@@ -41,7 +41,7 @@ Total space in repository for each repo
 
 -------- Discovery Veeam Jobs --------<br />
 [HIGH] => Job has FAILED <br />
-[AVERAGE] => Job has completed with warning<br />  
+[AVERAGE] => Job has completed with warning  
 [HIGH] => Job is still running (8 hours)
 
 -------- Discovery Veeam Tape Jobs --------

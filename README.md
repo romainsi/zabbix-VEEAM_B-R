@@ -12,8 +12,8 @@ Why? Because the execution of this command can take between 30 seconds and 3 min
 
 **-------- Items --------**
 
-Number of running jobs<br />
-Result Export Xml Veeam
+  - Number of running jobs<br />
+  - Result Export Xml Veeam
 
 
 **-------- Discovery --------**
@@ -35,7 +35,8 @@ Result Export Xml Veeam
 **3. Veeam Repository :**
 Remaining space in repository for each repo
 Total space in repository for each repo
-
+<br />
+<br />
 
 **-------- Triggers --------**
 
@@ -52,7 +53,8 @@ Total space in repository for each repo
 
 -------- Discovery Veeam Repository --------<br />
 [HIGH] => Less than 2Gb remaining on the repository
-
+<br />
+<br />
 
 **-------- Setup --------**
 

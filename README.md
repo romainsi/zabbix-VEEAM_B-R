@@ -3,7 +3,8 @@
 This template use the VEEAM Backup & Replication PowerShell Cmdlets to discover and manage VEEAM Backup jobs, Veeam BackupSync, Veeam Tape Job and All Repositories 
 
 Work with Veeam backup & replication V7 to V9.5<br />
-Work with Zabbix 3.X
+Work with Zabbix 3.X<br />
+Default French translation for the Template (sorry :p)
 
 Explanation of how it works :<br />
 The "Result Export Xml Veeam Xml" element sends a powerhell command to the host to create an xml of the result of the Get-VBRBackupSession command.<br />

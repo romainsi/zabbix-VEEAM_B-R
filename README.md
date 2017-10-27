@@ -6,8 +6,8 @@ Work with Veeam backup & replication V7 to V9.5
 Work with Zabbix 3.X
 
 Explanation of how it works :
-The item "Result Export Xml Veeam" send a powershell command to the host to create an xml of the result of the Get-VBRBackupSession command.
-Then each query imports the xml to retrieve the information.
+The item "Result Export Xml Veeam" send a powershell command to the host to create an xml of the result of the Get-VBRBackupSession command.<br />
+Then each query imports the xml to retrieve the information.<br />
 Why ? Because the execution of this command can take between 30seconds and 3 minutes (depending on the history and number of tasks) and I end up with several scripts running for a certain time and this chain. 
 
 **-------- Items --------**

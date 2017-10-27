@@ -46,7 +46,7 @@ Total space in repository for each repo
 
 -------- Discovery Veeam Tape Jobs --------
 [HIGH] => Job has FAILED <br />
-[AVERAGE] => Job has completed with warning <br /> 
+[AVERAGE] => Job has completed with warning
 [HIGH] => Job is still running (8 hours)<br />
 [INFORMATION] => No data recovery for 24 hours<br />
 

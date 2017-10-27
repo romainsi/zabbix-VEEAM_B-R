@@ -1,4 +1,4 @@
-================ VEEAM-Backup-Recovery-jobs ================
+#================ VEEAM-Backup-Recovery-jobs ================
 
 This template use the VEEAM Backup & Replication PowerShell Cmdlets to discover and manage VEEAM Backup jobs, Veeam BackupSync, Veeam Tape Job and All Repositories 
 
@@ -10,13 +10,13 @@ The item "Result Export Xml Veeam" send a powershell command to the host to crea
 Then each query imports the xml to retrieve the information.
 Why ? Because the execution of this command can take between 30seconds and 3 minutes (depending on the history and number of tasks) and I end up with several scripts running for a certain time and this chain. 
 
--------- Items --------
+**-------- Items --------**
 
 Number of running jobs
 Result Export Xml Veeam
 
 
--------- Discovery --------
+**-------- Discovery --------**
 
 - Veeam Jobs: 
 Execution status for each jobs
@@ -36,7 +36,7 @@ Result task ZabbixSender of each jobs
 Remaining space in repository for each repo
 Total space in repository for each repo
 
--------- Triggers --------
+**-------- Triggers --------**
 
 -------- Discovery Veeam Jobs --------
 [HIGH] => Job has FAILED 
@@ -51,6 +51,9 @@ Total space in repository for each repo
 
 -------- Discovery Veeam Repository --------
 [HIGH] => Less than 2Gb remaining on the repository
+
+
+**-------- Setup --------**
 
 1. Install the Zabbix agent on your host
 2. Copy zabbix_vbr_job.ps1 in the directory : "C:\Program Files\Zabbix Agent\scripts\" (create folder if not exist)

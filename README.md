@@ -33,9 +33,9 @@ Why? Because the execution of this command can take between 30 seconds and 3 min
   - Result of each jobs (ZabbixTrapper)
   - Result task ZabbixSender of each jobs
 
-**3. Veeam Repository :**
-Remaining space in repository for each repo
-Total space in repository for each repo
+**3. Veeam Repository :**<br />
+Remaining space in repository for each repo<br />
+Total space in repository for each repo<br />
 <br />
 <br />
 

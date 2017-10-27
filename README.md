@@ -1,4 +1,4 @@
-#================ VEEAM-Backup-Recovery-jobs ================
+================ VEEAM-Backup-Recovery-jobs ================
 
 This template use the VEEAM Backup & Replication PowerShell Cmdlets to discover and manage VEEAM Backup jobs, Veeam BackupSync, Veeam Tape Job and All Repositories 
 
@@ -18,21 +18,21 @@ Result Export Xml Veeam
 
 **-------- Discovery --------**
 
-- Veeam Jobs: 
-Execution status for each jobs
-Type for each jobs
-Number of virtual machine in each jobs
-Size included in each jobs
-Size excluded in each jobs
-Result of each jobs (ZabbixTrapper)
-Result task ZabbixSender of each jobs
+1. Veeam Jobs: 
+  - Execution status for each jobs
+  - Type for each jobs
+  - Number of virtual machine in each jobs
+  - Size included in each jobs
+  - Size excluded in each jobs
+  -   - Result of each jobs (ZabbixTrapper)
+  - Result task ZabbixSender of each jobs
 
-- Veeam Tape Jobs
-Execution status for each jobs
-Result of each jobs (ZabbixTrapper)
-Result task ZabbixSender of each jobs
+2. Veeam Tape Jobs
+  - Execution status for each jobs
+  - Result of each jobs (ZabbixTrapper)
+  - Result task ZabbixSender of each jobs
 
-- Veeam Repository
+3. Veeam Repository
 Remaining space in repository for each repo
 Total space in repository for each repo
 

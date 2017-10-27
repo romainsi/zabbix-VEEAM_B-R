@@ -12,44 +12,45 @@ Why ? Because the execution of this command can take between 30seconds and 3 min
 
 **-------- Items --------**
 
-Number of running jobs
+Number of running jobs<br />
 Result Export Xml Veeam
 
 
 **-------- Discovery --------**
 
-1. Veeam Jobs: 
+**1. Veeam Jobs :** 
   - Execution status for each jobs
   - Type for each jobs
   - Number of virtual machine in each jobs
   - Size included in each jobs
   - Size excluded in each jobs
-  -   - Result of each jobs (ZabbixTrapper)
+  - Result of each jobs (ZabbixTrapper)
   - Result task ZabbixSender of each jobs
 
-2. Veeam Tape Jobs
+**2. Veeam Tape Jobs :**
   - Execution status for each jobs
   - Result of each jobs (ZabbixTrapper)
   - Result task ZabbixSender of each jobs
 
-3. Veeam Repository
+**3. Veeam Repository :**
 Remaining space in repository for each repo
 Total space in repository for each repo
 
+
 **-------- Triggers --------**
 
--------- Discovery Veeam Jobs --------
-[HIGH] => Job has FAILED 
-[AVERAGE] => Job has completed with warning  
+-------- Discovery Veeam Jobs --------<br />
+[HIGH] => Job has FAILED <br />
+[AVERAGE] => Job has completed with warning<br />  
 [HIGH] => Job is still running (8 hours)
 
 -------- Discovery Veeam Tape Jobs --------
-[HIGH] => Job has FAILED 
-[AVERAGE] => Job has completed with warning  
-[HIGH] => Job is still running (8 hours)
-[INFORMATION] => No data recovery for 24 hours
+[HIGH] => Job has FAILED <br />
+[AVERAGE] => Job has completed with warning <br /> 
+[HIGH] => Job is still running (8 hours)<br />
+[INFORMATION] => No data recovery for 24 hours<br />
 
--------- Discovery Veeam Repository --------
+-------- Discovery Veeam Repository --------<br />
 [HIGH] => Less than 2Gb remaining on the repository
 
 

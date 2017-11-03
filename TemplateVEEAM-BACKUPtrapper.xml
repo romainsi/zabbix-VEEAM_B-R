@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <zabbix_export>
-    <version>3.4</version>
+    <version>3.0</version>
     <date>2017-10-27T09:38:54Z</date>
     <groups>
         <group>
@@ -32,9 +32,9 @@
                     <snmp_community/>
                     <snmp_oid/>
                     <key>system.run[powershell -NoProfile -ExecutionPolicy Bypass -File &quot;C:\Program Files\Zabbix Agent\scripts\zabbix_vbr_job.ps1&quot; exportxml,nowait]</key>
-                    <delay>10m</delay>
-                    <history>5d</history>
-                    <trends>15d</trends>
+                    <delay>600</delay>
+                    <history>5</history>
+                    <trends>15</trends>
                     <status>0</status>
                     <value_type>3</value_type>
                     <allowed_hosts/>
@@ -48,6 +48,11 @@
                     <snmpv3_privpassphrase/>
                     <params/>
                     <ipmi_sensor/>
+					<multiplier>0</multiplier>
+					<formula>1</formula>
+					<delta>0</delta>
+					<delay_flex/>
+					<data_type>0</data_type>
                     <authtype>0</authtype>
                     <username/>
                     <password/>
@@ -65,9 +70,6 @@
                         <name>sbrtaskresult</name>
                     </valuemap>
                     <logtimefmt/>
-                    <preprocessing/>
-                    <jmx_endpoint/>
-                    <master_item/>
                 </item>
                 <item>
                     <name>Nombre de travaux actif (s)</name>
@@ -75,9 +77,9 @@
                     <snmp_community/>
                     <snmp_oid/>
                     <key>vbr[&quot;RunningJob&quot;]</key>
-                    <delay>5m</delay>
-                    <history>1w</history>
-                    <trends>365d</trends>
+                    <delay>300</delay>
+                    <history>7</history>
+                    <trends>365</trends>
                     <status>0</status>
                     <value_type>3</value_type>
                     <allowed_hosts/>
@@ -91,6 +93,11 @@
                     <snmpv3_privpassphrase/>
                     <params/>
                     <ipmi_sensor/>
+					<multiplier>0</multiplier>
+					<formula>1</formula>
+					<delta>0</delta>
+					<delay_flex/>
+					<data_type>0</data_type>
                     <authtype>0</authtype>
                     <username/>
                     <password/>
@@ -106,9 +113,6 @@
                     </applications>
                     <valuemap/>
                     <logtimefmt/>
-                    <preprocessing/>
-                    <jmx_endpoint/>
-                    <master_item/>
                 </item>
             </items>
             <discovery_rules>
@@ -118,7 +122,7 @@
                     <snmp_community/>
                     <snmp_oid/>
                     <key>vbr[&quot;Discovery&quot;]</key>
-                    <delay>2h</delay>
+                    <delay>7200</delay>
                     <status>0</status>
                     <allowed_hosts/>
                     <snmpv3_contextname/>
@@ -130,6 +134,7 @@
                     <snmpv3_privpassphrase/>
                     <params/>
                     <ipmi_sensor/>
+					<delay_flex/>
                     <authtype>0</authtype>
                     <username/>
                     <password/>
@@ -141,7 +146,7 @@
                         <formula/>
                         <conditions/>
                     </filter>
-                    <lifetime>1w</lifetime>
+                    <lifetime>7</lifetime>
                     <description/>
                     <item_prototypes>
                         <item_prototype>
@@ -151,8 +156,8 @@
                             <snmp_oid/>
                             <key>Result.[{#JOBID}]</key>
                             <delay>0</delay>
-                            <history>90d</history>
-                            <trends>365d</trends>
+                            <history>90</history>
+                            <trends>365</trends>
                             <status>0</status>
                             <value_type>3</value_type>
                             <allowed_hosts/>
@@ -166,6 +171,11 @@
                             <snmpv3_privpassphrase/>
                             <params/>
                             <ipmi_sensor/>
+							<multiplier>0</multiplier>
+							<formula>1</formula>
+							<delta>0</delta>
+							<delay_flex/>
+							<data_type>0</data_type>
                             <authtype>0</authtype>
                             <username/>
                             <password/>
@@ -183,10 +193,7 @@
                                 <name>vbrJobResult</name>
                             </valuemap>
                             <logtimefmt/>
-                            <preprocessing/>
-                            <jmx_endpoint/>
                             <application_prototypes/>
-                            <master_item_prototype/>
                         </item_prototype>
                         <item_prototype>
                             <name>Taille exclue dans le travail {#JOBNAME}</name>
@@ -194,9 +201,9 @@
                             <snmp_community/>
                             <snmp_oid/>
                             <key>vbr[ExcludedSize,{#JOBID}]</key>
-                            <delay>1h</delay>
-                            <history>1w</history>
-                            <trends>365d</trends>
+                            <delay>3600</delay>
+                            <history>7</history>
+                            <trends>365</trends>
                             <status>0</status>
                             <value_type>3</value_type>
                             <allowed_hosts/>
@@ -210,6 +217,11 @@
                             <snmpv3_privpassphrase/>
                             <params/>
                             <ipmi_sensor/>
+							<multiplier>0</multiplier>
+							<formula>1</formula>
+							<delta>0</delta>
+							<delay_flex/>
+							<data_type>0</data_type>
                             <authtype>0</authtype>
                             <username/>
                             <password/>
@@ -225,10 +237,7 @@
                             </applications>
                             <valuemap/>
                             <logtimefmt/>
-                            <preprocessing/>
-                            <jmx_endpoint/>
                             <application_prototypes/>
-                            <master_item_prototype/>
                         </item_prototype>
                         <item_prototype>
                             <name>Taille inclue dans le travail {#JOBNAME}</name>
@@ -236,9 +245,9 @@
                             <snmp_community/>
                             <snmp_oid/>
                             <key>vbr[IncludedSize,{#JOBID}]</key>
-                            <delay>1h</delay>
-                            <history>1w</history>
-                            <trends>365d</trends>
+                            <delay>3600</delay>
+                            <history>7</history>
+                            <trends>365</trends>
                             <status>0</status>
                             <value_type>3</value_type>
                             <allowed_hosts/>
@@ -252,6 +261,11 @@
                             <snmpv3_privpassphrase/>
                             <params/>
                             <ipmi_sensor/>
+							<multiplier>0</multiplier>
+							<formula>1</formula>
+							<delta>0</delta>
+							<delay_flex/>
+							<data_type>0</data_type>
                             <authtype>0</authtype>
                             <username/>
                             <password/>
@@ -267,10 +281,7 @@
                             </applications>
                             <valuemap/>
                             <logtimefmt/>
-                            <preprocessing/>
-                            <jmx_endpoint/>
                             <application_prototypes/>
-                            <master_item_prototype/>
                         </item_prototype>
                         <item_prototype>
                             <name>Resultat Zabbix Sender {#JOBNAME}</name>
@@ -278,8 +289,8 @@
                             <snmp_community/>
                             <snmp_oid/>
                             <key>vbr[Result,{#JOBID}]</key>
-                            <delay>15m</delay>
-                            <history>1w</history>
+                            <delay>900</delay>
+                            <history>7</history>
                             <trends>0</trends>
                             <status>0</status>
                             <value_type>4</value_type>
@@ -294,6 +305,11 @@
                             <snmpv3_privpassphrase/>
                             <params/>
                             <ipmi_sensor/>
+							<multiplier>0</multiplier>
+							<formula>1</formula>
+							<delta>0</delta>
+							<delay_flex/>
+							<data_type>0</data_type>
                             <authtype>0</authtype>
                             <username/>
                             <password/>
@@ -309,10 +325,7 @@
                             </applications>
                             <valuemap/>
                             <logtimefmt/>
-                            <preprocessing/>
-                            <jmx_endpoint/>
                             <application_prototypes/>
-                            <master_item_prototype/>
                         </item_prototype>
                         <item_prototype>
                             <name>Statut d'exécution du travail {#JOBNAME}</name>
@@ -320,9 +333,9 @@
                             <snmp_community/>
                             <snmp_oid/>
                             <key>vbr[RunStatus,{#JOBID}]</key>
-                            <delay>15m</delay>
-                            <history>1w</history>
-                            <trends>365d</trends>
+                            <delay>900</delay>
+                            <history>7</history>
+                            <trends>365</trends>
                             <status>0</status>
                             <value_type>3</value_type>
                             <allowed_hosts/>
@@ -336,6 +349,11 @@
                             <snmpv3_privpassphrase/>
                             <params/>
                             <ipmi_sensor/>
+							<multiplier>0</multiplier>
+							<formula>1</formula>
+							<delta>0</delta>
+							<delay_flex/>
+							<data_type>0</data_type>
                             <authtype>0</authtype>
                             <username/>
                             <password/>
@@ -353,10 +371,7 @@
                                 <name>vbrJobRunStatus</name>
                             </valuemap>
                             <logtimefmt/>
-                            <preprocessing/>
-                            <jmx_endpoint/>
                             <application_prototypes/>
-                            <master_item_prototype/>
                         </item_prototype>
                         <item_prototype>
                             <name>Type de backup {#JOBNAME}</name>
@@ -364,8 +379,8 @@
                             <snmp_community/>
                             <snmp_oid/>
                             <key>vbr[Type,{#JOBID}]</key>
-                            <delay>1h</delay>
-                            <history>1w</history>
+                            <delay>3600</delay>
+                            <history>7</history>
                             <trends>0</trends>
                             <status>0</status>
                             <value_type>1</value_type>
@@ -380,6 +395,11 @@
                             <snmpv3_privpassphrase/>
                             <params/>
                             <ipmi_sensor/>
+							<multiplier>0</multiplier>
+							<formula>1</formula>
+							<delta>0</delta>
+							<delay_flex/>
+							<data_type>0</data_type>
                             <authtype>0</authtype>
                             <username/>
                             <password/>
@@ -395,10 +415,7 @@
                             </applications>
                             <valuemap/>
                             <logtimefmt/>
-                            <preprocessing/>
-                            <jmx_endpoint/>
                             <application_prototypes/>
-                            <master_item_prototype/>
                         </item_prototype>
                         <item_prototype>
                             <name>Nombre de VM dans le travail {#JOBNAME}</name>
@@ -406,9 +423,9 @@
                             <snmp_community/>
                             <snmp_oid/>
                             <key>vbr[VmCount,{#JOBID}]</key>
-                            <delay>15m</delay>
-                            <history>1w</history>
-                            <trends>365d</trends>
+                            <delay>900</delay>
+                            <history>7</history>
+                            <trends>365</trends>
                             <status>0</status>
                             <value_type>3</value_type>
                             <allowed_hosts/>
@@ -422,6 +439,11 @@
                             <snmpv3_privpassphrase/>
                             <params/>
                             <ipmi_sensor/>
+							<multiplier>0</multiplier>
+							<formula>1</formula>
+							<delta>0</delta>
+							<delay_flex/>
+							<data_type>0</data_type>
                             <authtype>0</authtype>
                             <username/>
                             <password/>
@@ -437,66 +459,44 @@
                             </applications>
                             <valuemap/>
                             <logtimefmt/>
-                            <preprocessing/>
-                            <jmx_endpoint/>
                             <application_prototypes/>
-                            <master_item_prototype/>
                         </item_prototype>
                     </item_prototypes>
                     <trigger_prototypes>
                         <trigger_prototype>
                             <expression>{Template VEEAM-BACKUP trapper:Result.[{#JOBID}].avg(5400)}&lt;1</expression>
-                            <recovery_mode>0</recovery_mode>
-                            <recovery_expression/>
                             <name>Backup {#JOBNAME} en erreur</name>
-                            <correlation_mode>0</correlation_mode>
-                            <correlation_tag/>
                             <url/>
                             <status>0</status>
                             <priority>4</priority>
                             <description/>
                             <type>0</type>
-                            <manual_close>0</manual_close>
                             <dependencies/>
-                            <tags/>
                         </trigger_prototype>
                         <trigger_prototype>
                             <expression>{Template VEEAM-BACKUP trapper:Result.[{#JOBID}].avg(5400)}&gt;0 and&#13;
 {Template VEEAM-BACKUP trapper:Result.[{#JOBID}].avg(5400)}&lt;2</expression>
-                            <recovery_mode>0</recovery_mode>
-                            <recovery_expression/>
                             <name>Backup {#JOBNAME} terminé avec Avertissement</name>
-                            <correlation_mode>0</correlation_mode>
-                            <correlation_tag/>
                             <url/>
                             <status>0</status>
                             <priority>2</priority>
                             <description/>
                             <type>0</type>
-                            <manual_close>0</manual_close>
                             <dependencies/>
-                            <tags/>
                         </trigger_prototype>
                         <trigger_prototype>
                             <expression>{Template VEEAM-BACKUP trapper:vbr[RunStatus,{#JOBID}].avg(28800)}=1 and {Template VEEAM-BACKUP trapper:vbr[Type,{#JOBID}].regexp(BackupSync)}=0</expression>
-                            <recovery_mode>0</recovery_mode>
-                            <recovery_expression/>
                             <name>Le travail VEEAM {#JOBNAME} est toujours en cours d'exécution (8h)</name>
-                            <correlation_mode>0</correlation_mode>
-                            <correlation_tag/>
                             <url/>
                             <status>0</status>
                             <priority>4</priority>
                             <description/>
                             <type>0</type>
-                            <manual_close>0</manual_close>
                             <dependencies/>
-                            <tags/>
                         </trigger_prototype>
                     </trigger_prototypes>
                     <graph_prototypes/>
                     <host_prototypes/>
-                    <jmx_endpoint/>
                 </discovery_rule>
                 <discovery_rule>
                     <name>VEEAM Repository</name>
@@ -504,7 +504,7 @@
                     <snmp_community/>
                     <snmp_oid/>
                     <key>vbr[&quot;DiscoveryRepo&quot;]</key>
-                    <delay>2h</delay>
+                    <delay>7200</delay>
                     <status>0</status>
                     <allowed_hosts/>
                     <snmpv3_contextname/>
@@ -516,6 +516,7 @@
                     <snmpv3_privpassphrase/>
                     <params/>
                     <ipmi_sensor/>
+					<delay_flex/>
                     <authtype>0</authtype>
                     <username/>
                     <password/>
@@ -527,7 +528,7 @@
                         <formula/>
                         <conditions/>
                     </filter>
-                    <lifetime>1w</lifetime>
+                    <lifetime>7</lifetime>
                     <description/>
                     <item_prototypes>
                         <item_prototype>
@@ -536,9 +537,9 @@
                             <snmp_community/>
                             <snmp_oid/>
                             <key>vbr[RepoCapacity,&quot;{#REPONAME}&quot;]</key>
-                            <delay>1h</delay>
-                            <history>90d</history>
-                            <trends>365d</trends>
+                            <delay>3600</delay>
+                            <history>90</history>
+                            <trends>365</trends>
                             <status>0</status>
                             <value_type>3</value_type>
                             <allowed_hosts/>
@@ -552,6 +553,11 @@
                             <snmpv3_privpassphrase/>
                             <params/>
                             <ipmi_sensor/>
+							<multiplier>0</multiplier>
+							<formula>1</formula>
+							<delta>0</delta>
+							<delay_flex/>
+							<data_type>0</data_type>
                             <authtype>0</authtype>
                             <username/>
                             <password/>
@@ -567,10 +573,7 @@
                             </applications>
                             <valuemap/>
                             <logtimefmt/>
-                            <preprocessing/>
-                            <jmx_endpoint/>
                             <application_prototypes/>
-                            <master_item_prototype/>
                         </item_prototype>
                         <item_prototype>
                             <name>Espace restant repository {#REPONAME}</name>
@@ -578,9 +581,9 @@
                             <snmp_community/>
                             <snmp_oid/>
                             <key>vbr[RepoFree,&quot;{#REPONAME}&quot;]</key>
-                            <delay>1h</delay>
-                            <history>90d</history>
-                            <trends>365d</trends>
+                            <delay>3600</delay>
+                            <history>90</history>
+                            <trends>365</trends>
                             <status>0</status>
                             <value_type>3</value_type>
                             <allowed_hosts/>
@@ -594,6 +597,11 @@
                             <snmpv3_privpassphrase/>
                             <params/>
                             <ipmi_sensor/>
+							<multiplier>0</multiplier>
+							<formula>1</formula>
+							<delta>0</delta>
+							<delay_flex/>
+							<data_type>0</data_type>
                             <authtype>0</authtype>
                             <username/>
                             <password/>
@@ -609,28 +617,19 @@
                             </applications>
                             <valuemap/>
                             <logtimefmt/>
-                            <preprocessing/>
-                            <jmx_endpoint/>
                             <application_prototypes/>
-                            <master_item_prototype/>
                         </item_prototype>
                     </item_prototypes>
                     <trigger_prototypes>
                         <trigger_prototype>
                             <expression>{Template VEEAM-BACKUP trapper:vbr[RepoFree,&quot;{#REPONAME}&quot;].last()}&lt;2147483648</expression>
-                            <recovery_mode>0</recovery_mode>
-                            <recovery_expression/>
                             <name>Moins de 2Gb restant sur le repository {#REPONAME}</name>
-                            <correlation_mode>0</correlation_mode>
-                            <correlation_tag/>
                             <url/>
                             <status>0</status>
                             <priority>4</priority>
                             <description/>
                             <type>0</type>
-                            <manual_close>0</manual_close>
                             <dependencies/>
-                            <tags/>
                         </trigger_prototype>
                     </trigger_prototypes>
                     <graph_prototypes>
@@ -668,7 +667,6 @@
                         </graph_prototype>
                     </graph_prototypes>
                     <host_prototypes/>
-                    <jmx_endpoint/>
                 </discovery_rule>
                 <discovery_rule>
                     <name>VEEAM Tape jobs</name>
@@ -676,7 +674,7 @@
                     <snmp_community/>
                     <snmp_oid/>
                     <key>vbr[&quot;DiscoveryTape&quot;]</key>
-                    <delay>2h</delay>
+                    <delay>7200</delay>
                     <status>0</status>
                     <allowed_hosts/>
                     <snmpv3_contextname/>
@@ -688,6 +686,7 @@
                     <snmpv3_privpassphrase/>
                     <params/>
                     <ipmi_sensor/>
+					<delay_flex/>
                     <authtype>0</authtype>
                     <username/>
                     <password/>
@@ -699,7 +698,7 @@
                         <formula/>
                         <conditions/>
                     </filter>
-                    <lifetime>1w</lifetime>
+                    <lifetime>7</lifetime>
                     <description/>
                     <item_prototypes>
                         <item_prototype>
@@ -709,8 +708,8 @@
                             <snmp_oid/>
                             <key>ResultTape.[{#JOBTAPEID}]</key>
                             <delay>0</delay>
-                            <history>90d</history>
-                            <trends>365d</trends>
+                            <history>90</history>
+                            <trends>365</trends>
                             <status>0</status>
                             <value_type>3</value_type>
                             <allowed_hosts/>
@@ -724,6 +723,11 @@
                             <snmpv3_privpassphrase/>
                             <params/>
                             <ipmi_sensor/>
+							<multiplier>0</multiplier>
+							<formula>1</formula>
+							<delta>0</delta>
+							<delay_flex/>
+							<data_type>0</data_type>
                             <authtype>0</authtype>
                             <username/>
                             <password/>
@@ -741,10 +745,7 @@
                                 <name>vbrJobResult</name>
                             </valuemap>
                             <logtimefmt/>
-                            <preprocessing/>
-                            <jmx_endpoint/>
                             <application_prototypes/>
-                            <master_item_prototype/>
                         </item_prototype>
                         <item_prototype>
                             <name>Resultat Zabbix Sender {#JOBTAPENAME}</name>
@@ -752,8 +753,8 @@
                             <snmp_community/>
                             <snmp_oid/>
                             <key>vbr[ResultTape,{#JOBTAPEID}]</key>
-                            <delay>15m</delay>
-                            <history>90d</history>
+                            <delay>900</delay>
+                            <history>90</history>
                             <trends>0</trends>
                             <status>0</status>
                             <value_type>4</value_type>
@@ -768,6 +769,11 @@
                             <snmpv3_privpassphrase/>
                             <params/>
                             <ipmi_sensor/>
+							<multiplier>0</multiplier>
+							<formula>1</formula>
+							<delta>0</delta>
+							<delay_flex/>
+							<data_type>0</data_type>
                             <authtype>0</authtype>
                             <username/>
                             <password/>
@@ -783,10 +789,7 @@
                             </applications>
                             <valuemap/>
                             <logtimefmt/>
-                            <preprocessing/>
-                            <jmx_endpoint/>
                             <application_prototypes/>
-                            <master_item_prototype/>
                         </item_prototype>
                         <item_prototype>
                             <name>Statut d'exécution du travail {#JOBTAPENAME}</name>
@@ -794,9 +797,9 @@
                             <snmp_community/>
                             <snmp_oid/>
                             <key>vbr[RunStatus,{#JOBTAPEID}]</key>
-                            <delay>15m</delay>
-                            <history>90d</history>
-                            <trends>365d</trends>
+                            <delay>900</delay>
+                            <history>90</history>
+                            <trends>365</trends>
                             <status>0</status>
                             <value_type>3</value_type>
                             <allowed_hosts/>
@@ -810,6 +813,11 @@
                             <snmpv3_privpassphrase/>
                             <params/>
                             <ipmi_sensor/>
+							<multiplier>0</multiplier>
+							<formula>1</formula>
+							<delta>0</delta>
+							<delay_flex/>
+							<data_type>0</data_type>
                             <authtype>0</authtype>
                             <username/>
                             <password/>
@@ -827,85 +835,56 @@
                                 <name>vbrJobRunStatus</name>
                             </valuemap>
                             <logtimefmt/>
-                            <preprocessing/>
-                            <jmx_endpoint/>
                             <application_prototypes/>
-                            <master_item_prototype/>
                         </item_prototype>
                     </item_prototypes>
                     <trigger_prototypes>
                         <trigger_prototype>
                             <expression>{Template VEEAM-BACKUP trapper:ResultTape.[{#JOBTAPEID}].avg(5400)}&lt;1</expression>
-                            <recovery_mode>0</recovery_mode>
-                            <recovery_expression/>
                             <name>Backup {#JOBTAPENAME} en erreur</name>
-                            <correlation_mode>0</correlation_mode>
-                            <correlation_tag/>
                             <url/>
                             <status>0</status>
                             <priority>4</priority>
                             <description/>
                             <type>0</type>
-                            <manual_close>0</manual_close>
                             <dependencies/>
-                            <tags/>
                         </trigger_prototype>
                         <trigger_prototype>
                             <expression>{Template VEEAM-BACKUP trapper:ResultTape.[{#JOBTAPEID}].avg(5400)}&gt;0 and&#13;
 {Template VEEAM-BACKUP trapper:ResultTape.[{#JOBTAPEID}].avg(5400)}&lt;2</expression>
-                            <recovery_mode>0</recovery_mode>
-                            <recovery_expression/>
                             <name>Backup {#JOBTAPENAME} terminé avec Avertissement</name>
-                            <correlation_mode>0</correlation_mode>
-                            <correlation_tag/>
                             <url/>
                             <status>0</status>
                             <priority>2</priority>
                             <description/>
                             <type>0</type>
-                            <manual_close>0</manual_close>
                             <dependencies/>
-                            <tags/>
                         </trigger_prototype>
                         <trigger_prototype>
                             <expression>{Template VEEAM-BACKUP trapper:vbr[RunStatus,{#JOBTAPEID}].avg(28800)}=1</expression>
-                            <recovery_mode>0</recovery_mode>
-                            <recovery_expression/>
                             <name>Le travail VEEAM {#JOBTAPENAME} est toujours en cours d'exécution (8h)</name>
-                            <correlation_mode>0</correlation_mode>
-                            <correlation_tag/>
                             <url/>
                             <status>0</status>
                             <priority>4</priority>
                             <description/>
                             <type>0</type>
-                            <manual_close>0</manual_close>
                             <dependencies/>
-                            <tags/>
                         </trigger_prototype>
                         <trigger_prototype>
                             <expression>{Template VEEAM-BACKUP trapper:vbr[ResultTape,{#JOBTAPEID}].nodata(1d)}=1</expression>
-                            <recovery_mode>0</recovery_mode>
-                            <recovery_expression/>
                             <name>Pas de récupération de données depuis 24h</name>
-                            <correlation_mode>0</correlation_mode>
-                            <correlation_tag/>
                             <url/>
                             <status>0</status>
                             <priority>1</priority>
                             <description/>
                             <type>0</type>
-                            <manual_close>0</manual_close>
                             <dependencies/>
-                            <tags/>
                         </trigger_prototype>
                     </trigger_prototypes>
                     <graph_prototypes/>
                     <host_prototypes/>
-                    <jmx_endpoint/>
                 </discovery_rule>
             </discovery_rules>
-            <httptests/>
             <macros/>
             <templates/>
             <screens/>

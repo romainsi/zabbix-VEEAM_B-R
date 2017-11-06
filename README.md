@@ -12,7 +12,7 @@ Then, each request imports the xml to retrieve the information.<br />
 Why? Because the execution of this command can take between 30 seconds and 3 minutes (depending on the history and the number of tasks) and I end up with several scripts running for a certain time and the execution is in timeout.
 The result of the Job is send by Zabbix Sender.<br />
 
-The triggers for Veeam services are disable by default and are to be activated according to the version of Veeam used. 
+The triggers for Veeam services are disable by default and are to be activated according to the version of Veeam used.<br /> 
 Items and triggers for Veeam V9 and later services are noted v9.X, others for earlier versions.
 
 

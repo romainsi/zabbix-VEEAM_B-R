@@ -10,7 +10,11 @@ Explanation of how it works :<br />
 The "Result Export Xml Veeam Xml" element sends a powerhell command to the host to create an xml of the result of the Get-VBRBackupSession command.<br />
 Then, each request imports the xml to retrieve the information.<br />
 Why? Because the execution of this command can take between 30 seconds and 3 minutes (depending on the history and the number of tasks) and I end up with several scripts running for a certain time and the execution is in timeout.
-The result of the Job is send by Zabbix Sender.
+The result of the Job is send by Zabbix Sender.<br />
+
+The triggers for Veeam services are disable by default and are to be activated according to the version of Veeam used. 
+Items for Veeam V9.5 services are noted v9.5 at the end, the others are for earlier versions.
+
 
 **-------- Items --------**
 
@@ -47,7 +51,7 @@ The result of the Job is send by Zabbix Sender.
 [AVERAGE] => Veeam Guest Catalog Service is down<br />
 [AVERAGE] => Veeam Hyper-V Integration Service is down<br />
 [AVERAGE] => Veeam Mount Service is down<br />
-[AVERAGE] => Veeam vPower NFS Service is down<br />
+[AVERAGE] => Veeam vPower NFS Service is down
 
 -------- Discovery Veeam Jobs --------<br />
 [HIGH] => Job has FAILED <br />

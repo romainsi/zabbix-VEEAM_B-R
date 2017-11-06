@@ -40,7 +40,14 @@ The result of the Job is send by Zabbix Sender.
 <br />
 <br />
 
-**-------- Triggers --------**
+**-------- Triggers --------**<br />
+[AVERAGE] => Veeam Cloud Connect Service is down<br />
+[AVERAGE] => Veeam Data Mover Service is down<br />
+[AVERAGE] => Veeam Data Mover ServiceVeeam Installer Service<br />
+[AVERAGE] => Veeam Guest Catalog Service is down<br />
+[AVERAGE] => Veeam Hyper-V Integration Service is down<br />
+[AVERAGE] => Veeam Mount Service is down<br />
+[AVERAGE] => Veeam vPower NFS Service is down<br />
 
 -------- Discovery Veeam Jobs --------<br />
 [HIGH] => Job has FAILED <br />

@@ -20,7 +20,7 @@ Items and triggers for Veeam V9 and later services are noted v9.X, others for ea
 
   - Number of running jobs<br />
   - Result Export Xml Veeam<br />
-  - All Services Veeam : Veeam Guest Catalog, Veeam Cloud Connect, Veeam Data Mover ServiceVeeam Installer, Veeam Hyper-V Integration,       Veeam Mount Service, Veeam vPower NFS,	Veeam Data Mover.
+  - All Services Veeam : Veeam Guest Catalog, Veeam Cloud Connect, Veeam Data Mover, Veeam Installer, Veeam Hyper-V Integration,       Veeam Mount Service, Veeam vPower NFS,	Veeam Remote Tape Access Service, Veeam Broker, Veeam Backup.
 
 **-------- Discovery --------**
 
@@ -47,10 +47,14 @@ Items and triggers for Veeam V9 and later services are noted v9.X, others for ea
 **-------- Triggers --------**<br />
 [AVERAGE] => Veeam Cloud Connect Service is down<br />
 [AVERAGE] => Veeam Data Mover Service is down<br />
-[AVERAGE] => Veeam Data Mover ServiceVeeam Installer Service<br />
+[AVERAGE] => Veeam Installer Service<br />
 [AVERAGE] => Veeam Guest Catalog Service is down<br />
 [AVERAGE] => Veeam Hyper-V Integration Service is down<br />
 [AVERAGE] => Veeam Mount Service is down<br />
+[AVERAGE] => Veeam Backup Catalog Data Service is down<br />
+[AVERAGE] => Veeam Backup Service<br />
+[AVERAGE] => Veeam Broker Service<br />
+[AVERAGE] => Veeam Remote Tape Access Service is down<br />
 [AVERAGE] => Veeam vPower NFS Service is down
 
 -------- Discovery Veeam Jobs --------<br />

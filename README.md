@@ -15,8 +15,8 @@ The result of the Job is send by Zabbix Sender.
 **-------- Items --------**
 
   - Number of running jobs<br />
-  - Result Export Xml Veeam
-
+  - Result Export Xml Veeam<br />
+  - All Services Veeam : Veeam Guest Catalog, Veeam Cloud Connect, Veeam Data Mover ServiceVeeam Installer, Veeam Hyper-V Integration,       Veeam Mount Service, Veeam vPower NFS,	Veeam Data Mover.
 
 **-------- Discovery --------**
 

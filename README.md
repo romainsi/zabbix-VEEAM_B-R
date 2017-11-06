@@ -13,7 +13,7 @@ Why? Because the execution of this command can take between 30 seconds and 3 min
 The result of the Job is send by Zabbix Sender.<br />
 
 The triggers for Veeam services are disable by default and are to be activated according to the version of Veeam used. 
-Items for Veeam V9.5 services are noted v9.5 at the end, the others are for earlier versions.
+Items for Veeam V9 and later services are noted v9 at the end, others for earlier versions.
 
 
 **-------- Items --------**

@@ -66,7 +66,7 @@ The result of the Job is send by Zabbix Sender.<br /><br />
 EnableRemoteCommands=1 <br />
 UnsafeUserParameters=1 <br />
 UserParameter=vbr[*],powershell -NoProfile -ExecutionPolicy Bypass -File "C:\Program Files\Zabbix Agent\scripts\zabbix_vbr_job.ps1" "$1" "$2"
-4. In Zabbix : Administration, General, Regular Expression : Add a new regular expression : 
+4. In Zabbix : Administration, General, Regular Expression : Add a new regular expression :<br /> 
 Name : "Veeam"    ;     Expression type : "TRUE"     ;     	Expression : "Veeam.*"
 5. Import TemplateVEEAM-BACKUPtrapper.xml file into Zabbix. 
 6. Associate "Template VEEAM-BACKUP trapper" to the host.

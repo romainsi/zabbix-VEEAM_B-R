@@ -111,17 +111,26 @@ switch ($ITEM) {
     else {write-host "Execution non reussie"}
    }}
 
-    "ResultTape"  {
+  "ResultTape"  {
   $query = Get-VBRTapeJob | Where-Object {$_.Id -like "*$ID*"}
   $query1 = $query | Where {$_.Id -eq $query.Id} | Sort creationtime -Descending | Select -First 1
   $query2 = $query1.LastResult
-  $query3 = "$query2".replace('Failed','0').replace('Warning','1').replace('Success','2').replace('None','2').replace('idle','3')
-  cd $pathsender
-  $trapper = .\zabbix_sender.exe -c .\zabbix_agentd.conf -k ResultTape.[$ID] -o $query3 -v
-    if ($trapper[0].Contains("processed: 1"))
-    {write-host "Execution reussie"}
-    else {write-host "Execution non reussie"}
-   }
+   if (!$query2){
+   $query3 = $query1.GetLastResult()
+   $query4 = "$query3".replace('Failed','0').replace('Warning','1').replace('Success','2').replace('None','2').replace('idle','3')
+   cd $pathsender
+   $trapper = .\zabbix_sender.exe -c .\zabbix_agentd.conf -k ResultTape.[$ID] -o $query4 -v
+     if ($trapper[0].Contains("processed: 1"))
+     {write-host "Execution reussie"}
+       else {write-host "Execution non reussie"}}
+   else {
+   $query3 = "$query2".replace('Failed','0').replace('Warning','1').replace('Success','2').replace('None','2').replace('idle','3')
+   cd $pathsender
+   $trapper = .\zabbix_sender.exe -c .\zabbix_agentd.conf -k ResultTape.[$ID] -o $query3 -v
+   if ($trapper[0].Contains("processed: 1"))
+   {write-host "Execution reussie"}
+   else {write-host "Execution non reussie"}}
+    }
 
     "RepoCapacity" {
   $query = Get-WmiObject -Class Repository -ComputerName $env:COMPUTERNAME -Namespace ROOT\VeeamBS | Where-Object {$_.Name -eq "$ID"}

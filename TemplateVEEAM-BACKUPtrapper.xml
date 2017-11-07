@@ -166,8 +166,8 @@
                             <snmp_oid/>
                             <key>service.info[{#SERVICE.NAME},state]</key>
                             <delay>60</delay>
-                            <history>90d</history>
-                            <trends>365d</trends>
+                            <history>90</history>
+                            <trends>365</trends>
                             <status>0</status>
                             <value_type>3</value_type>
                             <allowed_hosts/>
@@ -633,7 +633,7 @@
                         <formula/>
                         <conditions/>
                     </filter>
-                    <lifetime>1w</lifetime>
+                    <lifetime>1</lifetime>
                     <description/>
                     <item_prototypes>
                         <item_prototype>
@@ -803,7 +803,7 @@
                         <formula/>
                         <conditions/>
                     </filter>
-                    <lifetime>1w</lifetime>
+                    <lifetime>1</lifetime>
                     <description/>
                     <item_prototypes>
                         <item_prototype>

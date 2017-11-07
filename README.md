@@ -1,6 +1,6 @@
 **================ VEEAM-Backup-Recovery-jobs ================**
 
-This template use the VEEAM Backup & Replication PowerShell Cmdlets to discover and manage VEEAM Backup jobs, Veeam BackupSync, Veeam Tape Job and All Repositories 
+This template use the VEEAM Backup & Replication PowerShell Cmdlets to discover and manage VEEAM Backup jobs, Veeam BackupSync, Veeam Tape Job, All Repositories and Veeam Services.
 
 Work with Veeam backup & replication V7 to V9.5<br />
 Work with Zabbix 3.X<br />
@@ -10,17 +10,12 @@ Explanation of how it works :<br />
 The "Result Export Xml Veeam Xml" element sends a powerhell command to the host to create an xml of the result of the Get-VBRBackupSession command.<br />
 Then, each request imports the xml to retrieve the information.<br />
 Why? Because the execution of this command can take between 30 seconds and 3 minutes (depending on the history and the number of tasks) and I end up with several scripts running for a certain time and the execution is in timeout.
-The result of the Job is send by Zabbix Sender.<br />
-
-The triggers for Veeam services are disable by default and are to be activated according to the version of Veeam used.<br /> 
-Items and triggers for Veeam V9 and later services are noted v9.X, others for earlier versions.
-
+The result of the Job is send by Zabbix Sender.<br /><br />
 
 **-------- Items --------**
 
   - Number of running jobs<br />
   - Result Export Xml Veeam<br />
-  - All Services Veeam : Veeam Guest Catalog, Veeam Cloud Connect, Veeam Data Mover, Veeam Installer, Veeam Hyper-V Integration,       Veeam Mount Service, Veeam vPower NFS,	Veeam Remote Tape Access Service, Veeam Broker, Veeam Backup.
 
 **-------- Discovery --------**
 
@@ -42,20 +37,8 @@ Items and triggers for Veeam V9 and later services are noted v9.X, others for ea
   - Remaining space in repository for each repo<br />
   - Total space in repository for each repo<br />
 <br />
-<br />
 
 **-------- Triggers --------**<br />
-[AVERAGE] => Veeam Cloud Connect Service is down<br />
-[AVERAGE] => Veeam Data Mover Service is down<br />
-[AVERAGE] => Veeam Installer Service<br />
-[AVERAGE] => Veeam Guest Catalog Service is down<br />
-[AVERAGE] => Veeam Hyper-V Integration Service is down<br />
-[AVERAGE] => Veeam Mount Service is down<br />
-[AVERAGE] => Veeam Backup Catalog Data Service is down<br />
-[AVERAGE] => Veeam Backup Service<br />
-[AVERAGE] => Veeam Broker Service<br />
-[AVERAGE] => Veeam Remote Tape Access Service is down<br />
-[AVERAGE] => Veeam vPower NFS Service is down
 
 -------- Discovery Veeam Jobs --------<br />
 [HIGH] => Job has FAILED <br />
@@ -70,9 +53,11 @@ Items and triggers for Veeam V9 and later services are noted v9.X, others for ea
 
 -------- Discovery Veeam Repository --------<br />
 [HIGH] => Less than 2Gb remaining on the repository
-<br />
-<br />
 
+
+-------- Discovery Veeam Services --------<br />
+[AVERAGE] => Veeam Service is down for each services<br />
+<br />
 **-------- Setup --------**
 
 1. Install the Zabbix agent on your host
@@ -81,5 +66,7 @@ Items and triggers for Veeam V9 and later services are noted v9.X, others for ea
 EnableRemoteCommands=1 <br />
 UnsafeUserParameters=1 <br />
 UserParameter=vbr[*],powershell -NoProfile -ExecutionPolicy Bypass -File "C:\Program Files\Zabbix Agent\scripts\zabbix_vbr_job.ps1" "$1" "$2"
-4. Import TemplateVEEAM-BACKUPtrapper.xml file into Zabbix. 
-5. Associate "Template VEEAM-BACKUP trapper" to the host.
+4. In Zabbix : Administration, General, Regular Expression : Add a new regular expression :<br /> 
+Name : "Veeam"    ;     Expression type : "TRUE"     ;     	Expression : "Veeam.*"
+5. Import TemplateVEEAM-BACKUPtrapper.xml file into Zabbix. 
+6. Associate "Template VEEAM-BACKUP trapper" to the host.

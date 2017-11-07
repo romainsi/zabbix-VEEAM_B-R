@@ -1,6 +1,6 @@
 **================ VEEAM-Backup-Recovery-jobs ================**
 
-This template use the VEEAM Backup & Replication PowerShell Cmdlets to discover and manage VEEAM Backup jobs, Veeam BackupSync, Veeam Tape Job and All Repositories 
+This template use the VEEAM Backup & Replication PowerShell Cmdlets to discover and manage VEEAM Backup jobs, Veeam BackupSync, Veeam Tape Job, All Repositories and Veeam Services.
 
 Work with Veeam backup & replication V7 to V9.5<br />
 Work with Zabbix 3.X<br />

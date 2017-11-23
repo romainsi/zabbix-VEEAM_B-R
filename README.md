@@ -67,6 +67,7 @@ The result of the Job is send by Zabbix Sender.<br /><br />
 3. Add the following line to your Zabbix agent configuration file.<br />
 EnableRemoteCommands=1 <br />
 UnsafeUserParameters=1 <br />
+ServerActive="IP or DNS Zabbix Server"<br />
 UserParameter=vbr[*],powershell -NoProfile -ExecutionPolicy Bypass -File "C:\Program Files\Zabbix Agent\scripts\zabbix_vbr_job.ps1" "$1" "$2"
 4. In Zabbix : Administration, General, Regular Expression : Add a new regular expression :<br /> 
 Name : "Veeam"    ;     Expression type : "TRUE"     ;     	Expression : "Veeam.*"

@@ -1,4 +1,4 @@
-﻿# Script: zabbix_vbr_job
+# Script: zabbix_vbr_job
 # Author: Romainsi
 # Description: Query Veeam job information
 # 
@@ -11,7 +11,6 @@
 # Add to Zabbix Agent
 #   UserParameter=vbr[*],powershell -NoProfile -ExecutionPolicy Bypass -File "C:\Program Files\Zabbix Agent\scripts\zabbix_vbr_job.ps1" "$1" "$2"
 #
-
 $pathxml = 'C:\Program Files\Zabbix Agent\scripts'
 $pathsender = 'C:\Program Files\Zabbix Agent'
 
@@ -23,7 +22,9 @@ Add-PsSnapin -Name VeeamPSSnapIn -ErrorAction SilentlyContinue
 switch ($ITEM) {
   "Discovery" {
     $output =  "{`"data`":["
+    $connectVeeam = 'Connect-VBRServer'
       $query = Get-VBRJob | Where-Object {$_.IsScheduleEnabled -eq "true"} | Select-Object Id,Name, IsScheduleEnabled
+    $disconnectVeeam = 'Disconnect-VBRServer'
       $count = $query | Measure-Object
       $count = $count.count
       foreach ($object in $query) {
@@ -43,7 +44,9 @@ switch ($ITEM) {
     
    "DiscoveryRepo" {
     $output =  "{`"data`":["
+    $connectVeeam = 'Connect-VBRServer'
       $query = Get-WmiObject -Class Repository -ComputerName $env:COMPUTERNAME -Namespace ROOT\VeeamBS | Select-object Name
+    $disconnectVeeam = 'Disconnect-VBRServer'
       $count = $query | Measure-Object
       $count = $count.count
       foreach ($object in $query) {
@@ -61,7 +64,9 @@ switch ($ITEM) {
 
   "DiscoveryTape" {
     $output =  "{`"data`":["
+    $connectVeeam = 'Connect-VBRServer'
       $query = Get-VBRTapeJob | Select-Object Id,Name
+    $disconnectVeeam = 'Disconnect-VBRServer'
       $count = $query | Measure-Object
       $count = $count.count
       foreach ($object in $query) {
@@ -80,13 +85,17 @@ switch ($ITEM) {
 
    "ExportXml" {
   write-host "Command Send"
+  $connectVeeam = 'Connect-VBRServer'
   Get-VBRBackupSession | Export-Clixml $pathxml\backupsessiontemp.xml
+  $disconnectVeeam = 'Disconnect-VBRServer'
   Copy-Item -Path $pathxml\backupsessiontemp.xml -Destination $pathxml\backupsession.xml
   Remove-Item $pathxml'\backupsessiontemp.xml'
     }
 
     "Result"  {
+  $connectVeeam = 'Connect-VBRServer'
   $query = Get-VBRJob | Where-Object {$_.Id -like "*$ID*" -and $_.IsScheduleEnabled -eq "true"}
+  $disconnectVeeam = 'Disconnect-VBRServer'
   $xml = Import-Clixml $pathxml\backupsession.xml
   $query1 = $xml | Where {$_.jobId -eq $query.Id.Guid} | Sort creationtime -Descending | Select -First 1
   $query2 = $query1.Result
@@ -112,7 +121,9 @@ switch ($ITEM) {
    }}
 
   "ResultTape"  {
+  $connectVeeam = 'Connect-VBRServer'
   $query = Get-VBRTapeJob | Where-Object {$_.Id -like "*$ID*"}
+  $disconnectVeeam = 'Disconnect-VBRServer'
   $query1 = $query | Where {$_.Id -eq $query.Id} | Sort creationtime -Descending | Select -First 1
   $query2 = $query1.LastResult
    if (!$query2){
@@ -141,27 +152,39 @@ switch ($ITEM) {
   $query|Select-Object -ExpandProperty FreeSpace
     }
     "RunStatus" {
+  $connectVeeam = 'Connect-VBRServer'
   $query = Get-VBRJob | Where-Object {$_.Id -like "*$ID*"}
+  $disconnectVeeam = 'Disconnect-VBRServer'
   if ($query.IsRunning) { return "1" } else { return "0"}
   }
   "IncludedSize"{
+  $connectVeeam = 'Connect-VBRServer'
   $query = Get-VBRJob | Where-Object {$_.Id -like "*$ID*"}
+  $disconnectVeeam = 'Disconnect-VBRServer'
   [string]$query.Info.IncludedSize
   }
   "ExcludedSize"{
+  $connectVeeam = 'Connect-VBRServer'
   $query = Get-VBRJob | Where-Object {$_.Id -like "*$ID*"}
+  $disconnectVeeam = 'Disconnect-VBRServer'
   [string]$query.Info.ExcludedSize
   }
   "VmCount" {
+  $connectVeeam = 'Connect-VBRServer'
   $query = Get-VBRBackup | Where-Object {$_.JobId -like "*$ID*"}
+  $disconnectVeeam = 'Disconnect-VBRServer'
   [string]$query.VmCount
   }
   "Type" {
+  $connectVeeam = 'Connect-VBRServer'
   $query = Get-VBRBackup | Where-Object {$_.JobId -like "*$ID*"}
+  $DisconnectVeeam = 'Disconnect-VBRServer'
   [string]$query.JobType
   }
     "RunningJob" {
+  $connectVeeam = 'Connect-VBRServer'
   $query = $xml | where { $_.isCompleted -eq $false } | Measure
+  $DisconnectVeeam = 'Disconnect-VBRServer'
   if ($query) {
 	[string]$query.Count
     } else {

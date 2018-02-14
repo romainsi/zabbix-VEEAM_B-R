@@ -150,7 +150,7 @@
 +                        <conditions>
 +                            <condition>
 +                                <macro>{#SERVICE.NAME}</macro>
-+                                <value>@Veeam</value>
++                                <value>^Veeam</value>
 +                                <operator>8</operator>
 +                                <formulaid>A</formulaid>
 +                            </condition>

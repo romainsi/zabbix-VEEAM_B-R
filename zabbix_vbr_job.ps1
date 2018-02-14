@@ -86,17 +86,17 @@ switch ($ITEM) {
    "ExportXml" {
   write-host "Command Send"
   $connectVeeam = 'Connect-VBRServer'
-  Get-VBRBackupSession | Export-Clixml $pathxml\backupsessiontemp.xml
+  Get-VBRBackupSession | Export-Clixml "$pathxml\backupsessiontemp.xml"
   $disconnectVeeam = 'Disconnect-VBRServer'
-  Copy-Item -Path $pathxml\backupsessiontemp.xml -Destination $pathxml\backupsession.xml
-  Remove-Item $pathxml'\backupsessiontemp.xml'
+  Copy-Item -Path $pathxml\backupsessiontemp.xml -Destination "$pathxml\backupsession.xml"
+  Remove-Item "$pathxml\backupsessiontemp.xml"
     }
 
     "Result"  {
   $connectVeeam = 'Connect-VBRServer'
   $query = Get-VBRJob | Where-Object {$_.Id -like "*$ID*" -and $_.IsScheduleEnabled -eq "true"}
   $disconnectVeeam = 'Disconnect-VBRServer'
-  $xml = Import-Clixml $pathxml\backupsession.xml
+  $xml = Import-Clixml "$pathxml\backupsession.xml"
   $query1 = $xml | Where {$_.jobId -eq $query.Id.Guid} | Sort creationtime -Descending | Select -First 1
   $query2 = $query1.Result
 

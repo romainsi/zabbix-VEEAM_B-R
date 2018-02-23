@@ -93,6 +93,11 @@ switch ($ITEM) {
     }
 
     "Result"  {
+  if (!$ID){
+  Write-Host "-- ERROR --   Switch 'result' need ID of the Veeam task"
+  Write-Host ""
+  Write-Host "Example : ./zabbix_vbr_job.ps1 result 'c333cedf-db4a-44ed-8623-17633300d7fe'"}
+  else {
   $connectVeeam = 'Connect-VBRServer'
   $query = Get-VBRJob | Where-Object {$_.Id -like "*$ID*" -and $_.IsScheduleEnabled -eq "true"}
   $disconnectVeeam = 'Disconnect-VBRServer'
@@ -118,9 +123,14 @@ switch ($ITEM) {
    if ($trapper1[0].Contains("processed: 1"))
     {write-host "Execution reussie"}
     else {write-host "Execution non reussie"}
-   }}
+   }}}
 
   "ResultTape"  {
+    if (!$ID){
+  Write-Host "-- ERROR --   Switch 'ResultTape' need ID of the Veeam task"
+  Write-Host ""
+  Write-Host "Example : ./zabbix_vbr_job.ps1 result 'c333cedf-db4a-44ed-8623-17633300d7fe'"}
+  else {
   $connectVeeam = 'Connect-VBRServer'
   $query = Get-VBRTapeJob | Where-Object {$_.Id -like "*$ID*"}
   $disconnectVeeam = 'Disconnect-VBRServer'
@@ -141,7 +151,7 @@ switch ($ITEM) {
    if ($trapper[0].Contains("processed: 1"))
    {write-host "Execution reussie"}
    else {write-host "Execution non reussie"}}
-    }
+    }}
 
     "RepoCapacity" {
   $query = Get-WmiObject -Class Repository -ComputerName $env:COMPUTERNAME -Namespace ROOT\VeeamBS | Where-Object {$_.Name -eq "$ID"}
@@ -192,6 +202,6 @@ switch ($ITEM) {
     }
   }
   default {
-      Write-Host "-- ERREUR -- : Besoin d'une option !"
+      Write-Host "-- ERROR -- : Need an option !"
   }
 }

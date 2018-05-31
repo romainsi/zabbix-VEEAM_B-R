@@ -11,6 +11,7 @@
 # Add to Zabbix Agent
 #   UserParameter=vbr[*],powershell -NoProfile -ExecutionPolicy Bypass -File "C:\Program Files\Zabbix Agent\scripts\zabbix_vbr_job.ps1" "$1" "$2"
 #
+
 $pathxml = 'C:\Program Files\Zabbix Agent\scripts'
 $pathsender = 'C:\Program Files\Zabbix Agent'
 
@@ -93,11 +94,6 @@ switch ($ITEM) {
     }
 
     "Result"  {
-  if (!$ID){
-  Write-Host "-- ERROR --   Switch 'result' need ID of the Veeam task"
-  Write-Host ""
-  Write-Host "Example : ./zabbix_vbr_job.ps1 result 'c333cedf-db4a-44ed-8623-17633300d7fe'"}
-  else {
   $connectVeeam = 'Connect-VBRServer'
   $query = Get-VBRJob | Where-Object {$_.Id -like "*$ID*" -and $_.IsScheduleEnabled -eq "true"}
   $disconnectVeeam = 'Disconnect-VBRServer'
@@ -116,6 +112,14 @@ switch ($ITEM) {
    }
   else {$queryn1 = $xml | Where {$_.jobId -eq $query.Id.Guid} | Sort creationtime -Descending | Select -First 2 | Select -Index 1
   $queryn2 = $queryn1.Result
+  if (!$queryn2){
+  $queryn3 = $queryn2.value
+  cd $pathsender
+  $trapper = .\zabbix_sender.exe -c .\zabbix_agentd.conf -k Result.[$ID] -o 4 -v
+    if ($trapper[0].Contains("processed: 1"))
+    {write-host "Execution reussie"}
+    else {write-host "Execution non reussie"}}
+  else {
   $queryn3 = $queryn2.value
   $queryn4 = "$queryn3".replace('Failed','0').replace('Warning','1').replace('Success','2').replace('None','2').replace('idle','3')
   cd $pathsender
@@ -126,11 +130,6 @@ switch ($ITEM) {
    }}}
 
   "ResultTape"  {
-    if (!$ID){
-  Write-Host "-- ERROR --   Switch 'ResultTape' need ID of the Veeam task"
-  Write-Host ""
-  Write-Host "Example : ./zabbix_vbr_job.ps1 result 'c333cedf-db4a-44ed-8623-17633300d7fe'"}
-  else {
   $connectVeeam = 'Connect-VBRServer'
   $query = Get-VBRTapeJob | Where-Object {$_.Id -like "*$ID*"}
   $disconnectVeeam = 'Disconnect-VBRServer'
@@ -151,7 +150,7 @@ switch ($ITEM) {
    if ($trapper[0].Contains("processed: 1"))
    {write-host "Execution reussie"}
    else {write-host "Execution non reussie"}}
-    }}
+    }
 
     "RepoCapacity" {
   $query = Get-WmiObject -Class Repository -ComputerName $env:COMPUTERNAME -Namespace ROOT\VeeamBS | Where-Object {$_.Name -eq "$ID"}
@@ -202,6 +201,6 @@ switch ($ITEM) {
     }
   }
   default {
-      Write-Host "-- ERROR -- : Need an option !"
+      Write-Host "-- ERREUR -- : Besoin d'une option !"
   }
 }

@@ -1047,6 +1047,10 @@
                 <mapping>
                     <value>3</value>
                     <newvalue>Idle</newvalue>
+		</mapping>
+		<mapping>
+                    <value>4</value>
+                    <newvalue>First Backup (no history)</newvalue>
                 </mapping>
             </mappings>
         </value_map>

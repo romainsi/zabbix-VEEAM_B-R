@@ -71,7 +71,7 @@ ServerActive="IP or DNS Zabbix Server"<br />
 Alias=service.discovery.veeam:service.discovery<br />
 UserParameter=vbr[*],powershell -NoProfile -ExecutionPolicy Bypass -File "C:\Program Files\Zabbix Agent\scripts\zabbix_vbr_job.ps1" "$1" "$2"
 4. In Zabbix : Administration, General, Regular Expression : Add a new regular expression :<br /> 
-Name : "Veeam"    ;     Expression type : "**TRUE**"     ;     	Expression : "Veeam.*"<br />*
+*Name : "Veeam"    ;     Expression type : "**TRUE**"     ;     	Expression : "Veeam.*"<br />*
 And modify regular expression "Windows service startup states for discovery" : Add : <br />
 *Name : "Veeam" ; Expression type : "**FALSE**" ; Expression : "Veeam.*"<br />
 5. Import TemplateVEEAM-BACKUPtrapper.xml file into Zabbix. 

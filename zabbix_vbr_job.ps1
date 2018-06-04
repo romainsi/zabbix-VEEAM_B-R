@@ -11,7 +11,6 @@
 # Add to Zabbix Agent
 #   UserParameter=vbr[*],powershell -NoProfile -ExecutionPolicy Bypass -File "C:\Program Files\Zabbix Agent\scripts\zabbix_vbr_job.ps1" "$1" "$2"
 #
-
 $pathxml = 'C:\Program Files\Zabbix Agent\scripts'
 $pathsender = 'C:\Program Files\Zabbix Agent'
 
@@ -112,14 +111,6 @@ switch ($ITEM) {
    }
   else {$queryn1 = $xml | Where {$_.jobId -eq $query.Id.Guid} | Sort creationtime -Descending | Select -First 2 | Select -Index 1
   $queryn2 = $queryn1.Result
-  if (!$queryn2){
-  $queryn3 = $queryn2.value
-  cd $pathsender
-  $trapper = .\zabbix_sender.exe -c .\zabbix_agentd.conf -k Result.[$ID] -o 4 -v
-    if ($trapper[0].Contains("processed: 1"))
-    {write-host "Execution reussie"}
-    else {write-host "Execution non reussie"}}
-  else {
   $queryn3 = $queryn2.value
   $queryn4 = "$queryn3".replace('Failed','0').replace('Warning','1').replace('Success','2').replace('None','2').replace('idle','3')
   cd $pathsender
@@ -127,7 +118,7 @@ switch ($ITEM) {
    if ($trapper1[0].Contains("processed: 1"))
     {write-host "Execution reussie"}
     else {write-host "Execution non reussie"}
-   }}}
+   }}
 
   "ResultTape"  {
   $connectVeeam = 'Connect-VBRServer'

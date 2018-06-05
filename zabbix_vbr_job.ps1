@@ -88,11 +88,14 @@ switch ($ITEM) {
   $connectVeeam = 'Connect-VBRServer'
   Get-VBRBackupSession | Export-Clixml "$pathxml\backupsessiontemp.xml"
   Get-VBRJob | Export-Clixml "$pathxml\backupjobtemp.xml"
+  Get-VBRBackup | Export-Clixml "$pathxml\backupbackuptemp.xml"
   $disconnectVeeam = 'Disconnect-VBRServer'
   Copy-Item -Path $pathxml\backupsessiontemp.xml -Destination "$pathxml\backupsession.xml"
   Copy-Item -Path $pathxml\backupjobtemp.xml -Destination "$pathxml\backupjob.xml"
+  Copy-Item -Path $pathxml\backupbackuptemp.xml -Destination "$pathxml\backupbackup.xml"
   Remove-Item "$pathxml\backupsessiontemp.xml"
   Remove-Item "$pathxml\backupjobtemp.xml"
+  Remove-Item "$pathxml\backupbackuptemp.xml"
     }
 
     "Result"  {
@@ -181,13 +184,13 @@ switch ($ITEM) {
   [string]$query.Info.ExcludedSize
   }
   "VmCount" {
-  $xml1 = Import-Clixml "$pathxml\backupjob.xml" 
+  $xml1 = Import-Clixml "$pathxml\backupbackup.xml" 
   $query = $xml1 | Where-Object {$_.JobId -like "*$ID*"}
   $disconnectVeeam = 'Disconnect-VBRServer'
   [string]$query.VmCount
   }
   "Type" {
-  $xml1 = Import-Clixml "$pathxml\backupjob.xml" 
+  $xml1 = Import-Clixml "$pathxml\backupbackup.xml" 
   $query = $xml1 | Where-Object {$_.JobId -like "*$ID*"}
   $DisconnectVeeam = 'Disconnect-VBRServer'
   [string]$query.JobType

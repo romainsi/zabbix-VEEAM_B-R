@@ -104,7 +104,7 @@ switch ($ITEM) {
   $xml = Import-Clixml "$pathxml\backupsession.xml"
   $query1 = $xml | Where {$_.jobId -eq $query.Id.Guid} | Sort creationtime -Descending | Select -First 1
   $query2 = $query1.Result
-  if (!$query2){
+  if (!$query2.value){
   cd $pathsender
   $trapper = .\zabbix_sender.exe -c .\zabbix_agentd.conf -k Result.[$ID] -o 4 -v
    if ($trapper[0].Contains("processed: 1"))

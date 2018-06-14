@@ -11,6 +11,7 @@
 # Add to Zabbix Agent
 #   UserParameter=vbr[*],powershell -NoProfile -ExecutionPolicy Bypass -File "C:\Program Files\Zabbix Agent\scripts\zabbix_vbr_job.ps1" "$1" "$2"
 #
+
 $pathxml = 'C:\Program Files\Zabbix Agent\scripts'
 $pathsender = 'C:\Program Files\Zabbix Agent'
 
@@ -83,19 +84,43 @@ switch ($ITEM) {
     Write-Host $output
   }
 
+    "DiscoveryEndpointJobs" {
+    $output =  "{`"data`":["
+    $connectVeeam = 'Connect-VBRServer'
+      $query = Get-VBREPJob | Select-Object Id,Name
+    $disconnectVeeam = 'Disconnect-VBRServer'
+      $count = $query | Measure-Object
+      $count = $count.count
+      foreach ($object in $query) {
+        $Id = [string]$object.Id
+        $Name = [string]$object.Name
+      if ($count -eq 1) {
+          $output = $output + "{`"{#JOBENDPOINTID}`":`"$Id`",`"{#JOBENDPOINTNAME}`":`"$Name`"}"
+        } else {
+          $output = $output + "{`"{#JOBENDPOINTID}`":`"$Id`",`"{#JOBENDPOINTNAME}`":`"$Name`"},"
+        }
+        $count--
+    }
+    $output = $output + "]}"
+    Write-Host $output
+  }
+
    "ExportXml" {
   write-host "Command Send"
   $connectVeeam = 'Connect-VBRServer'
   Get-VBRBackupSession | Export-Clixml "$pathxml\backupsessiontemp.xml"
   Get-VBRJob | Export-Clixml "$pathxml\backupjobtemp.xml"
   Get-VBRBackup | Export-Clixml "$pathxml\backupbackuptemp.xml"
+  Get-VBREPJob | Export-Clixml "$pathxml\backupendpointtemp.xml"
   $disconnectVeeam = 'Disconnect-VBRServer'
   Copy-Item -Path $pathxml\backupsessiontemp.xml -Destination "$pathxml\backupsession.xml"
   Copy-Item -Path $pathxml\backupjobtemp.xml -Destination "$pathxml\backupjob.xml"
   Copy-Item -Path $pathxml\backupbackuptemp.xml -Destination "$pathxml\backupbackup.xml"
+  Copy-Item -Path $pathxml\backupendpointtemp.xml -Destination "$pathxml\backupendpoint.xml"
   Remove-Item "$pathxml\backupsessiontemp.xml"
   Remove-Item "$pathxml\backupjobtemp.xml"
   Remove-Item "$pathxml\backupbackuptemp.xml"
+  Remove-Item "$pathxml\backupendpointtemp.xml"
     }
 
     "Result"  {
@@ -136,7 +161,7 @@ switch ($ITEM) {
     if (!$ID){
   Write-Host "-- ERROR --   Switch 'ResultTape' need ID of the Veeam task"
   Write-Host ""
-  Write-Host "Example : ./zabbix_vbr_job.ps1 result 'c333cedf-db4a-44ed-8623-17633300d7fe'"}
+  Write-Host "Example : ./zabbix_vbr_job.ps1 ResultTape 'c333cedf-db4a-44ed-8623-17633300d7fe'"}
   else {
   $connectVeeam = 'Connect-VBRServer'
   $query = Get-VBRTapeJob | Where-Object {$_.Id -like "*$ID*"}
@@ -159,6 +184,32 @@ switch ($ITEM) {
    {write-host "Execution reussie"}
    else {write-host "Execution non reussie"}}
     }
+
+      "ResultEndpoint"  {
+    if (!$ID){
+  Write-Host "-- ERROR --   Switch 'ResultEndpoint' need ID of the Veeam Endpoint Task"
+  Write-Host ""
+  Write-Host "Example : ./zabbix_vbr_job.ps1 ResultEndpoint 'c333cedf-db4a-44ed-8623-17633300d7fe'"}
+  else {
+  $xml3 = Import-Clixml "$pathxml\backupendpoint.xml" 
+  $query = $xml3 | Where-Object {$_.Id -like "*$ID*"}
+  $query1 = $query | Where {$_.Id -eq $query.Id} | Sort creationtime -Descending | Select -First 1
+  $query2 = $query1.LastResult
+  if (!$query2){
+  cd $pathsender
+  $trapper = .\zabbix_sender.exe -c .\zabbix_agentd.conf -k ResultEndpoint.[$ID] -o 4 -v
+   if ($trapper[0].Contains("processed: 1"))
+    {write-host "Execution reussie"}
+    else {write-host "Result Empty or Backup Task Disabled"} 
+  }
+  else {
+   $query3 = "$query2".replace('Failed','0').replace('Warning','1').replace('Success','2').replace('None','2').replace('idle','3')
+   cd $pathsender
+   $trapper = .\zabbix_sender.exe -c .\zabbix_agentd.conf -k ResultEndpoint.[$ID] -o $query3 -v
+   if ($trapper[0].Contains("processed: 1"))
+   {write-host "Execution reussie"}
+   else {write-host "Execution non reussie"}}
+    }}
 
     "RepoCapacity" {
   $query = Get-WmiObject -Class Repository -ComputerName $env:COMPUTERNAME -Namespace ROOT\VeeamBS | Where-Object {$_.Name -eq "$ID"}
@@ -196,9 +247,8 @@ switch ($ITEM) {
   [string]$query.JobType
   }
     "RunningJob" {
-  $connectVeeam = 'Connect-VBRServer'
-  $query = $xml | where { $_.isCompleted -eq $false } | Measure
-  $DisconnectVeeam = 'Disconnect-VBRServer'
+  $xml1 = Import-Clixml "$pathxml\backupjob.xml" 
+  $query = $xml1 | where { $_.isCompleted -eq $false } | Measure
   if ($query) {
 	[string]$query.Count
     } else {

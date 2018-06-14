@@ -203,7 +203,8 @@ switch ($ITEM) {
     else {write-host "Result Empty or Backup Task Disabled"} 
   }
   else {
-   $query3 = "$query2".replace('Failed','0').replace('Warning','1').replace('Success','2').replace('None','2').replace('idle','3')
+   $query4 = $query2.value
+   $query3 = $query4.replace('Failed','0').replace('Warning','1').replace('Success','2').replace('None','2').replace('idle','3')
    cd $pathsender
    $trapper = .\zabbix_sender.exe -c .\zabbix_agentd.conf -k ResultEndpoint.[$ID] -o $query3 -v
    if ($trapper[0].Contains("processed: 1"))

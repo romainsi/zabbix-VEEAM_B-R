@@ -237,13 +237,11 @@ switch ($ITEM) {
   "VmCount" {
   $xml1 = Import-Clixml "$pathxml\backupbackup.xml" 
   $query = $xml1 | Where-Object {$_.JobId -like "*$ID*"}
-  $disconnectVeeam = 'Disconnect-VBRServer'
   [string]$query.VmCount
   }
   "Type" {
   $xml1 = Import-Clixml "$pathxml\backupbackup.xml" 
   $query = $xml1 | Where-Object {$_.JobId -like "*$ID*"}
-  $DisconnectVeeam = 'Disconnect-VBRServer'
   [string]$query.JobType
   }
     "RunningJob" {

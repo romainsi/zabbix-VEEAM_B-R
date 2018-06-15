@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <zabbix_export>
     <version>3.0</version>
-    <date>2017-11-07T09:32:27Z</date>
+    <date>2018-06-15T13:54:59Z</date>
     <groups>
         <group>
             <name>Templates</name>
@@ -33,6 +33,7 @@
                     <name>Result of Export Xml Veeam</name>
                     <type>7</type>
                     <snmp_community/>
+                    <multiplier>0</multiplier>
                     <snmp_oid/>
                     <key>system.run[powershell -NoProfile -ExecutionPolicy Bypass -File &quot;C:\Program Files\Zabbix Agent\scripts\zabbix_vbr_job.ps1&quot; exportxml,nowait]</key>
                     <delay>1200</delay>
@@ -42,6 +43,7 @@
                     <value_type>3</value_type>
                     <allowed_hosts/>
                     <units/>
+                    <delta>0</delta>
                     <snmpv3_contextname/>
                     <snmpv3_securityname/>
                     <snmpv3_securitylevel>0</snmpv3_securitylevel>
@@ -49,13 +51,11 @@
                     <snmpv3_authpassphrase/>
                     <snmpv3_privprotocol>0</snmpv3_privprotocol>
                     <snmpv3_privpassphrase/>
+                    <formula>1</formula>
+                    <delay_flex/>
                     <params/>
                     <ipmi_sensor/>
-					<multiplier>0</multiplier>
-					<formula>1</formula>
-					<delta>0</delta>
-					<delay_flex/>
-					<data_type>0</data_type>		   
+                    <data_type>0</data_type>
                     <authtype>0</authtype>
                     <username/>
                     <password/>
@@ -78,6 +78,7 @@
                     <name>Number of active jobs (s)</name>
                     <type>0</type>
                     <snmp_community/>
+                    <multiplier>0</multiplier>
                     <snmp_oid/>
                     <key>vbr[&quot;RunningJob&quot;]</key>
                     <delay>300</delay>
@@ -87,6 +88,7 @@
                     <value_type>3</value_type>
                     <allowed_hosts/>
                     <units>job(s)</units>
+                    <delta>0</delta>
                     <snmpv3_contextname/>
                     <snmpv3_securityname/>
                     <snmpv3_securitylevel>0</snmpv3_securitylevel>
@@ -94,13 +96,11 @@
                     <snmpv3_authpassphrase/>
                     <snmpv3_privprotocol>0</snmpv3_privprotocol>
                     <snmpv3_privpassphrase/>
+                    <formula>1</formula>
+                    <delay_flex/>
                     <params/>
                     <ipmi_sensor/>
-					<multiplier>0</multiplier>
-					<formula>1</formula>
-					<delta>0</delta>
-					<delay_flex/>
-					<data_type>0</data_type>
+                    <data_type>0</data_type>
                     <authtype>0</authtype>
                     <username/>
                     <password/>
@@ -135,9 +135,9 @@
                     <snmpv3_authpassphrase/>
                     <snmpv3_privprotocol>0</snmpv3_privprotocol>
                     <snmpv3_privpassphrase/>
+                    <delay_flex/>
                     <params/>
                     <ipmi_sensor/>
-					<delay_flex/>
                     <authtype>0</authtype>
                     <username/>
                     <password/>
@@ -163,6 +163,7 @@
                             <name>Status {#SERVICE.DISPLAYNAME}</name>
                             <type>0</type>
                             <snmp_community/>
+                            <multiplier>0</multiplier>
                             <snmp_oid/>
                             <key>service.info[{#SERVICE.NAME},state]</key>
                             <delay>60</delay>
@@ -172,6 +173,7 @@
                             <value_type>3</value_type>
                             <allowed_hosts/>
                             <units/>
+                            <delta>0</delta>
                             <snmpv3_contextname/>
                             <snmpv3_securityname/>
                             <snmpv3_securitylevel>0</snmpv3_securitylevel>
@@ -179,13 +181,11 @@
                             <snmpv3_authpassphrase/>
                             <snmpv3_privprotocol>0</snmpv3_privprotocol>
                             <snmpv3_privpassphrase/>
+                            <formula>1</formula>
+                            <delay_flex/>
                             <params/>
                             <ipmi_sensor/>
-							<multiplier>0</multiplier>
-							<formula>1</formula>
-							<delta>0</delta>
-							<delay_flex/>
-							<data_type>0</data_type>
+                            <data_type>0</data_type>
                             <authtype>0</authtype>
                             <username/>
                             <password/>
@@ -237,9 +237,9 @@
                     <snmpv3_authpassphrase/>
                     <snmpv3_privprotocol>0</snmpv3_privprotocol>
                     <snmpv3_privpassphrase/>
+                    <delay_flex/>
                     <params/>
                     <ipmi_sensor/>
-					<delay_flex/>
                     <authtype>0</authtype>
                     <username/>
                     <password/>
@@ -258,6 +258,7 @@
                             <name>Job {#JOBNAME} result</name>
                             <type>2</type>
                             <snmp_community/>
+                            <multiplier>0</multiplier>
                             <snmp_oid/>
                             <key>Result.[{#JOBID}]</key>
                             <delay>0</delay>
@@ -267,6 +268,7 @@
                             <value_type>3</value_type>
                             <allowed_hosts/>
                             <units/>
+                            <delta>0</delta>
                             <snmpv3_contextname/>
                             <snmpv3_securityname/>
                             <snmpv3_securitylevel>0</snmpv3_securitylevel>
@@ -274,13 +276,11 @@
                             <snmpv3_authpassphrase/>
                             <snmpv3_privprotocol>0</snmpv3_privprotocol>
                             <snmpv3_privpassphrase/>
+                            <formula>1</formula>
+                            <delay_flex/>
                             <params/>
                             <ipmi_sensor/>
-							<multiplier>0</multiplier>
-							<formula>1</formula>
-							<delta>0</delta>
-							<delay_flex/>
-							<data_type>0</data_type>
+                            <data_type>0</data_type>
                             <authtype>0</authtype>
                             <username/>
                             <password/>
@@ -304,6 +304,7 @@
                             <name>Excluded size {#JOBNAME}</name>
                             <type>0</type>
                             <snmp_community/>
+                            <multiplier>0</multiplier>
                             <snmp_oid/>
                             <key>vbr[ExcludedSize,{#JOBID}]</key>
                             <delay>3600</delay>
@@ -313,6 +314,7 @@
                             <value_type>3</value_type>
                             <allowed_hosts/>
                             <units>bytes</units>
+                            <delta>0</delta>
                             <snmpv3_contextname/>
                             <snmpv3_securityname/>
                             <snmpv3_securitylevel>0</snmpv3_securitylevel>
@@ -320,13 +322,11 @@
                             <snmpv3_authpassphrase/>
                             <snmpv3_privprotocol>0</snmpv3_privprotocol>
                             <snmpv3_privpassphrase/>
+                            <formula>1</formula>
+                            <delay_flex/>
                             <params/>
                             <ipmi_sensor/>
-							<multiplier>0</multiplier>
-							<formula>1</formula>
-							<delta>0</delta>
-							<delay_flex/>
-							<data_type>0</data_type>
+                            <data_type>0</data_type>
                             <authtype>0</authtype>
                             <username/>
                             <password/>
@@ -348,6 +348,7 @@
                             <name>Included size {#JOBNAME}</name>
                             <type>0</type>
                             <snmp_community/>
+                            <multiplier>0</multiplier>
                             <snmp_oid/>
                             <key>vbr[IncludedSize,{#JOBID}]</key>
                             <delay>3600</delay>
@@ -357,6 +358,7 @@
                             <value_type>3</value_type>
                             <allowed_hosts/>
                             <units>bytes</units>
+                            <delta>0</delta>
                             <snmpv3_contextname/>
                             <snmpv3_securityname/>
                             <snmpv3_securitylevel>0</snmpv3_securitylevel>
@@ -364,13 +366,55 @@
                             <snmpv3_authpassphrase/>
                             <snmpv3_privprotocol>0</snmpv3_privprotocol>
                             <snmpv3_privpassphrase/>
+                            <formula>1</formula>
+                            <delay_flex/>
                             <params/>
                             <ipmi_sensor/>
-							<multiplier>0</multiplier>
-							<formula>1</formula>
-							<delta>0</delta>
-							<delay_flex/>
-							<data_type>0</data_type>
+                            <data_type>0</data_type>
+                            <authtype>0</authtype>
+                            <username/>
+                            <password/>
+                            <publickey/>
+                            <privatekey/>
+                            <port/>
+                            <description/>
+                            <inventory_link>0</inventory_link>
+                            <applications>
+                                <application>
+                                    <name>VEEAM Backup &amp; Recovery job(s)</name>
+                                </application>
+                            </applications>
+                            <valuemap/>
+                            <logtimefmt/>
+                            <application_prototypes/>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>Next run time {#JOBNAME}</name>
+                            <type>0</type>
+                            <snmp_community/>
+                            <multiplier>0</multiplier>
+                            <snmp_oid/>
+                            <key>vbr[NextRunTime,{#JOBID}]</key>
+                            <delay>7200</delay>
+                            <history>90</history>
+                            <trends>365</trends>
+                            <status>0</status>
+                            <value_type>3</value_type>
+                            <allowed_hosts/>
+                            <units>unixtime</units>
+                            <delta>0</delta>
+                            <snmpv3_contextname/>
+                            <snmpv3_securityname/>
+                            <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                            <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                            <snmpv3_authpassphrase/>
+                            <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                            <snmpv3_privpassphrase/>
+                            <formula>1</formula>
+                            <delay_flex/>
+                            <params/>
+                            <ipmi_sensor/>
+                            <data_type>0</data_type>
                             <authtype>0</authtype>
                             <username/>
                             <password/>
@@ -392,6 +436,7 @@
                             <name>Zabbix Sender result {#JOBNAME}</name>
                             <type>0</type>
                             <snmp_community/>
+                            <multiplier>0</multiplier>
                             <snmp_oid/>
                             <key>vbr[Result,{#JOBID}]</key>
                             <delay>900</delay>
@@ -401,6 +446,7 @@
                             <value_type>4</value_type>
                             <allowed_hosts/>
                             <units/>
+                            <delta>0</delta>
                             <snmpv3_contextname/>
                             <snmpv3_securityname/>
                             <snmpv3_securitylevel>0</snmpv3_securitylevel>
@@ -408,13 +454,11 @@
                             <snmpv3_authpassphrase/>
                             <snmpv3_privprotocol>0</snmpv3_privprotocol>
                             <snmpv3_privpassphrase/>
+                            <formula>1</formula>
+                            <delay_flex/>
                             <params/>
                             <ipmi_sensor/>
-							<multiplier>0</multiplier>
-							<formula>1</formula>
-							<delta>0</delta>
-							<delay_flex/>
-							<data_type>0</data_type>
+                            <data_type>0</data_type>
                             <authtype>0</authtype>
                             <username/>
                             <password/>
@@ -436,6 +480,7 @@
                             <name>Job {#JOBNAME} run status</name>
                             <type>0</type>
                             <snmp_community/>
+                            <multiplier>0</multiplier>
                             <snmp_oid/>
                             <key>vbr[RunStatus,{#JOBID}]</key>
                             <delay>900</delay>
@@ -445,6 +490,7 @@
                             <value_type>3</value_type>
                             <allowed_hosts/>
                             <units/>
+                            <delta>0</delta>
                             <snmpv3_contextname/>
                             <snmpv3_securityname/>
                             <snmpv3_securitylevel>0</snmpv3_securitylevel>
@@ -452,13 +498,11 @@
                             <snmpv3_authpassphrase/>
                             <snmpv3_privprotocol>0</snmpv3_privprotocol>
                             <snmpv3_privpassphrase/>
+                            <formula>1</formula>
+                            <delay_flex/>
                             <params/>
                             <ipmi_sensor/>
-							<multiplier>0</multiplier>
-							<formula>1</formula>
-							<delta>0</delta>
-							<delay_flex/>
-							<data_type>0</data_type>
+                            <data_type>0</data_type>
                             <authtype>0</authtype>
                             <username/>
                             <password/>
@@ -482,6 +526,7 @@
                             <name>Job {#JOBNAME} backup type</name>
                             <type>0</type>
                             <snmp_community/>
+                            <multiplier>0</multiplier>
                             <snmp_oid/>
                             <key>vbr[Type,{#JOBID}]</key>
                             <delay>3600</delay>
@@ -491,6 +536,7 @@
                             <value_type>1</value_type>
                             <allowed_hosts/>
                             <units/>
+                            <delta>0</delta>
                             <snmpv3_contextname/>
                             <snmpv3_securityname/>
                             <snmpv3_securitylevel>0</snmpv3_securitylevel>
@@ -498,13 +544,11 @@
                             <snmpv3_authpassphrase/>
                             <snmpv3_privprotocol>0</snmpv3_privprotocol>
                             <snmpv3_privpassphrase/>
+                            <formula>1</formula>
+                            <delay_flex/>
                             <params/>
                             <ipmi_sensor/>
-							<multiplier>0</multiplier>
-							<formula>1</formula>
-							<delta>0</delta>
-							<delay_flex/>
-							<data_type>0</data_type>
+                            <data_type>0</data_type>
                             <authtype>0</authtype>
                             <username/>
                             <password/>
@@ -526,6 +570,7 @@
                             <name>Number of VMs in job {#JOBNAME}</name>
                             <type>0</type>
                             <snmp_community/>
+                            <multiplier>0</multiplier>
                             <snmp_oid/>
                             <key>vbr[VmCount,{#JOBID}]</key>
                             <delay>900</delay>
@@ -535,6 +580,7 @@
                             <value_type>3</value_type>
                             <allowed_hosts/>
                             <units>vm(s)</units>
+                            <delta>0</delta>
                             <snmpv3_contextname/>
                             <snmpv3_securityname/>
                             <snmpv3_securitylevel>0</snmpv3_securitylevel>
@@ -542,13 +588,11 @@
                             <snmpv3_authpassphrase/>
                             <snmpv3_privprotocol>0</snmpv3_privprotocol>
                             <snmpv3_privpassphrase/>
+                            <formula>1</formula>
+                            <delay_flex/>
                             <params/>
                             <ipmi_sensor/>
-							<multiplier>0</multiplier>
-							<formula>1</formula>
-							<delta>0</delta>
-							<delay_flex/>
-							<data_type>0</data_type>
+                            <data_type>0</data_type>
                             <authtype>0</authtype>
                             <username/>
                             <password/>
@@ -569,6 +613,17 @@
                     </item_prototypes>
                     <trigger_prototypes>
                         <trigger_prototype>
+                            <expression>{Template VEEAM-BACKUP trapper:Result.[{#JOBID}].avg(5400)}&gt;0 and&#13;
+			{Template VEEAM-BACKUP trapper:Result.[{#JOBID}].avg(5400)}&lt;2</expression>
+                            <name>Backup {#JOBNAME} completed with warning</name>
+                            <url/>
+                            <status>0</status>
+                            <priority>2</priority>
+                            <description/>
+                            <type>0</type>
+                            <dependencies/>
+                        </trigger_prototype>
+                        <trigger_prototype>
                             <expression>{Template VEEAM-BACKUP trapper:Result.[{#JOBID}].avg(5400)}&lt;1</expression>
                             <name>Backup {#JOBNAME} error</name>
                             <url/>
@@ -579,9 +634,8 @@
                             <dependencies/>
                         </trigger_prototype>
                         <trigger_prototype>
-                            <expression>{Template VEEAM-BACKUP trapper:Result.[{#JOBID}].avg(5400)}&gt;0 and&#13;
-			{Template VEEAM-BACKUP trapper:Result.[{#JOBID}].avg(5400)}&lt;2</expression>
-                            <name>Backup {#JOBNAME} completed with warning</name>
+                            <expression>{Template VEEAM-BACKUP trapper:vbr[Result,{#JOBID}].regexp(Execution non reussie)}=1 or {Template VEEAM-BACKUP trapper:vbr[Result,{#JOBID}].nodata(86400)}=1</expression>
+                            <name>Data recovery problem Backup Veeam</name>
                             <url/>
                             <status>0</status>
                             <priority>2</priority>
@@ -597,15 +651,312 @@
                             <priority>4</priority>
                             <description/>
                             <type>0</type>
-						</trigger_prototype>			
+                            <dependencies/>
+                        </trigger_prototype>
+                    </trigger_prototypes>
+                    <graph_prototypes/>
+                    <host_prototypes/>
+                </discovery_rule>
+                <discovery_rule>
+                    <name>VEEAM EndpointBackup</name>
+                    <type>0</type>
+                    <snmp_community/>
+                    <snmp_oid/>
+                    <key>vbr[&quot;DiscoveryEndpointJobs&quot;]</key>
+                    <delay>7200</delay>
+                    <status>0</status>
+                    <allowed_hosts/>
+                    <snmpv3_contextname/>
+                    <snmpv3_securityname/>
+                    <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                    <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                    <snmpv3_authpassphrase/>
+                    <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                    <snmpv3_privpassphrase/>
+                    <delay_flex/>
+                    <params/>
+                    <ipmi_sensor/>
+                    <authtype>0</authtype>
+                    <username/>
+                    <password/>
+                    <publickey/>
+                    <privatekey/>
+                    <port/>
+                    <filter>
+                        <evaltype>0</evaltype>
+                        <formula/>
+                        <conditions/>
+                    </filter>
+                    <lifetime>30</lifetime>
+                    <description/>
+                    <item_prototypes>
+                        <item_prototype>
+                            <name>Resultat backup {#JOBENDPOINTNAME}</name>
+                            <type>0</type>
+                            <snmp_community/>
+                            <multiplier>0</multiplier>
+                            <snmp_oid/>
+                            <key>ResultEndpoint.[{#JOBENDPOINTID}]</key>
+                            <delay>30</delay>
+                            <history>90</history>
+                            <trends>365</trends>
+                            <status>0</status>
+                            <value_type>3</value_type>
+                            <allowed_hosts/>
+                            <units/>
+                            <delta>0</delta>
+                            <snmpv3_contextname/>
+                            <snmpv3_securityname/>
+                            <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                            <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                            <snmpv3_authpassphrase/>
+                            <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                            <snmpv3_privpassphrase/>
+                            <formula>1</formula>
+                            <delay_flex/>
+                            <params/>
+                            <ipmi_sensor/>
+                            <data_type>0</data_type>
+                            <authtype>0</authtype>
+                            <username/>
+                            <password/>
+                            <publickey/>
+                            <privatekey/>
+                            <port/>
+                            <description/>
+                            <inventory_link>0</inventory_link>
+                            <applications>
+                                <application>
+                                    <name>VEEAM Backup &amp; Recovery job(s)</name>
+                                </application>
+                            </applications>
+                            <valuemap>
+                                <name>vbrJobResult</name>
+                            </valuemap>
+                            <logtimefmt/>
+                            <application_prototypes/>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>Next run time {#JOBENDPOINTNAME}</name>
+                            <type>0</type>
+                            <snmp_community/>
+                            <multiplier>0</multiplier>
+                            <snmp_oid/>
+                            <key>vbr[NextRunTime,{#JOBENDPOINTID}]</key>
+                            <delay>7200</delay>
+                            <history>90</history>
+                            <trends>365</trends>
+                            <status>0</status>
+                            <value_type>3</value_type>
+                            <allowed_hosts/>
+                            <units>unixtime</units>
+                            <delta>0</delta>
+                            <snmpv3_contextname/>
+                            <snmpv3_securityname/>
+                            <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                            <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                            <snmpv3_authpassphrase/>
+                            <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                            <snmpv3_privpassphrase/>
+                            <formula>1</formula>
+                            <delay_flex/>
+                            <params/>
+                            <ipmi_sensor/>
+                            <data_type>0</data_type>
+                            <authtype>0</authtype>
+                            <username/>
+                            <password/>
+                            <publickey/>
+                            <privatekey/>
+                            <port/>
+                            <description/>
+                            <inventory_link>0</inventory_link>
+                            <applications>
+                                <application>
+                                    <name>VEEAM Backup &amp; Recovery job(s)</name>
+                                </application>
+                            </applications>
+                            <valuemap/>
+                            <logtimefmt/>
+                            <application_prototypes/>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>Resultat Zabbix Sender {#JOBENDPOINTNAME}</name>
+                            <type>0</type>
+                            <snmp_community/>
+                            <multiplier>0</multiplier>
+                            <snmp_oid/>
+                            <key>vbr[ResultEndpoint,{#JOBENDPOINTID}]</key>
+                            <delay>900</delay>
+                            <history>90</history>
+                            <trends>0</trends>
+                            <status>0</status>
+                            <value_type>4</value_type>
+                            <allowed_hosts/>
+                            <units/>
+                            <delta>0</delta>
+                            <snmpv3_contextname/>
+                            <snmpv3_securityname/>
+                            <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                            <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                            <snmpv3_authpassphrase/>
+                            <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                            <snmpv3_privpassphrase/>
+                            <formula>1</formula>
+                            <delay_flex/>
+                            <params/>
+                            <ipmi_sensor/>
+                            <data_type>0</data_type>
+                            <authtype>0</authtype>
+                            <username/>
+                            <password/>
+                            <publickey/>
+                            <privatekey/>
+                            <port/>
+                            <description/>
+                            <inventory_link>0</inventory_link>
+                            <applications>
+                                <application>
+                                    <name>VEEAM Backup &amp; Recovery job(s)</name>
+                                </application>
+                            </applications>
+                            <valuemap/>
+                            <logtimefmt/>
+                            <application_prototypes/>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>Statut d'exécution du travail {#JOBENDPOINTNAME}</name>
+                            <type>0</type>
+                            <snmp_community/>
+                            <multiplier>0</multiplier>
+                            <snmp_oid/>
+                            <key>vbr[RunStatus,{#JOBENDPOINTID}]</key>
+                            <delay>900</delay>
+                            <history>90</history>
+                            <trends>365</trends>
+                            <status>0</status>
+                            <value_type>3</value_type>
+                            <allowed_hosts/>
+                            <units/>
+                            <delta>0</delta>
+                            <snmpv3_contextname/>
+                            <snmpv3_securityname/>
+                            <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                            <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                            <snmpv3_authpassphrase/>
+                            <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                            <snmpv3_privpassphrase/>
+                            <formula>1</formula>
+                            <delay_flex/>
+                            <params/>
+                            <ipmi_sensor/>
+                            <data_type>0</data_type>
+                            <authtype>0</authtype>
+                            <username/>
+                            <password/>
+                            <publickey/>
+                            <privatekey/>
+                            <port/>
+                            <description/>
+                            <inventory_link>0</inventory_link>
+                            <applications>
+                                <application>
+                                    <name>VEEAM Backup &amp; Recovery job(s)</name>
+                                </application>
+                            </applications>
+                            <valuemap>
+                                <name>vbrJobRunStatus</name>
+                            </valuemap>
+                            <logtimefmt/>
+                            <application_prototypes/>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>Type de backup {#JOBENDPOINTNAME}</name>
+                            <type>0</type>
+                            <snmp_community/>
+                            <multiplier>0</multiplier>
+                            <snmp_oid/>
+                            <key>vbr[Type,{#JOBENDPOINTID}]</key>
+                            <delay>7200</delay>
+                            <history>90</history>
+                            <trends>0</trends>
+                            <status>0</status>
+                            <value_type>1</value_type>
+                            <allowed_hosts/>
+                            <units/>
+                            <delta>0</delta>
+                            <snmpv3_contextname/>
+                            <snmpv3_securityname/>
+                            <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                            <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                            <snmpv3_authpassphrase/>
+                            <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                            <snmpv3_privpassphrase/>
+                            <formula>1</formula>
+                            <delay_flex/>
+                            <params/>
+                            <ipmi_sensor/>
+                            <data_type>0</data_type>
+                            <authtype>0</authtype>
+                            <username/>
+                            <password/>
+                            <publickey/>
+                            <privatekey/>
+                            <port/>
+                            <description/>
+                            <inventory_link>0</inventory_link>
+                            <applications>
+                                <application>
+                                    <name>VEEAM Backup &amp; Recovery job(s)</name>
+                                </application>
+                            </applications>
+                            <valuemap/>
+                            <logtimefmt/>
+                            <application_prototypes/>
+                        </item_prototype>
+                    </item_prototypes>
+                    <trigger_prototypes>
                         <trigger_prototype>
-                            <expression>{Template VEEAM-BACKUP trapper:vbr[Result,{#JOBID}].regexp(Execution non reussie)}=1 or {Template VEEAM-BACKUP trapper:vbr[Result,{#JOBID}].nodata(86400)}=1</expression>
-                            <name>Data recovery problem Backup Veeam</name>
+                            <expression>{Template VEEAM-BACKUP trapper:ResultEndpoint.[{#JOBENDPOINTID}].avg(300)}&lt;1</expression>
+                            <name>Backup {#JOBENDPOINTNAME} en erreur</name>
+                            <url/>
+                            <status>0</status>
+                            <priority>4</priority>
+                            <description/>
+                            <type>0</type>
+                            <dependencies/>
+                        </trigger_prototype>
+                        <trigger_prototype>
+                            <expression>{Template VEEAM-BACKUP trapper:ResultEndpoint.[{#JOBENDPOINTID}].avg(300)}&gt;0 and&#13;
+{Template VEEAM-BACKUP trapper:ResultEndpoint.[{#JOBENDPOINTID}].avg(300)}&lt;2</expression>
+                            <name>Backup {#JOBENDPOINTNAME} terminé avec Avertissement</name>
                             <url/>
                             <status>0</status>
                             <priority>2</priority>
                             <description/>
-                            <type>0</type>					    
+                            <type>0</type>
+                            <dependencies/>
+                        </trigger_prototype>
+                        <trigger_prototype>
+                            <expression>{Template VEEAM-BACKUP trapper:vbr[RunStatus,{#JOBENDPOINTID}].avg(28800)}=1</expression>
+                            <name>Le travail VEEAM {#JOBENDPOINTNAME} est toujours en cours d'exécution (8h)</name>
+                            <url/>
+                            <status>0</status>
+                            <priority>4</priority>
+                            <description/>
+                            <type>0</type>
+                            <dependencies/>
+                        </trigger_prototype>
+                        <trigger_prototype>
+                            <expression>{Template VEEAM-BACKUP trapper:vbr[ResultEndpoint,{#JOBENDPOINTID}].regexp(Execution non reussie)}=1 or&#13;
+{Template VEEAM-BACKUP trapper:ResultEndpoint.[{#JOBENDPOINTID}].nodata(86400)}=1</expression>
+                            <name>Problème récupération données Backup Veeam</name>
+                            <url/>
+                            <status>0</status>
+                            <priority>2</priority>
+                            <description/>
+                            <type>0</type>
+                            <dependencies/>
                         </trigger_prototype>
                     </trigger_prototypes>
                     <graph_prototypes/>
@@ -627,9 +978,9 @@
                     <snmpv3_authpassphrase/>
                     <snmpv3_privprotocol>0</snmpv3_privprotocol>
                     <snmpv3_privpassphrase/>
+                    <delay_flex/>
                     <params/>
                     <ipmi_sensor/>
-					<delay_flex/>
                     <authtype>0</authtype>
                     <username/>
                     <password/>
@@ -648,6 +999,7 @@
                             <name>Repository {#REPONAME} total space</name>
                             <type>0</type>
                             <snmp_community/>
+                            <multiplier>0</multiplier>
                             <snmp_oid/>
                             <key>vbr[RepoCapacity,&quot;{#REPONAME}&quot;]</key>
                             <delay>3600</delay>
@@ -657,6 +1009,7 @@
                             <value_type>3</value_type>
                             <allowed_hosts/>
                             <units>B</units>
+                            <delta>0</delta>
                             <snmpv3_contextname/>
                             <snmpv3_securityname/>
                             <snmpv3_securitylevel>0</snmpv3_securitylevel>
@@ -664,13 +1017,11 @@
                             <snmpv3_authpassphrase/>
                             <snmpv3_privprotocol>0</snmpv3_privprotocol>
                             <snmpv3_privpassphrase/>
+                            <formula>1</formula>
+                            <delay_flex/>
                             <params/>
                             <ipmi_sensor/>
-							<multiplier>0</multiplier>
-							<formula>1</formula>
-							<delta>0</delta>
-							<delay_flex/>
-							<data_type>0</data_type>
+                            <data_type>0</data_type>
                             <authtype>0</authtype>
                             <username/>
                             <password/>
@@ -692,6 +1043,7 @@
                             <name>Repository {#REPONAME} free space</name>
                             <type>0</type>
                             <snmp_community/>
+                            <multiplier>0</multiplier>
                             <snmp_oid/>
                             <key>vbr[RepoFree,&quot;{#REPONAME}&quot;]</key>
                             <delay>3600</delay>
@@ -701,6 +1053,7 @@
                             <value_type>3</value_type>
                             <allowed_hosts/>
                             <units>B</units>
+                            <delta>0</delta>
                             <snmpv3_contextname/>
                             <snmpv3_securityname/>
                             <snmpv3_securitylevel>0</snmpv3_securitylevel>
@@ -708,13 +1061,11 @@
                             <snmpv3_authpassphrase/>
                             <snmpv3_privprotocol>0</snmpv3_privprotocol>
                             <snmpv3_privpassphrase/>
+                            <formula>1</formula>
+                            <delay_flex/>
                             <params/>
                             <ipmi_sensor/>
-							<multiplier>0</multiplier>
-							<formula>1</formula>
-							<delta>0</delta>
-							<delay_flex/>
-							<data_type>0</data_type>
+                            <data_type>0</data_type>
                             <authtype>0</authtype>
                             <username/>
                             <password/>
@@ -797,9 +1148,9 @@
                     <snmpv3_authpassphrase/>
                     <snmpv3_privprotocol>0</snmpv3_privprotocol>
                     <snmpv3_privpassphrase/>
+                    <delay_flex/>
                     <params/>
                     <ipmi_sensor/>
-					<delay_flex/>
                     <authtype>0</authtype>
                     <username/>
                     <password/>
@@ -818,6 +1169,7 @@
                             <name>Job {#JOBTAPENAME} result</name>
                             <type>2</type>
                             <snmp_community/>
+                            <multiplier>0</multiplier>
                             <snmp_oid/>
                             <key>ResultTape.[{#JOBTAPEID}]</key>
                             <delay>0</delay>
@@ -827,6 +1179,7 @@
                             <value_type>3</value_type>
                             <allowed_hosts/>
                             <units/>
+                            <delta>0</delta>
                             <snmpv3_contextname/>
                             <snmpv3_securityname/>
                             <snmpv3_securitylevel>0</snmpv3_securitylevel>
@@ -834,13 +1187,11 @@
                             <snmpv3_authpassphrase/>
                             <snmpv3_privprotocol>0</snmpv3_privprotocol>
                             <snmpv3_privpassphrase/>
+                            <formula>1</formula>
+                            <delay_flex/>
                             <params/>
                             <ipmi_sensor/>
-							<multiplier>0</multiplier>
-							<formula>1</formula>
-							<delta>0</delta>
-							<delay_flex/>
-							<data_type>0</data_type>
+                            <data_type>0</data_type>
                             <authtype>0</authtype>
                             <username/>
                             <password/>
@@ -864,6 +1215,7 @@
                             <name>Result Zabbix Sender {#JOBTAPENAME}</name>
                             <type>0</type>
                             <snmp_community/>
+                            <multiplier>0</multiplier>
                             <snmp_oid/>
                             <key>vbr[ResultTape,{#JOBTAPEID}]</key>
                             <delay>900</delay>
@@ -873,6 +1225,7 @@
                             <value_type>4</value_type>
                             <allowed_hosts/>
                             <units/>
+                            <delta>0</delta>
                             <snmpv3_contextname/>
                             <snmpv3_securityname/>
                             <snmpv3_securitylevel>0</snmpv3_securitylevel>
@@ -880,13 +1233,11 @@
                             <snmpv3_authpassphrase/>
                             <snmpv3_privprotocol>0</snmpv3_privprotocol>
                             <snmpv3_privpassphrase/>
+                            <formula>1</formula>
+                            <delay_flex/>
                             <params/>
                             <ipmi_sensor/>
-							<multiplier>0</multiplier>
-							<formula>1</formula>
-							<delta>0</delta>
-							<delay_flex/>
-							<data_type>0</data_type>
+                            <data_type>0</data_type>
                             <authtype>0</authtype>
                             <username/>
                             <password/>
@@ -908,6 +1259,7 @@
                             <name>Job {#JOBTAPENAME} status</name>
                             <type>0</type>
                             <snmp_community/>
+                            <multiplier>0</multiplier>
                             <snmp_oid/>
                             <key>vbr[RunStatus,{#JOBTAPEID}]</key>
                             <delay>900</delay>
@@ -917,6 +1269,7 @@
                             <value_type>3</value_type>
                             <allowed_hosts/>
                             <units/>
+                            <delta>0</delta>
                             <snmpv3_contextname/>
                             <snmpv3_securityname/>
                             <snmpv3_securitylevel>0</snmpv3_securitylevel>
@@ -924,13 +1277,11 @@
                             <snmpv3_authpassphrase/>
                             <snmpv3_privprotocol>0</snmpv3_privprotocol>
                             <snmpv3_privpassphrase/>
+                            <formula>1</formula>
+                            <delay_flex/>
                             <params/>
                             <ipmi_sensor/>
-							<multiplier>0</multiplier>
-							<formula>1</formula>
-							<delta>0</delta>
-							<delay_flex/>
-							<data_type>0</data_type>
+                            <data_type>0</data_type>
                             <authtype>0</authtype>
                             <username/>
                             <password/>
@@ -1014,7 +1365,7 @@
             <type>0</type>
             <dependencies/>
         </trigger>
-    </triggers>			  
+    </triggers>
     <value_maps>
         <value_map>
             <name>sbrtaskresult</name>
@@ -1047,8 +1398,8 @@
                 <mapping>
                     <value>3</value>
                     <newvalue>Idle</newvalue>
-		</mapping>
-		<mapping>
+                </mapping>
+                <mapping>
                     <value>4</value>
                     <newvalue>First Backup (no history)</newvalue>
                 </mapping>

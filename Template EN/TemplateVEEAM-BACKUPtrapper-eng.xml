@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <zabbix_export>
     <version>3.0</version>
-    <date>2018-06-15T13:54:59Z</date>
+    <date>2018-06-15T14:05:50Z</date>
     <groups>
         <group>
             <name>Templates</name>
@@ -691,7 +691,7 @@
                     <description/>
                     <item_prototypes>
                         <item_prototype>
-                            <name>Resultat backup {#JOBENDPOINTNAME}</name>
+                            <name>Result backup {#JOBENDPOINTNAME}</name>
                             <type>0</type>
                             <snmp_community/>
                             <multiplier>0</multiplier>
@@ -781,7 +781,7 @@
                             <application_prototypes/>
                         </item_prototype>
                         <item_prototype>
-                            <name>Resultat Zabbix Sender {#JOBENDPOINTNAME}</name>
+                            <name>Job {#JOBENDPOINTNAME} result</name>
                             <type>0</type>
                             <snmp_community/>
                             <multiplier>0</multiplier>
@@ -825,7 +825,7 @@
                             <application_prototypes/>
                         </item_prototype>
                         <item_prototype>
-                            <name>Statut d'exécution du travail {#JOBENDPOINTNAME}</name>
+                            <name>Job {#JOBENDPOINTNAME} run status</name>
                             <type>0</type>
                             <snmp_community/>
                             <multiplier>0</multiplier>
@@ -871,7 +871,7 @@
                             <application_prototypes/>
                         </item_prototype>
                         <item_prototype>
-                            <name>Type de backup {#JOBENDPOINTNAME}</name>
+                            <name>Job {#JOBENDPOINTNAME} backup type</name>
                             <type>0</type>
                             <snmp_community/>
                             <multiplier>0</multiplier>

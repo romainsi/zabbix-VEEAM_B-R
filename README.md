@@ -33,11 +33,18 @@ The result of the Job is send by Zabbix Sender.<br /><br />
   - Execution status for each jobs
   - Result of each jobs (ZabbixTrapper)
   - Result task ZabbixSender of each jobs
+  - Next run time of each jobs
 
 **3. Veeam Repository :**<br />
   - Remaining space in repository for each repo<br />
   - Total space in repository for each repo<br />
 <br />
+**4. Veeam Jobs Endpoint Backup:** 
+  - Execution status for each jobs
+  - Result of each jobs (ZabbixTrapper)
+  - Result task ZabbixSender of each jobs
+  - Next run time of each jobs
+
 
 **-------- Triggers --------**<br />
 [WARNING] => Export XML Veeam Error <br />
@@ -61,6 +68,14 @@ The result of the Job is send by Zabbix Sender.<br /><br />
 -------- Discovery Veeam Services --------<br />
 [AVERAGE] => Veeam Service is down for each services<br />
 <br />
+
+-------- Discovery Veeam Jobs Endpoint Agent --------<br />
+[HIGH] => Job has FAILED <br />
+[AVERAGE] => Job has completed with warning<br />
+[HIGH] => Job is still running (8 hours)<br />
+[INFORMATION] => No data recovery for 24 hours<br />
+<br>
+
 **-------- Setup --------**
 
 1. Install the Zabbix agent on your host

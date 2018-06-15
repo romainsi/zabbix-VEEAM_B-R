@@ -18,6 +18,19 @@ $pathsender = 'C:\Program Files\Zabbix Agent'
 $ITEM = [string]$args[0]
 $ID = [string]$args[1]
 
+# The function is to bring to the format understands zabbix
+function convertto-encoding ([string]$from, [string]$to){
+	begin{
+		$encfrom = [system.text.encoding]::getencoding($from)
+		$encto = [system.text.encoding]::getencoding($to)
+	}
+	process{
+		$bytes = $encto.getbytes($_)
+		$bytes = [system.text.encoding]::convert($encfrom, $encto, $bytes)
+		$encto.getstring($bytes)
+	}
+}
+
 Add-PsSnapin -Name VeeamPSSnapIn -ErrorAction SilentlyContinue
 
 switch ($ITEM) {
@@ -63,7 +76,7 @@ switch ($ITEM) {
     Write-Host $output
   }
 
-  "DiscoveryTape" {
+   "DiscoveryTape" {
     $output =  "{`"data`":["
     $connectVeeam = 'Connect-VBRServer'
       $query = Get-VBRTapeJob | Select-Object Id,Name
@@ -245,7 +258,18 @@ switch ($ITEM) {
   $query = $xml1 | Where-Object {$_.JobId -like "*$ID*"}
   [string]$query.JobType
   }
-    "RunningJob" {
+  "NextRunTime" {
+  $xml1 = Import-Clixml "$pathxml\backupjob.xml" 
+  $query = $xml1 | where {$_.Id -like "*$ID*"}
+  $query1 = $query.ScheduleOptions
+  $result = $query1.NextRun 
+  $result1 = $nextdate, $nexttime = $result.Split(" ")
+  $newdate = [datetime]("$($nextdate -replace "(\d{2})-(\d{2})", "`$2-`$1") $nexttime")
+  $date = get-date -date "01/01/1970"
+  $result2 = (New-TimeSpan -Start $date -end $newdate).TotalSeconds
+  [string]$result2
+  }
+  "RunningJob" {
   $xml1 = Import-Clixml "$pathxml\backupjob.xml" 
   $query = $xml1 | where { $_.isCompleted -eq $false } | Measure
   if ($query) {

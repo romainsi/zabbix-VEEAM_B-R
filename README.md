@@ -44,7 +44,7 @@ The result of the Job is send by Zabbix Sender.<br /><br />
   - Execution status for each jobs<br />
   - Result of each jobs (ZabbixTrapper)<br />
   - Result task ZabbixSender of each jobs<br />
-  - Next run time of each jobs<br />
+  - Next run time of each jobs<br /><br />
 
 
 **-------- Triggers --------**<br />

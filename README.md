@@ -39,11 +39,12 @@ The result of the Job is send by Zabbix Sender.<br /><br />
   - Remaining space in repository for each repo<br />
   - Total space in repository for each repo<br />
 <br />
-**4. Veeam Jobs Endpoint Backup:** 
-  - Execution status for each jobs
-  - Result of each jobs (ZabbixTrapper)
-  - Result task ZabbixSender of each jobs
-  - Next run time of each jobs
+
+**4. Veeam Jobs Endpoint Backup:**<br />
+  - Execution status for each jobs<br />
+  - Result of each jobs (ZabbixTrapper)<br />
+  - Result task ZabbixSender of each jobs<br />
+  - Next run time of each jobs<br />
 
 
 **-------- Triggers --------**<br />

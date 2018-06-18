@@ -31,14 +31,21 @@ function convertto-encoding ([string]$from, [string]$to){
 	}
 }
 
-Add-PsSnapin -Name VeeamPSSnapIn -ErrorAction SilentlyContinue
+# Start Load VEEAM Snapin (if not already loaded)
+if (!(Get-PSSnapin -Name VeeamPSSnapIn -ErrorAction SilentlyContinue)) {
+	if (!(Add-PSSnapin -PassThru VeeamPSSnapIn)) {
+		# Error out if loading fails
+		Write-Error "`nERROR: Cannot load the VEEAM Snapin."
+		Exit
+	}
+}
 
 switch ($ITEM) {
   "Discovery" {
     $output =  "{`"data`":["
-    $connectVeeam = 'Connect-VBRServer'
+    $connectVeeam = Connect-VBRServer
       $query = Get-VBRJob | Where-Object {$_.IsScheduleEnabled -eq "true"} | Select-Object Id,Name, IsScheduleEnabled
-    $disconnectVeeam = 'Disconnect-VBRServer'
+    $disconnectVeeam = Disconnect-VBRServer
       $count = $query | Measure-Object
       $count = $count.count
       foreach ($object in $query) {
@@ -58,9 +65,9 @@ switch ($ITEM) {
     
    "DiscoveryRepo" {
     $output =  "{`"data`":["
-    $connectVeeam = 'Connect-VBRServer'
+    $connectVeeam = Connect-VBRServer
       $query = Get-WmiObject -Class Repository -ComputerName $env:COMPUTERNAME -Namespace ROOT\VeeamBS | Select-object Name
-    $disconnectVeeam = 'Disconnect-VBRServer'
+    $disconnectVeeam = Disconnect-VBRServer
       $count = $query | Measure-Object
       $count = $count.count
       foreach ($object in $query) {
@@ -78,9 +85,9 @@ switch ($ITEM) {
 
    "DiscoveryTape" {
     $output =  "{`"data`":["
-    $connectVeeam = 'Connect-VBRServer'
+    $connectVeeam = Connect-VBRServer
       $query = Get-VBRTapeJob | Select-Object Id,Name
-    $disconnectVeeam = 'Disconnect-VBRServer'
+    $disconnectVeeam = Disconnect-VBRServer
       $count = $query | Measure-Object
       $count = $count.count
       foreach ($object in $query) {
@@ -99,9 +106,9 @@ switch ($ITEM) {
 
     "DiscoveryEndpointJobs" {
     $output =  "{`"data`":["
-    $connectVeeam = 'Connect-VBRServer'
+    $connectVeeam = Connect-VBRServer
       $query = Get-VBREPJob | Select-Object Id,Name
-    $disconnectVeeam = 'Disconnect-VBRServer'
+    $disconnectVeeam = Disconnect-VBRServer
       $count = $query | Measure-Object
       $count = $count.count
       foreach ($object in $query) {
@@ -120,12 +127,12 @@ switch ($ITEM) {
 
    "ExportXml" {
   write-host "Command Send"
-  $connectVeeam = 'Connect-VBRServer'
+  $connectVeeam = Connect-VBRServer
   Get-VBRBackupSession | Export-Clixml "$pathxml\backupsessiontemp.xml"
   Get-VBRJob | Export-Clixml "$pathxml\backupjobtemp.xml"
   Get-VBRBackup | Export-Clixml "$pathxml\backupbackuptemp.xml"
   Get-VBREPJob | Export-Clixml "$pathxml\backupendpointtemp.xml"
-  $disconnectVeeam = 'Disconnect-VBRServer'
+  $disconnectVeeam = Disconnect-VBRServer
   Copy-Item -Path $pathxml\backupsessiontemp.xml -Destination "$pathxml\backupsession.xml"
   Copy-Item -Path $pathxml\backupjobtemp.xml -Destination "$pathxml\backupjob.xml"
   Copy-Item -Path $pathxml\backupbackuptemp.xml -Destination "$pathxml\backupbackup.xml"
@@ -176,9 +183,9 @@ switch ($ITEM) {
   Write-Host ""
   Write-Host "Example : ./zabbix_vbr_job.ps1 ResultTape 'c333cedf-db4a-44ed-8623-17633300d7fe'"}
   else {
-  $connectVeeam = 'Connect-VBRServer'
+  $connectVeeam = Connect-VBRServer
   $query = Get-VBRTapeJob | Where-Object {$_.Id -like "*$ID*"}
-  $disconnectVeeam = 'Disconnect-VBRServer'
+  $disconnectVeeam = Disconnect-VBRServer
   $query1 = $query | Where {$_.Id -eq $query.Id} | Sort creationtime -Descending | Select -First 1
   $query2 = $query1.LastResult
    if (!$query2){

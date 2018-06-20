@@ -32,13 +32,7 @@ function convertto-encoding ([string]$from, [string]$to){
 }
 
 # Start Load VEEAM Snapin (if not already loaded)
-if (!(Get-PSSnapin -Name VeeamPSSnapIn -ErrorAction SilentlyContinue)) {
-	if (!(Add-PSSnapin -PassThru VeeamPSSnapIn)) {
-		# Error out if loading fails
-		Write-Error "`nERROR: Cannot load the VEEAM Snapin."
-		Exit
-	}
-}
+Add-PSSnapin -Name VeeamPSSnapIn -ErrorAction SilentlyContinue
 
 switch ($ITEM) {
   "Discovery" {

@@ -59,9 +59,7 @@ switch ($ITEM) {
     
    "DiscoveryRepo" {
     $output =  "{`"data`":["
-    $connectVeeam = Connect-VBRServer
       $query = Get-WmiObject -Class Repository -ComputerName $env:COMPUTERNAME -Namespace ROOT\VeeamBS | Select-object Name
-    $disconnectVeeam = Disconnect-VBRServer
       $count = $query | Measure-Object
       $count = $count.count
       foreach ($object in $query) {

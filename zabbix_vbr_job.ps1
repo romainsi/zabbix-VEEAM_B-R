@@ -14,6 +14,7 @@
 
 $pathxml = 'C:\Program Files\Zabbix Agent\scripts'
 $pathsender = 'C:\Program Files\Zabbix Agent'
+$pathconf = 'C:\Program Files\Zabbix Agent\zabbix_agentd.conf'
 
 $ITEM = [string]$args[0]
 $ID = [string]$args[1]
@@ -143,7 +144,7 @@ switch ($ITEM) {
   $query2 = $query1.Result
   if (!$query2.value){
   cd $pathsender
-  $trapper = .\zabbix_sender.exe -c .\zabbix_agentd.conf -k Result.[$ID] -o 4 -v
+  $trapper = .\zabbix_sender.exe -c $pathconf -k Result.[$ID] -o 4 -v
    if ($trapper[0].Contains("processed: 1"))
     {write-host "Execution reussie"}
     else {write-host "Result Empty or Backup Task Disabled"} 
@@ -153,7 +154,7 @@ switch ($ITEM) {
   $query3 = $query2.value
   $query4 = "$query3".replace('Failed','0').replace('Warning','1').replace('Success','2').replace('None','2').replace('idle','3')
   cd $pathsender
-  $trapper = .\zabbix_sender.exe -c .\zabbix_agentd.conf -k Result.[$ID] -o $query4 -v
+  $trapper = .\zabbix_sender.exe -c $pathconf -k Result.[$ID] -o $query4 -v
     if ($trapper[0].Contains("processed: 1"))
     {write-host "Execution reussie"}
     else {write-host "Execution non reussie"}
@@ -163,7 +164,7 @@ switch ($ITEM) {
   $queryn3 = $queryn2.value
   $queryn4 = "$queryn3".replace('Failed','0').replace('Warning','1').replace('Success','2').replace('None','2').replace('idle','3')
   cd $pathsender
-  $trapper1 = .\zabbix_sender.exe -c .\zabbix_agentd.conf -k Result.[$ID] -o $queryn4 -v
+  $trapper1 = .\zabbix_sender.exe -c $pathconf -k Result.[$ID] -o $queryn4 -v
    if ($trapper1[0].Contains("processed: 1"))
     {write-host "Execution reussie"}
     else {write-host "Execution non reussie"}
@@ -184,14 +185,14 @@ switch ($ITEM) {
    $query3 = $query1.GetLastResult()
    $query4 = "$query3".replace('Failed','0').replace('Warning','1').replace('Success','2').replace('None','2').replace('idle','3')
    cd $pathsender
-   $trapper = .\zabbix_sender.exe -c .\zabbix_agentd.conf -k ResultTape.[$ID] -o $query4 -v
+   $trapper = .\zabbix_sender.exe -c $pathconf -k ResultTape.[$ID] -o $query4 -v
      if ($trapper[0].Contains("processed: 1"))
      {write-host "Execution reussie"}
        else {write-host "Execution non reussie"}}}
    else {
    $query3 = "$query2".replace('Failed','0').replace('Warning','1').replace('Success','2').replace('None','2').replace('idle','3')
    cd $pathsender
-   $trapper = .\zabbix_sender.exe -c .\zabbix_agentd.conf -k ResultTape.[$ID] -o $query3 -v
+   $trapper = .\zabbix_sender.exe -c $pathconf -k ResultTape.[$ID] -o $query3 -v
    if ($trapper[0].Contains("processed: 1"))
    {write-host "Execution reussie"}
    else {write-host "Execution non reussie"}}
@@ -209,7 +210,7 @@ switch ($ITEM) {
   $query2 = $query1.LastResult
   if (!$query2){
   cd $pathsender
-  $trapper = .\zabbix_sender.exe -c .\zabbix_agentd.conf -k ResultEndpoint.[$ID] -o 4 -v
+  $trapper = .\zabbix_sender.exe -c $pathconf -k ResultEndpoint.[$ID] -o 4 -v
    if ($trapper[0].Contains("processed: 1"))
     {write-host "Execution reussie"}
     else {write-host "Result Empty or Backup Task Disabled"} 
@@ -218,7 +219,7 @@ switch ($ITEM) {
    $query4 = $query2.value
    $query3 = $query4.replace('Failed','0').replace('Warning','1').replace('Success','2').replace('None','2').replace('idle','3')
    cd $pathsender
-   $trapper = .\zabbix_sender.exe -c .\zabbix_agentd.conf -k ResultEndpoint.[$ID] -o $query3 -v
+   $trapper = .\zabbix_sender.exe -c $pathconf -k ResultEndpoint.[$ID] -o $query3 -v
    if ($trapper[0].Contains("processed: 1"))
    {write-host "Execution reussie"}
    else {write-host "Execution non reussie"}}

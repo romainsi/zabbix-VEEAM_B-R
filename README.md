@@ -52,7 +52,7 @@ So, the result of the work is sent by Zabbix Sender to avoid Timeouts<br /><br /
   - Result of each jobs (ZabbixTrapper)<br />
   - Result task ZabbixSender of each jobs<br />
   - Execution status for each jobs<br />
-  - Next run time of each jobs<br /><br />
+  - Next run time of each jobs<br />
 
 **5. Veeam Repository :**<br />
   - Remaining space in repository for each repo<br />

@@ -7,44 +7,67 @@ Work with Zabbix 3.X<br />
 French & English translation for the Template
 
 Explanation of how it works :<br />
-The "Result Export Xml Veeam Xml" element sends a powershell command to the host to create an xml of the result of the Get-VBRBackupSession and Get-VBRJob commands.<br />
+The "Result Export Xml Veeam" item sends a powerhell command (with nowait option) to the host to create an xml file of the result of the Get-VBRBbackupSession,Get-VBRJob, Get-VRBBackup and Get-VBREPJob commands that is stored under C:\Program Files\Zabbix Agent\scripts\*.xml (variable $pathxml)<br />
 Then, each request imports the xml to retrieve the information.<br />
 Why? Because the execution of this command can take between 30 seconds and more than 3 minutes (depending on the history and the number of tasks) and I end up with several scripts running for a certain time and the execution is in timeout.
-The result of the Job is send by Zabbix Sender.<br /><br />
+So, the result of the work is sent by Zabbix Sender to avoid Timeouts<br /><br />
 
 **-------- Items --------**
 
+  - Number of tasks jobs<br />
   - Number of running jobs<br />
   - Result Export Xml Veeam<br />
 
-**-------- Discovery --------**
+**-------- Discovery Jobs --------**
 
-**1. Veeam Jobs :** 
-  - Execution status for each jobs
-  - Type for each jobs
-  - Number of virtual machine in each jobs
-  - Size included in each jobs
-  - Size excluded in each jobs
-  - Result of each jobs (ZabbixTrapper)
-  - Result task ZabbixSender of each jobs
-  - Next run time of each jobs
-
-**2. Veeam Tape Jobs :**
-  - Execution status for each jobs
-  - Result of each jobs (ZabbixTrapper)
-  - Result task ZabbixSender of each jobs
-  - Next run time of each jobs
-
-**3. Veeam Repository :**<br />
-  - Remaining space in repository for each repo<br />
-  - Total space in repository for each repo<br />
-<br />
-
-**4. Veeam Jobs Endpoint Backup:**<br />
-  - Execution status for each jobs<br />
+**1. Veeam Jobs :** <br />
   - Result of each jobs (ZabbixTrapper)<br />
   - Result task ZabbixSender of each jobs<br />
+  - Execution status for each jobs<br />
+  - Number of VMs Failed in each jobs<br />
+  - Number of VMs Warning in each jobs<br />
+  - Type for each jobs<br />
+  - Number of VMs in each jobs<br />
+  - Size included in each jobs (disabled by default)<br />
+  - Size excluded in each jobs (disabled by default)<br />
+  - Next run time of each jobs<br />
+
+**2. Veeam Tape Jobs :**<br />
+  - Result of each jobs (ZabbixTrapper)<br />
+  - Result task ZabbixSender of each jobs<br />
+  - Execution status for each jobs<br />
+
+**3. Veeam BackupSync Jobs :**<br />
+  - Result of each jobs (ZabbixTrapper)<br />
+  - Result task ZabbixSender of each jobs<br />
+  - Execution status for each jobs<br />
+  - Number of VMs Failed in each jobs<br />
+  - Number of VMs Warning in each jobs<br />
+  - Type for each jobs<br />
+  - Number of VMs in each jobs<br />
+  - Size included in each jobs (disabled by default)<br />
+  - Size excluded in each jobs (disabled by default)<br />
+
+**4. Veeam Jobs Endpoint Backup:**<br />
+  - Result of each jobs (ZabbixTrapper)<br />
+  - Result task ZabbixSender of each jobs<br />
+  - Execution status for each jobs<br />
   - Next run time of each jobs<br /><br />
+
+**5. Veeam Repository :**<br />
+  - Remaining space in repository for each repo<br />
+  - Total space in repository for each repo<br />
+
+**-------- Discovery Jobs By VMs --------**
+
+**1. VEEAM Backup By VMs :**<br />
+  - Result of each VMs in each Jobs (ZabbixTrapper)<br />
+
+**2. VEEAM BackupSync By VMs :**<br />
+  - Result of each VMs in each Jobs (ZabbixTrapper)<br />
+  
+**3. VEEAM EndpointBackup By VMs :**<br />
+  - Result of each VMs in each Jobs (ZabbixTrapper)<br />
 
 
 **-------- Triggers --------**<br />
@@ -62,13 +85,10 @@ The result of the Job is send by Zabbix Sender.<br /><br />
 [HIGH] => Job is still running (8 hours)<br />
 [INFORMATION] => No data recovery for 24 hours<br />
 
--------- Discovery Veeam Repository --------<br />
-[HIGH] => Less than 2Gb remaining on the repository
-
-
--------- Discovery Veeam Services --------<br />
-[AVERAGE] => Veeam Service is down for each services<br />
-<br />
+-------- Discovery Veeam BackupSync Jobs --------<br />
+[HIGH] => Job has FAILED <br />
+[AVERAGE] => Job has completed with warning<br />
+[INFORMATION] => No data recovery for 24 hours<br />
 
 -------- Discovery Veeam Jobs Endpoint Agent --------<br />
 [HIGH] => Job has FAILED <br />
@@ -76,6 +96,14 @@ The result of the Job is send by Zabbix Sender.<br /><br />
 [HIGH] => Job is still running (8 hours)<br />
 [INFORMATION] => No data recovery for 24 hours<br />
 <br>
+
+-------- Discovery Veeam Repository --------<br />
+[HIGH] => Less than 2Gb remaining on the repository
+
+
+-------- Discovery Veeam Services --------<br />
+[AVERAGE] => Veeam Service is down for each services<br />
+<br />
 
 **-------- Setup --------**
 
@@ -92,4 +120,10 @@ Name : "Veeam"    ;     Expression type : "**TRUE**"     ;     	Expression : "Ve
 And modify regular expression "Windows service startup states for discovery" : Add : <br />
 Name : "Veeam" ; Expression type : "**FALSE**" ; Expression : "Veeam.\*"<br />
 5. Import TemplateVEEAM-BACKUPtrapper.xml file into Zabbix. 
-6. Associate "Template VEEAM-BACKUP trapper" to the host.
+6. Purge and clean Template OS Windows if is linked to the host (you can relink it after).
+7. Associate "Template VEEAM-BACKUP trapper" to the host.
+8. Wait about 20 minutes for the XML file to be generated and 10 minutes more for first informations retrieve.
+
+With a large or very large backup tasks history, the XML size can be more than 500 MB you can reduce this with this link :  
+https://www.veeam.com/kb1995
+Use first : "Changing Session history retention" and if this is not enough, "Clear old job sessions".

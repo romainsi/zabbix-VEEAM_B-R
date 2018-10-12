@@ -69,7 +69,7 @@ So, the result of the work is sent by Zabbix Sender to avoid Timeouts<br /><br /
 **3. VEEAM EndpointBackup By VMs :**<br />
   - Result of each VMs in each Jobs (ZabbixTrapper)
 
-
+<br />
 **-------- Triggers --------**<br />
 [WARNING] => Export XML Veeam Error <br />
 
@@ -122,7 +122,7 @@ Name : "Veeam" ; Expression type : "**FALSE**" ; Expression : "Veeam.\*"<br />
 5. Import TemplateVEEAM-BACKUPtrapper.xml file into Zabbix. 
 6. Purge and clean Template OS Windows if is linked to the host (you can relink it after).
 7. Associate "Template VEEAM-BACKUP trapper" to the host.
-8. Wait about 20 minutes for the XML file to be generated and 10 minutes more for first informations retrieve.
+8. Wait about 1h for the XML file to be generated and first informations retrieves.
 <br />
 With a large or very large backup tasks history, the XML size can be more than 500 MB you can reduce this with this link :  
 https://www.veeam.com/kb1995

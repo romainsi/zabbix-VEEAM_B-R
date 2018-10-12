@@ -9,7 +9,7 @@
 #   as an item:     vbr[<ITEM_TO_QUERY>,<JOBID>]
 #
 # Add to Zabbix Agent
-#   UserParameter=vbr[*],powershell -NoProfile -ExecutionPolicy Bypass -File "C:\Program Files\Zabbix Agent\scripts\zabbix_vbr_job.ps1" "$1" "$2"
+#   UserParameter=vbr[*],powershell -NoProfile -ExecutionPolicy Bypass -File "C:\Program Files\Zabbix Agent\scripts\zabbix_vbr_job.ps1" "$1" "$2" "$3"
 #
 
 $pathxml = 'C:\Program Files\Zabbix Agent\scripts'

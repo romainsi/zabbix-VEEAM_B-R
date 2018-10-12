@@ -124,6 +124,6 @@ Name : "Veeam" ; Expression type : "**FALSE**" ; Expression : "Veeam.\*"<br />
 7. Associate "Template VEEAM-BACKUP trapper" to the host.
 8. Wait about 1h for the XML file to be generated and first informations retrieves.
 <br />
-With a large or very large backup tasks history, the XML size can be more than 500 MB you can reduce this with this link :  
-https://www.veeam.com/kb1995
+With a large or very large backup tasks history, the XML size can be more than 500 MB (so script finish in timeout) you can reduce this with this link : <br /> 
+https://www.veeam.com/kb1995 <br />
 Use first : "Changing Session history retention" and if this is not enough, "Clear old job sessions".

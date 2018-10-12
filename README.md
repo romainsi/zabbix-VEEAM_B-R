@@ -71,7 +71,7 @@ So, the result of the work is sent by Zabbix Sender to avoid Timeouts<br /><br /
 
 <br />
 **-------- Triggers --------**<br />
-[WARNING] => Export XML Veeam Error<br />
+[WARNING] => Export XML Veeam Error<br /><br />
 
 -------- Discovery Veeam Jobs --------<br />
 [HIGH] => Job has FAILED <br />

@@ -95,11 +95,9 @@ So, the result of the work is sent by Zabbix Sender to avoid Timeouts<br /><br /
 [AVERAGE] => Job has completed with warning<br />
 [HIGH] => Job is still running (8 hours)<br />
 [INFORMATION] => No data recovery for 24 hours<br />
-<br>
 
 -------- Discovery Veeam Repository --------<br />
 [HIGH] => Less than 2Gb remaining on the repository
-
 
 -------- Discovery Veeam Services --------<br />
 [AVERAGE] => Veeam Service is down for each services<br />

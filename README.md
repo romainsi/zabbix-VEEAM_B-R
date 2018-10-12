@@ -56,18 +56,18 @@ So, the result of the work is sent by Zabbix Sender to avoid Timeouts<br /><br /
 
 **5. Veeam Repository :**<br />
   - Remaining space in repository for each repo<br />
-  - Total space in repository for each repo<br />
+  - Total space in repository for each repo<br /><br />
 
 **-------- Discovery Jobs By VMs --------**
 
-**1. VEEAM Backup By VMs :**<br />
-  - Result of each VMs in each Jobs (ZabbixTrapper)<br />
-
-**2. VEEAM BackupSync By VMs :**<br />
-  - Result of each VMs in each Jobs (ZabbixTrapper)<br />
+**1. VEEAM Backup By VMs :**
+  - Result of each VMs in each Jobs (ZabbixTrapper)
+  
+**2. VEEAM BackupSync By VMs :**
+  - Result of each VMs in each Jobs (ZabbixTrapper)
   
 **3. VEEAM EndpointBackup By VMs :**<br />
-  - Result of each VMs in each Jobs (ZabbixTrapper)<br />
+  - Result of each VMs in each Jobs (ZabbixTrapper)
 
 
 **-------- Triggers --------**<br />
@@ -114,7 +114,7 @@ EnableRemoteCommands=1 <br />
 UnsafeUserParameters=1 <br />
 ServerActive="IP or DNS Zabbix Server"<br />
 Alias=service.discovery.veeam:service.discovery<br />
-UserParameter=vbr[*],powershell -NoProfile -ExecutionPolicy Bypass -File "C:\Program Files\Zabbix Agent\scripts\zabbix_vbr_job.ps1" "$1" "$2"
+UserParameter=vbr[*],powershell -NoProfile -ExecutionPolicy Bypass -File "C:\Program Files\Zabbix Agent\scripts\zabbix_vbr_job.ps1" "$1" "$2" "$3"
 4. In Zabbix : Administration, General, Regular Expression : Add a new regular expression :<br /> 
 Name : "Veeam"    ;     Expression type : "**TRUE**"     ;     	Expression : "Veeam.\*"<br />
 And modify regular expression "Windows service startup states for discovery" : Add : <br />
@@ -123,7 +123,7 @@ Name : "Veeam" ; Expression type : "**FALSE**" ; Expression : "Veeam.\*"<br />
 6. Purge and clean Template OS Windows if is linked to the host (you can relink it after).
 7. Associate "Template VEEAM-BACKUP trapper" to the host.
 8. Wait about 20 minutes for the XML file to be generated and 10 minutes more for first informations retrieve.
-
+<br />
 With a large or very large backup tasks history, the XML size can be more than 500 MB you can reduce this with this link :  
 https://www.veeam.com/kb1995
 Use first : "Changing Session history retention" and if this is not enough, "Clear old job sessions".

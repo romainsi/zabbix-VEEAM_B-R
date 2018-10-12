@@ -65,9 +65,6 @@ So, the result of the work is sent by Zabbix Sender to avoid Timeouts<br /><br /
   
 **2. VEEAM BackupSync By VMs :**
   - Result of each VMs in each Jobs (ZabbixTrapper)
-  
-**3. VEEAM EndpointBackup By VMs :**<br />
-  - Result of each VMs in each Jobs (ZabbixTrapper)
 
 <br />
 **-------- Triggers --------**<br />

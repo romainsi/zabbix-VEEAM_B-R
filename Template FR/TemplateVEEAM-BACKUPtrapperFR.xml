@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <zabbix_export>
     <version>3.0</version>
-    <date>2018-06-15T14:00:54Z</date>
+    <date>2018-10-11T10:08:29Z</date>
     <groups>
         <group>
             <name>Templates</name>
@@ -19,7 +19,25 @@
             </groups>
             <applications>
                 <application>
-                    <name>VEEAM Backup &amp; Recovery job(s)</name>
+                    <name>VEEAM Backup &amp; Recovery - Backup Job(s)</name>
+                </application>
+                <application>
+                    <name>VEEAM Backup &amp; Recovery - Backup Job(s) By VMs</name>
+                </application>
+                <application>
+                    <name>VEEAM Backup &amp; Recovery - BackupSync Job(s)</name>
+                </application>
+                <application>
+                    <name>VEEAM Backup &amp; Recovery - BackupSync Job(s) By VMs</name>
+                </application>
+                <application>
+                    <name>VEEAM Backup &amp; Recovery - EndPoint Backup job(s)</name>
+                </application>
+                <application>
+                    <name>VEEAM Backup &amp; Recovery - Tape job(s)</name>
+                </application>
+                <application>
+                    <name>VEEAM Discovery Mechanics</name>
                 </application>
                 <application>
                     <name>VEEAM Repository</name>
@@ -66,11 +84,11 @@
                     <inventory_link>0</inventory_link>
                     <applications>
                         <application>
-                            <name>VEEAM Backup &amp; Recovery job(s)</name>
+                            <name>VEEAM Discovery Mechanics</name>
                         </application>
                     </applications>
                     <valuemap>
-                        <name>sbrtaskresult</name>
+                        <name>vbrtaskresult</name>
                     </valuemap>
                     <logtimefmt/>
                 </item>
@@ -82,7 +100,7 @@
                     <snmp_oid/>
                     <key>vbr[&quot;RunningJob&quot;]</key>
                     <delay>300</delay>
-                    <history>1</history>
+                    <history>7</history>
                     <trends>365</trends>
                     <status>0</status>
                     <value_type>3</value_type>
@@ -111,7 +129,50 @@
                     <inventory_link>0</inventory_link>
                     <applications>
                         <application>
-                            <name>VEEAM Backup &amp; Recovery job(s)</name>
+                            <name>VEEAM Backup &amp; Recovery - Backup Job(s)</name>
+                        </application>
+                    </applications>
+                    <valuemap/>
+                    <logtimefmt/>
+                </item>
+                <item>
+                    <name>Nombre de travaux (Total)</name>
+                    <type>0</type>
+                    <snmp_community/>
+                    <multiplier>0</multiplier>
+                    <snmp_oid/>
+                    <key>vbr[JobsCount]</key>
+                    <delay>60</delay>
+                    <history>7</history>
+                    <trends>365</trends>
+                    <status>0</status>
+                    <value_type>3</value_type>
+                    <allowed_hosts/>
+                    <units>job(s)</units>
+                    <delta>0</delta>
+                    <snmpv3_contextname/>
+                    <snmpv3_securityname/>
+                    <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                    <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                    <snmpv3_authpassphrase/>
+                    <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                    <snmpv3_privpassphrase/>
+                    <formula>1</formula>
+                    <delay_flex/>
+                    <params/>
+                    <ipmi_sensor/>
+                    <data_type>0</data_type>
+                    <authtype>0</authtype>
+                    <username/>
+                    <password/>
+                    <publickey/>
+                    <privatekey/>
+                    <port/>
+                    <description/>
+                    <inventory_link>0</inventory_link>
+                    <applications>
+                        <application>
+                            <name>VEEAM Backup &amp; Recovery - Backup Job(s)</name>
                         </application>
                     </applications>
                     <valuemap/>
@@ -124,8 +185,8 @@
                     <type>0</type>
                     <snmp_community/>
                     <snmp_oid/>
-                    <key>service.discovery.veeam</key>
-                    <delay>7200</delay>
+                    <key>service.discovery</key>
+                    <delay>3600</delay>
                     <status>0</status>
                     <allowed_hosts/>
                     <snmpv3_contextname/>
@@ -150,7 +211,7 @@
                         <conditions>
                             <condition>
                                 <macro>{#SERVICE.NAME}</macro>
-                                <value>^Veeam</value>
+                                <value>@Veeam</value>
                                 <operator>8</operator>
                                 <formulaid>A</formulaid>
                             </condition>
@@ -222,12 +283,12 @@
                     <host_prototypes/>
                 </discovery_rule>
                 <discovery_rule>
-                    <name>VEEAM Jobs</name>
+                    <name>VEEAM Backup Jobs</name>
                     <type>0</type>
                     <snmp_community/>
                     <snmp_oid/>
-                    <key>vbr[&quot;Discovery&quot;]</key>
-                    <delay>7200</delay>
+                    <key>vbr[&quot;DiscoveryBackupJobs&quot;]</key>
+                    <delay>3600</delay>
                     <status>0</status>
                     <allowed_hosts/>
                     <snmpv3_contextname/>
@@ -291,7 +352,7 @@
                             <inventory_link>0</inventory_link>
                             <applications>
                                 <application>
-                                    <name>VEEAM Backup &amp; Recovery job(s)</name>
+                                    <name>VEEAM Backup &amp; Recovery - Backup Job(s)</name>
                                 </application>
                             </applications>
                             <valuemap>
@@ -308,9 +369,9 @@
                             <snmp_oid/>
                             <key>vbr[ExcludedSize,{#JOBID}]</key>
                             <delay>3600</delay>
-                            <history>1</history>
+                            <history>7</history>
                             <trends>365</trends>
-                            <status>0</status>
+                            <status>1</status>
                             <value_type>3</value_type>
                             <allowed_hosts/>
                             <units>bytes</units>
@@ -337,7 +398,7 @@
                             <inventory_link>0</inventory_link>
                             <applications>
                                 <application>
-                                    <name>VEEAM Backup &amp; Recovery job(s)</name>
+                                    <name>VEEAM Backup &amp; Recovery - Backup Job(s)</name>
                                 </application>
                             </applications>
                             <valuemap/>
@@ -352,9 +413,9 @@
                             <snmp_oid/>
                             <key>vbr[IncludedSize,{#JOBID}]</key>
                             <delay>3600</delay>
-                            <history>1</history>
+                            <history>7</history>
                             <trends>365</trends>
-                            <status>0</status>
+                            <status>1</status>
                             <value_type>3</value_type>
                             <allowed_hosts/>
                             <units>bytes</units>
@@ -381,7 +442,7 @@
                             <inventory_link>0</inventory_link>
                             <applications>
                                 <application>
-                                    <name>VEEAM Backup &amp; Recovery job(s)</name>
+                                    <name>VEEAM Backup &amp; Recovery - Backup Job(s)</name>
                                 </application>
                             </applications>
                             <valuemap/>
@@ -425,7 +486,7 @@
                             <inventory_link>0</inventory_link>
                             <applications>
                                 <application>
-                                    <name>VEEAM Backup &amp; Recovery job(s)</name>
+                                    <name>VEEAM Backup &amp; Recovery - Backup Job(s)</name>
                                 </application>
                             </applications>
                             <valuemap/>
@@ -440,7 +501,7 @@
                             <snmp_oid/>
                             <key>vbr[Result,{#JOBID}]</key>
                             <delay>900</delay>
-                            <history>1</history>
+                            <history>7</history>
                             <trends>0</trends>
                             <status>0</status>
                             <value_type>4</value_type>
@@ -469,7 +530,7 @@
                             <inventory_link>0</inventory_link>
                             <applications>
                                 <application>
-                                    <name>VEEAM Backup &amp; Recovery job(s)</name>
+                                    <name>VEEAM Backup &amp; Recovery - Backup Job(s)</name>
                                 </application>
                             </applications>
                             <valuemap/>
@@ -484,7 +545,7 @@
                             <snmp_oid/>
                             <key>vbr[RunStatus,{#JOBID}]</key>
                             <delay>900</delay>
-                            <history>1</history>
+                            <history>7</history>
                             <trends>365</trends>
                             <status>0</status>
                             <value_type>3</value_type>
@@ -513,7 +574,7 @@
                             <inventory_link>0</inventory_link>
                             <applications>
                                 <application>
-                                    <name>VEEAM Backup &amp; Recovery job(s)</name>
+                                    <name>VEEAM Backup &amp; Recovery - Backup Job(s)</name>
                                 </application>
                             </applications>
                             <valuemap>
@@ -530,7 +591,7 @@
                             <snmp_oid/>
                             <key>vbr[Type,{#JOBID}]</key>
                             <delay>7200</delay>
-                            <history>1</history>
+                            <history>7</history>
                             <trends>0</trends>
                             <status>0</status>
                             <value_type>1</value_type>
@@ -559,7 +620,7 @@
                             <inventory_link>0</inventory_link>
                             <applications>
                                 <application>
-                                    <name>VEEAM Backup &amp; Recovery job(s)</name>
+                                    <name>VEEAM Backup &amp; Recovery - Backup Job(s)</name>
                                 </application>
                             </applications>
                             <valuemap/>
@@ -572,9 +633,9 @@
                             <snmp_community/>
                             <multiplier>0</multiplier>
                             <snmp_oid/>
-                            <key>vbr[VmCount,{#JOBID}]</key>
+                            <key>vbr[VmCount,{#JOBNAME}]</key>
                             <delay>3600</delay>
-                            <history>1</history>
+                            <history>7</history>
                             <trends>365</trends>
                             <status>0</status>
                             <value_type>3</value_type>
@@ -603,7 +664,95 @@
                             <inventory_link>0</inventory_link>
                             <applications>
                                 <application>
-                                    <name>VEEAM Backup &amp; Recovery job(s)</name>
+                                    <name>VEEAM Backup &amp; Recovery - Backup Job(s)</name>
+                                </application>
+                            </applications>
+                            <valuemap/>
+                            <logtimefmt/>
+                            <application_prototypes/>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>Nombre Failed {#JOBNAME}</name>
+                            <type>0</type>
+                            <snmp_community/>
+                            <multiplier>0</multiplier>
+                            <snmp_oid/>
+                            <key>vbr[VmCountResultBackup,{#JOBNAME},Failed]</key>
+                            <delay>900</delay>
+                            <history>90</history>
+                            <trends>365</trends>
+                            <status>0</status>
+                            <value_type>3</value_type>
+                            <allowed_hosts/>
+                            <units/>
+                            <delta>0</delta>
+                            <snmpv3_contextname/>
+                            <snmpv3_securityname/>
+                            <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                            <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                            <snmpv3_authpassphrase/>
+                            <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                            <snmpv3_privpassphrase/>
+                            <formula>1</formula>
+                            <delay_flex/>
+                            <params/>
+                            <ipmi_sensor/>
+                            <data_type>0</data_type>
+                            <authtype>0</authtype>
+                            <username/>
+                            <password/>
+                            <publickey/>
+                            <privatekey/>
+                            <port/>
+                            <description/>
+                            <inventory_link>0</inventory_link>
+                            <applications>
+                                <application>
+                                    <name>VEEAM Backup &amp; Recovery - Backup Job(s)</name>
+                                </application>
+                            </applications>
+                            <valuemap/>
+                            <logtimefmt/>
+                            <application_prototypes/>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>Nombre Warning {#JOBNAME}</name>
+                            <type>0</type>
+                            <snmp_community/>
+                            <multiplier>0</multiplier>
+                            <snmp_oid/>
+                            <key>vbr[VmCountResultBackup,{#JOBNAME},Warning]</key>
+                            <delay>900</delay>
+                            <history>90</history>
+                            <trends>365</trends>
+                            <status>0</status>
+                            <value_type>3</value_type>
+                            <allowed_hosts/>
+                            <units/>
+                            <delta>0</delta>
+                            <snmpv3_contextname/>
+                            <snmpv3_securityname/>
+                            <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                            <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                            <snmpv3_authpassphrase/>
+                            <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                            <snmpv3_privpassphrase/>
+                            <formula>1</formula>
+                            <delay_flex/>
+                            <params/>
+                            <ipmi_sensor/>
+                            <data_type>0</data_type>
+                            <authtype>0</authtype>
+                            <username/>
+                            <password/>
+                            <publickey/>
+                            <privatekey/>
+                            <port/>
+                            <description/>
+                            <inventory_link>0</inventory_link>
+                            <applications>
+                                <application>
+                                    <name>VEEAM Backup &amp; Recovery - Backup Job(s)</name>
                                 </application>
                             </applications>
                             <valuemap/>
@@ -658,12 +807,12 @@
                     <host_prototypes/>
                 </discovery_rule>
                 <discovery_rule>
-                    <name>VEEAM EndpointBackup</name>
+                    <name>VEEAM BackupSync Jobs</name>
                     <type>0</type>
                     <snmp_community/>
                     <snmp_oid/>
-                    <key>vbr[&quot;DiscoveryEndpointJobs&quot;]</key>
-                    <delay>7200</delay>
+                    <key>vbr[&quot;DiscoveryBackupSyncJobs&quot;]</key>
+                    <delay>3600</delay>
                     <status>0</status>
                     <allowed_hosts/>
                     <snmpv3_contextname/>
@@ -687,7 +836,644 @@
                         <formula/>
                         <conditions/>
                     </filter>
-                    <lifetime>30</lifetime>
+                    <lifetime>1</lifetime>
+                    <description/>
+                    <item_prototypes>
+                        <item_prototype>
+                            <name>Resultat backup {#JOBBSNAME}</name>
+                            <type>2</type>
+                            <snmp_community/>
+                            <multiplier>0</multiplier>
+                            <snmp_oid/>
+                            <key>Result.[{#JOBBSID}]</key>
+                            <delay>0</delay>
+                            <history>90</history>
+                            <trends>365</trends>
+                            <status>0</status>
+                            <value_type>3</value_type>
+                            <allowed_hosts/>
+                            <units/>
+                            <delta>0</delta>
+                            <snmpv3_contextname/>
+                            <snmpv3_securityname/>
+                            <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                            <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                            <snmpv3_authpassphrase/>
+                            <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                            <snmpv3_privpassphrase/>
+                            <formula>1</formula>
+                            <delay_flex/>
+                            <params/>
+                            <ipmi_sensor/>
+                            <data_type>0</data_type>
+                            <authtype>0</authtype>
+                            <username/>
+                            <password/>
+                            <publickey/>
+                            <privatekey/>
+                            <port/>
+                            <description/>
+                            <inventory_link>0</inventory_link>
+                            <applications>
+                                <application>
+                                    <name>VEEAM Backup &amp; Recovery - BackupSync Job(s)</name>
+                                </application>
+                            </applications>
+                            <valuemap>
+                                <name>vbrJobResult</name>
+                            </valuemap>
+                            <logtimefmt/>
+                            <application_prototypes/>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>Taille exclue dans le travail {#JOBBSNAME}</name>
+                            <type>0</type>
+                            <snmp_community/>
+                            <multiplier>0</multiplier>
+                            <snmp_oid/>
+                            <key>vbr[ExcludedSize,{#JOBBSID}]</key>
+                            <delay>3600</delay>
+                            <history>7</history>
+                            <trends>365</trends>
+                            <status>1</status>
+                            <value_type>3</value_type>
+                            <allowed_hosts/>
+                            <units>bytes</units>
+                            <delta>0</delta>
+                            <snmpv3_contextname/>
+                            <snmpv3_securityname/>
+                            <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                            <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                            <snmpv3_authpassphrase/>
+                            <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                            <snmpv3_privpassphrase/>
+                            <formula>1</formula>
+                            <delay_flex/>
+                            <params/>
+                            <ipmi_sensor/>
+                            <data_type>0</data_type>
+                            <authtype>0</authtype>
+                            <username/>
+                            <password/>
+                            <publickey/>
+                            <privatekey/>
+                            <port/>
+                            <description/>
+                            <inventory_link>0</inventory_link>
+                            <applications>
+                                <application>
+                                    <name>VEEAM Backup &amp; Recovery - BackupSync Job(s)</name>
+                                </application>
+                            </applications>
+                            <valuemap/>
+                            <logtimefmt/>
+                            <application_prototypes/>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>Taille inclue dans le travail {#JOBBSNAME}</name>
+                            <type>0</type>
+                            <snmp_community/>
+                            <multiplier>0</multiplier>
+                            <snmp_oid/>
+                            <key>vbr[IncludedSize,{#JOBBSID}]</key>
+                            <delay>3600</delay>
+                            <history>90</history>
+                            <trends>365</trends>
+                            <status>1</status>
+                            <value_type>3</value_type>
+                            <allowed_hosts/>
+                            <units>bytes</units>
+                            <delta>0</delta>
+                            <snmpv3_contextname/>
+                            <snmpv3_securityname/>
+                            <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                            <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                            <snmpv3_authpassphrase/>
+                            <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                            <snmpv3_privpassphrase/>
+                            <formula>1</formula>
+                            <delay_flex/>
+                            <params/>
+                            <ipmi_sensor/>
+                            <data_type>0</data_type>
+                            <authtype>0</authtype>
+                            <username/>
+                            <password/>
+                            <publickey/>
+                            <privatekey/>
+                            <port/>
+                            <description/>
+                            <inventory_link>0</inventory_link>
+                            <applications>
+                                <application>
+                                    <name>VEEAM Backup &amp; Recovery - BackupSync Job(s)</name>
+                                </application>
+                            </applications>
+                            <valuemap/>
+                            <logtimefmt/>
+                            <application_prototypes/>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>Resultat Zabbix Sender {#JOBBSNAME}</name>
+                            <type>0</type>
+                            <snmp_community/>
+                            <multiplier>0</multiplier>
+                            <snmp_oid/>
+                            <key>vbr[Result,{#JOBBSID}]</key>
+                            <delay>900</delay>
+                            <history>900</history>
+                            <trends>0</trends>
+                            <status>0</status>
+                            <value_type>4</value_type>
+                            <allowed_hosts/>
+                            <units/>
+                            <delta>0</delta>
+                            <snmpv3_contextname/>
+                            <snmpv3_securityname/>
+                            <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                            <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                            <snmpv3_authpassphrase/>
+                            <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                            <snmpv3_privpassphrase/>
+                            <formula>1</formula>
+                            <delay_flex/>
+                            <params/>
+                            <ipmi_sensor/>
+                            <data_type>0</data_type>
+                            <authtype>0</authtype>
+                            <username/>
+                            <password/>
+                            <publickey/>
+                            <privatekey/>
+                            <port/>
+                            <description/>
+                            <inventory_link>0</inventory_link>
+                            <applications>
+                                <application>
+                                    <name>VEEAM Backup &amp; Recovery - BackupSync Job(s)</name>
+                                </application>
+                            </applications>
+                            <valuemap/>
+                            <logtimefmt/>
+                            <application_prototypes/>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>Statut d'exécution du travail {#JOBBSNAME}</name>
+                            <type>0</type>
+                            <snmp_community/>
+                            <multiplier>0</multiplier>
+                            <snmp_oid/>
+                            <key>vbr[RunStatus,{#JOBBSID}]</key>
+                            <delay>900</delay>
+                            <history>7</history>
+                            <trends>365</trends>
+                            <status>0</status>
+                            <value_type>3</value_type>
+                            <allowed_hosts/>
+                            <units/>
+                            <delta>0</delta>
+                            <snmpv3_contextname/>
+                            <snmpv3_securityname/>
+                            <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                            <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                            <snmpv3_authpassphrase/>
+                            <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                            <snmpv3_privpassphrase/>
+                            <formula>1</formula>
+                            <delay_flex/>
+                            <params/>
+                            <ipmi_sensor/>
+                            <data_type>0</data_type>
+                            <authtype>0</authtype>
+                            <username/>
+                            <password/>
+                            <publickey/>
+                            <privatekey/>
+                            <port/>
+                            <description/>
+                            <inventory_link>0</inventory_link>
+                            <applications>
+                                <application>
+                                    <name>VEEAM Backup &amp; Recovery - BackupSync Job(s)</name>
+                                </application>
+                            </applications>
+                            <valuemap>
+                                <name>vbrJobRunStatus</name>
+                            </valuemap>
+                            <logtimefmt/>
+                            <application_prototypes/>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>Type de backup {#JOBBSNAME}</name>
+                            <type>0</type>
+                            <snmp_community/>
+                            <multiplier>0</multiplier>
+                            <snmp_oid/>
+                            <key>vbr[Type,{#JOBBSID}]</key>
+                            <delay>7200</delay>
+                            <history>7</history>
+                            <trends>0</trends>
+                            <status>0</status>
+                            <value_type>1</value_type>
+                            <allowed_hosts/>
+                            <units/>
+                            <delta>0</delta>
+                            <snmpv3_contextname/>
+                            <snmpv3_securityname/>
+                            <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                            <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                            <snmpv3_authpassphrase/>
+                            <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                            <snmpv3_privpassphrase/>
+                            <formula>1</formula>
+                            <delay_flex/>
+                            <params/>
+                            <ipmi_sensor/>
+                            <data_type>0</data_type>
+                            <authtype>0</authtype>
+                            <username/>
+                            <password/>
+                            <publickey/>
+                            <privatekey/>
+                            <port/>
+                            <description/>
+                            <inventory_link>0</inventory_link>
+                            <applications>
+                                <application>
+                                    <name>VEEAM Backup &amp; Recovery - BackupSync Job(s)</name>
+                                </application>
+                            </applications>
+                            <valuemap/>
+                            <logtimefmt/>
+                            <application_prototypes/>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>Nombre de VM dans le travail {#JOBBSNAME}</name>
+                            <type>0</type>
+                            <snmp_community/>
+                            <multiplier>0</multiplier>
+                            <snmp_oid/>
+                            <key>vbr[VmCount,{#JOBBSNAME}]</key>
+                            <delay>3600</delay>
+                            <history>7</history>
+                            <trends>365</trends>
+                            <status>0</status>
+                            <value_type>3</value_type>
+                            <allowed_hosts/>
+                            <units>vm(s)</units>
+                            <delta>0</delta>
+                            <snmpv3_contextname/>
+                            <snmpv3_securityname/>
+                            <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                            <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                            <snmpv3_authpassphrase/>
+                            <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                            <snmpv3_privpassphrase/>
+                            <formula>1</formula>
+                            <delay_flex/>
+                            <params/>
+                            <ipmi_sensor/>
+                            <data_type>0</data_type>
+                            <authtype>0</authtype>
+                            <username/>
+                            <password/>
+                            <publickey/>
+                            <privatekey/>
+                            <port/>
+                            <description/>
+                            <inventory_link>0</inventory_link>
+                            <applications>
+                                <application>
+                                    <name>VEEAM Backup &amp; Recovery - BackupSync Job(s)</name>
+                                </application>
+                            </applications>
+                            <valuemap/>
+                            <logtimefmt/>
+                            <application_prototypes/>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>Nombre Failed {#JOBBSNAME}</name>
+                            <type>0</type>
+                            <snmp_community/>
+                            <multiplier>0</multiplier>
+                            <snmp_oid/>
+                            <key>vbr[VmCountResultBackupSync,{#JOBBSNAME},Failed]</key>
+                            <delay>900</delay>
+                            <history>90</history>
+                            <trends>365</trends>
+                            <status>0</status>
+                            <value_type>3</value_type>
+                            <allowed_hosts/>
+                            <units/>
+                            <delta>0</delta>
+                            <snmpv3_contextname/>
+                            <snmpv3_securityname/>
+                            <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                            <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                            <snmpv3_authpassphrase/>
+                            <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                            <snmpv3_privpassphrase/>
+                            <formula>1</formula>
+                            <delay_flex/>
+                            <params/>
+                            <ipmi_sensor/>
+                            <data_type>0</data_type>
+                            <authtype>0</authtype>
+                            <username/>
+                            <password/>
+                            <publickey/>
+                            <privatekey/>
+                            <port/>
+                            <description/>
+                            <inventory_link>0</inventory_link>
+                            <applications>
+                                <application>
+                                    <name>VEEAM Backup &amp; Recovery - BackupSync Job(s)</name>
+                                </application>
+                            </applications>
+                            <valuemap/>
+                            <logtimefmt/>
+                            <application_prototypes/>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>Nombre Warning {#JOBBSNAME}</name>
+                            <type>0</type>
+                            <snmp_community/>
+                            <multiplier>0</multiplier>
+                            <snmp_oid/>
+                            <key>vbr[VmCountResultBackupSync,{#JOBBSNAME},Warning]</key>
+                            <delay>900</delay>
+                            <history>90</history>
+                            <trends>365</trends>
+                            <status>0</status>
+                            <value_type>3</value_type>
+                            <allowed_hosts/>
+                            <units/>
+                            <delta>0</delta>
+                            <snmpv3_contextname/>
+                            <snmpv3_securityname/>
+                            <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                            <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                            <snmpv3_authpassphrase/>
+                            <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                            <snmpv3_privpassphrase/>
+                            <formula>1</formula>
+                            <delay_flex/>
+                            <params/>
+                            <ipmi_sensor/>
+                            <data_type>0</data_type>
+                            <authtype>0</authtype>
+                            <username/>
+                            <password/>
+                            <publickey/>
+                            <privatekey/>
+                            <port/>
+                            <description/>
+                            <inventory_link>0</inventory_link>
+                            <applications>
+                                <application>
+                                    <name>VEEAM Backup &amp; Recovery - BackupSync Job(s)</name>
+                                </application>
+                            </applications>
+                            <valuemap/>
+                            <logtimefmt/>
+                            <application_prototypes/>
+                        </item_prototype>
+                    </item_prototypes>
+                    <trigger_prototypes>
+                        <trigger_prototype>
+                            <expression>{Template VEEAM-BACKUP trapper:Result.[{#JOBBSID}].avg(300)}&lt;1</expression>
+                            <name>Backup {#JOBBSNAME} en erreur</name>
+                            <url/>
+                            <status>0</status>
+                            <priority>4</priority>
+                            <description/>
+                            <type>0</type>
+                            <dependencies/>
+                        </trigger_prototype>
+                        <trigger_prototype>
+                            <expression>{Template VEEAM-BACKUP trapper:Result.[{#JOBBSID}].avg(300)}&gt;0 and {Template VEEAM-BACKUP trapper:Result.[{#JOBBSID}].avg(300)}&lt;2</expression>
+                            <name>Backup {#JOBBSNAME} terminé avec Avertissement</name>
+                            <url/>
+                            <status>0</status>
+                            <priority>2</priority>
+                            <description/>
+                            <type>0</type>
+                            <dependencies/>
+                        </trigger_prototype>
+                        <trigger_prototype>
+                            <expression>{Template VEEAM-BACKUP trapper:vbr[Result,{#JOBBSID}].regexp(Execution non reussie)}=1 or {Template VEEAM-BACKUP trapper:vbr[Result,{#JOBBSID}].nodata(86400)}=1</expression>
+                            <name>Problème récupération données Backup Veeam</name>
+                            <url/>
+                            <status>0</status>
+                            <priority>2</priority>
+                            <description/>
+                            <type>0</type>
+                            <dependencies/>
+                        </trigger_prototype>
+                    </trigger_prototypes>
+                    <graph_prototypes/>
+                    <host_prototypes/>
+                </discovery_rule>
+                <discovery_rule>
+                    <name>VEEAM BackupSync By VMs</name>
+                    <type>0</type>
+                    <snmp_community/>
+                    <snmp_oid/>
+                    <key>vbr[&quot;DiscoveryBackupVmsByJobs&quot;,&quot;BackupSync&quot;]</key>
+                    <delay>3600</delay>
+                    <status>0</status>
+                    <allowed_hosts/>
+                    <snmpv3_contextname/>
+                    <snmpv3_securityname/>
+                    <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                    <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                    <snmpv3_authpassphrase/>
+                    <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                    <snmpv3_privpassphrase/>
+                    <delay_flex/>
+                    <params/>
+                    <ipmi_sensor/>
+                    <authtype>0</authtype>
+                    <username/>
+                    <password/>
+                    <publickey/>
+                    <privatekey/>
+                    <port/>
+                    <filter>
+                        <evaltype>0</evaltype>
+                        <formula/>
+                        <conditions/>
+                    </filter>
+                    <lifetime>1</lifetime>
+                    <description/>
+                    <item_prototypes>
+                        <item_prototype>
+                            <name>Job {#JOBNAME} - Resultat {#JOBVMNAME}</name>
+                            <type>0</type>
+                            <snmp_community/>
+                            <multiplier>0</multiplier>
+                            <snmp_oid/>
+                            <key>vbr[VMResultBackupSync,&quot;{#JOBVMNAME}&quot;,&quot;{#JOBNAME}&quot;]</key>
+                            <delay>900</delay>
+                            <history>90</history>
+                            <trends>365</trends>
+                            <status>0</status>
+                            <value_type>3</value_type>
+                            <allowed_hosts/>
+                            <units/>
+                            <delta>0</delta>
+                            <snmpv3_contextname/>
+                            <snmpv3_securityname/>
+                            <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                            <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                            <snmpv3_authpassphrase/>
+                            <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                            <snmpv3_privpassphrase/>
+                            <formula>1</formula>
+                            <delay_flex/>
+                            <params/>
+                            <ipmi_sensor/>
+                            <data_type>0</data_type>
+                            <authtype>0</authtype>
+                            <username/>
+                            <password/>
+                            <publickey/>
+                            <privatekey/>
+                            <port/>
+                            <description/>
+                            <inventory_link>0</inventory_link>
+                            <applications>
+                                <application>
+                                    <name>VEEAM Backup &amp; Recovery - BackupSync Job(s) By VMs</name>
+                                </application>
+                            </applications>
+                            <valuemap>
+                                <name>vbrJobResult</name>
+                            </valuemap>
+                            <logtimefmt/>
+                            <application_prototypes/>
+                        </item_prototype>
+                    </item_prototypes>
+                    <trigger_prototypes/>
+                    <graph_prototypes/>
+                    <host_prototypes/>
+                </discovery_rule>
+                <discovery_rule>
+                    <name>VEEAM Backup By VMs</name>
+                    <type>0</type>
+                    <snmp_community/>
+                    <snmp_oid/>
+                    <key>vbr[&quot;DiscoveryBackupVmsByJobs&quot;]</key>
+                    <delay>3600</delay>
+                    <status>0</status>
+                    <allowed_hosts/>
+                    <snmpv3_contextname/>
+                    <snmpv3_securityname/>
+                    <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                    <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                    <snmpv3_authpassphrase/>
+                    <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                    <snmpv3_privpassphrase/>
+                    <delay_flex/>
+                    <params/>
+                    <ipmi_sensor/>
+                    <authtype>0</authtype>
+                    <username/>
+                    <password/>
+                    <publickey/>
+                    <privatekey/>
+                    <port/>
+                    <filter>
+                        <evaltype>0</evaltype>
+                        <formula/>
+                        <conditions/>
+                    </filter>
+                    <lifetime>1</lifetime>
+                    <description/>
+                    <item_prototypes>
+                        <item_prototype>
+                            <name>Job {#JOBNAME} - Resultat {#JOBVMNAME}</name>
+                            <type>0</type>
+                            <snmp_community/>
+                            <multiplier>0</multiplier>
+                            <snmp_oid/>
+                            <key>vbr[VMResultBackup,&quot;{#JOBVMNAME}&quot;,&quot;{#JOBNAME}&quot;]</key>
+                            <delay>900</delay>
+                            <history>90</history>
+                            <trends>365</trends>
+                            <status>0</status>
+                            <value_type>3</value_type>
+                            <allowed_hosts/>
+                            <units/>
+                            <delta>0</delta>
+                            <snmpv3_contextname/>
+                            <snmpv3_securityname/>
+                            <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                            <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                            <snmpv3_authpassphrase/>
+                            <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                            <snmpv3_privpassphrase/>
+                            <formula>1</formula>
+                            <delay_flex/>
+                            <params/>
+                            <ipmi_sensor/>
+                            <data_type>0</data_type>
+                            <authtype>0</authtype>
+                            <username/>
+                            <password/>
+                            <publickey/>
+                            <privatekey/>
+                            <port/>
+                            <description/>
+                            <inventory_link>0</inventory_link>
+                            <applications>
+                                <application>
+                                    <name>VEEAM Backup &amp; Recovery - Backup Job(s) By VMs</name>
+                                </application>
+                            </applications>
+                            <valuemap>
+                                <name>vbrJobResult</name>
+                            </valuemap>
+                            <logtimefmt/>
+                            <application_prototypes/>
+                        </item_prototype>
+                    </item_prototypes>
+                    <trigger_prototypes/>
+                    <graph_prototypes/>
+                    <host_prototypes/>
+                </discovery_rule>
+                <discovery_rule>
+                    <name>VEEAM EndpointBackup Jobs</name>
+                    <type>0</type>
+                    <snmp_community/>
+                    <snmp_oid/>
+                    <key>vbr[&quot;DiscoveryEndpointJobs&quot;]</key>
+                    <delay>3600</delay>
+                    <status>0</status>
+                    <allowed_hosts/>
+                    <snmpv3_contextname/>
+                    <snmpv3_securityname/>
+                    <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                    <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                    <snmpv3_authpassphrase/>
+                    <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                    <snmpv3_privpassphrase/>
+                    <delay_flex/>
+                    <params/>
+                    <ipmi_sensor/>
+                    <authtype>0</authtype>
+                    <username/>
+                    <password/>
+                    <publickey/>
+                    <privatekey/>
+                    <port/>
+                    <filter>
+                        <evaltype>0</evaltype>
+                        <formula/>
+                        <conditions/>
+                    </filter>
+                    <lifetime>1</lifetime>
                     <description/>
                     <item_prototypes>
                         <item_prototype>
@@ -727,52 +1513,12 @@
                             <inventory_link>0</inventory_link>
                             <applications>
                                 <application>
-                                    <name>VEEAM Backup &amp; Recovery job(s)</name>
+                                    <name>VEEAM Backup &amp; Recovery - EndPoint Backup job(s)</name>
                                 </application>
                             </applications>
                             <valuemap>
                                 <name>vbrJobResult</name>
                             </valuemap>
-                            <logtimefmt/>
-                            <application_prototypes/>
-                        </item_prototype>
-                        <item_prototype>
-                            <name>Prochain lancement tâche {#JOBENDPOINTNAME}</name>
-                            <type>0</type>
-                            <snmp_community/>
-                            <multiplier>0</multiplier>
-                            <snmp_oid/>
-                            <key>vbr[NextRunTime,{#JOBENDPOINTID}]</key>
-                            <delay>7200</delay>
-                            <history>90</history>
-                            <trends>365</trends>
-                            <status>0</status>
-                            <value_type>3</value_type>
-                            <allowed_hosts/>
-                            <units>unixtime</units>
-                            <delta>0</delta>
-                            <snmpv3_contextname/>
-                            <snmpv3_securityname/>
-                            <snmpv3_securitylevel>0</snmpv3_securitylevel>
-                            <snmpv3_authprotocol>0</snmpv3_authprotocol>
-                            <snmpv3_authpassphrase/>
-                            <snmpv3_privprotocol>0</snmpv3_privprotocol>
-                            <snmpv3_privpassphrase/>
-                            <formula>1</formula>
-                            <delay_flex/>
-                            <params/>
-                            <ipmi_sensor/>
-                            <data_type>0</data_type>
-                            <authtype>0</authtype>
-                            <username/>
-                            <password/>
-                            <publickey/>
-                            <privatekey/>
-                            <port/>
-                            <description/>
-                            <inventory_link>0</inventory_link>
-                            <applications/>
-                            <valuemap/>
                             <logtimefmt/>
                             <application_prototypes/>
                         </item_prototype>
@@ -783,7 +1529,7 @@
                             <multiplier>0</multiplier>
                             <snmp_oid/>
                             <key>vbr[ResultEndpoint,{#JOBENDPOINTID}]</key>
-                            <delay>15</delay>
+                            <delay>900</delay>
                             <history>90</history>
                             <trends>0</trends>
                             <status>0</status>
@@ -813,7 +1559,7 @@
                             <inventory_link>0</inventory_link>
                             <applications>
                                 <application>
-                                    <name>VEEAM Backup &amp; Recovery job(s)</name>
+                                    <name>VEEAM Backup &amp; Recovery - EndPoint Backup job(s)</name>
                                 </application>
                             </applications>
                             <valuemap/>
@@ -857,10 +1603,12 @@
                             <inventory_link>0</inventory_link>
                             <applications>
                                 <application>
-                                    <name>VEEAM Backup &amp; Recovery job(s)</name>
+                                    <name>VEEAM Backup &amp; Recovery - EndPoint Backup job(s)</name>
                                 </application>
                             </applications>
-                            <valuemap/>
+                            <valuemap>
+                                <name>vbrJobRunStatus</name>
+                            </valuemap>
                             <logtimefmt/>
                             <application_prototypes/>
                         </item_prototype>
@@ -901,7 +1649,7 @@
                             <inventory_link>0</inventory_link>
                             <applications>
                                 <application>
-                                    <name>VEEAM Backup &amp; Recovery job(s)</name>
+                                    <name>VEEAM Backup &amp; Recovery - EndPoint Backup job(s)</name>
                                 </application>
                             </applications>
                             <valuemap/>
@@ -962,7 +1710,7 @@
                     <snmp_community/>
                     <snmp_oid/>
                     <key>vbr[&quot;DiscoveryRepo&quot;]</key>
-                    <delay>7200</delay>
+                    <delay>3600</delay>
                     <status>0</status>
                     <allowed_hosts/>
                     <snmpv3_contextname/>
@@ -986,7 +1734,7 @@
                         <formula/>
                         <conditions/>
                     </filter>
-                    <lifetime>1</lifetime>
+                    <lifetime>7</lifetime>
                     <description/>
                     <item_prototypes>
                         <item_prototype>
@@ -1131,8 +1879,8 @@
                     <type>0</type>
                     <snmp_community/>
                     <snmp_oid/>
-                    <key>vbr[&quot;DiscoveryTape&quot;]</key>
-                    <delay>7200</delay>
+                    <key>vbr[&quot;DiscoveryTapeJobs&quot;]</key>
+                    <delay>3600</delay>
                     <status>0</status>
                     <allowed_hosts/>
                     <snmpv3_contextname/>
@@ -1156,7 +1904,7 @@
                         <formula/>
                         <conditions/>
                     </filter>
-                    <lifetime>1</lifetime>
+                    <lifetime>7</lifetime>
                     <description/>
                     <item_prototypes>
                         <item_prototype>
@@ -1196,56 +1944,12 @@
                             <inventory_link>0</inventory_link>
                             <applications>
                                 <application>
-                                    <name>VEEAM Backup &amp; Recovery job(s)</name>
+                                    <name>VEEAM Backup &amp; Recovery - Tape job(s)</name>
                                 </application>
                             </applications>
                             <valuemap>
                                 <name>vbrJobResult</name>
                             </valuemap>
-                            <logtimefmt/>
-                            <application_prototypes/>
-                        </item_prototype>
-                        <item_prototype>
-                            <name>Prochain lancement tâche {#JOBTAPENAME}</name>
-                            <type>0</type>
-                            <snmp_community/>
-                            <multiplier>0</multiplier>
-                            <snmp_oid/>
-                            <key>vbr[NextRunTime,{#JOBTAPEID}]</key>
-                            <delay>7200</delay>
-                            <history>90</history>
-                            <trends>365</trends>
-                            <status>0</status>
-                            <value_type>3</value_type>
-                            <allowed_hosts/>
-                            <units>unixtime</units>
-                            <delta>0</delta>
-                            <snmpv3_contextname/>
-                            <snmpv3_securityname/>
-                            <snmpv3_securitylevel>0</snmpv3_securitylevel>
-                            <snmpv3_authprotocol>0</snmpv3_authprotocol>
-                            <snmpv3_authpassphrase/>
-                            <snmpv3_privprotocol>0</snmpv3_privprotocol>
-                            <snmpv3_privpassphrase/>
-                            <formula>1</formula>
-                            <delay_flex/>
-                            <params/>
-                            <ipmi_sensor/>
-                            <data_type>0</data_type>
-                            <authtype>0</authtype>
-                            <username/>
-                            <password/>
-                            <publickey/>
-                            <privatekey/>
-                            <port/>
-                            <description/>
-                            <inventory_link>0</inventory_link>
-                            <applications>
-                                <application>
-                                    <name>VEEAM Backup &amp; Recovery job(s)</name>
-                                </application>
-                            </applications>
-                            <valuemap/>
                             <logtimefmt/>
                             <application_prototypes/>
                         </item_prototype>
@@ -1286,7 +1990,7 @@
                             <inventory_link>0</inventory_link>
                             <applications>
                                 <application>
-                                    <name>VEEAM Backup &amp; Recovery job(s)</name>
+                                    <name>VEEAM Backup &amp; Recovery - Tape job(s)</name>
                                 </application>
                             </applications>
                             <valuemap/>
@@ -1330,7 +2034,7 @@
                             <inventory_link>0</inventory_link>
                             <applications>
                                 <application>
-                                    <name>VEEAM Backup &amp; Recovery job(s)</name>
+                                    <name>VEEAM Backup &amp; Recovery - Tape job(s)</name>
                                 </application>
                             </applications>
                             <valuemap>
@@ -1342,7 +2046,7 @@
                     </item_prototypes>
                     <trigger_prototypes>
                         <trigger_prototype>
-                            <expression>{Template VEEAM-BACKUP trapper:ResultTape.[{#JOBTAPEID}].avg(5400)}&lt;1</expression>
+                            <expression>{Template VEEAM-BACKUP trapper:ResultTape.[{#JOBTAPEID}].avg(300)}&lt;1</expression>
                             <name>Backup {#JOBTAPENAME} en erreur</name>
                             <url/>
                             <status>0</status>
@@ -1352,8 +2056,8 @@
                             <dependencies/>
                         </trigger_prototype>
                         <trigger_prototype>
-                            <expression>{Template VEEAM-BACKUP trapper:ResultTape.[{#JOBTAPEID}].avg(5400)}&gt;0 and&#13;
-{Template VEEAM-BACKUP trapper:ResultTape.[{#JOBTAPEID}].avg(5400)}&lt;2</expression>
+                            <expression>{Template VEEAM-BACKUP trapper:ResultTape.[{#JOBTAPEID}].avg(300)}&gt;0 and&#13;
+{Template VEEAM-BACKUP trapper:ResultTape.[{#JOBTAPEID}].avg(300)}&lt;2</expression>
                             <name>Backup {#JOBTAPENAME} terminé avec Avertissement</name>
                             <url/>
                             <status>0</status>
@@ -1373,7 +2077,7 @@
                             <dependencies/>
                         </trigger_prototype>
                         <trigger_prototype>
-                            <expression>{Template VEEAM-BACKUP trapper:vbr[ResultTape,{#JOBTAPEID}].nodata(1d)}=1</expression>
+                            <expression>{Template VEEAM-BACKUP trapper:vbr[ResultTape,{#JOBTAPEID}].nodata(1)}=1</expression>
                             <name>Pas de récupération de données depuis 24h</name>
                             <url/>
                             <status>0</status>
@@ -1389,7 +2093,59 @@
             </discovery_rules>
             <macros/>
             <templates/>
-            <screens/>
+            <screens>
+                <screen>
+                    <name>Veeam</name>
+                    <hsize>2</hsize>
+                    <vsize>4</vsize>
+                    <screen_items>
+                        <screen_item>
+                            <resourcetype>1</resourcetype>
+                            <width>500</width>
+                            <height>100</height>
+                            <x>0</x>
+                            <y>0</y>
+                            <colspan>1</colspan>
+                            <rowspan>1</rowspan>
+                            <elements>0</elements>
+                            <valign>0</valign>
+                            <halign>0</halign>
+                            <style>0</style>
+                            <url/>
+                            <dynamic>0</dynamic>
+                            <sort_triggers>0</sort_triggers>
+                            <resource>
+                                <key>vbr[&quot;RunningJob&quot;]</key>
+                                <host>Template VEEAM-BACKUP trapper</host>
+                            </resource>
+                            <max_columns>3</max_columns>
+                            <application/>
+                        </screen_item>
+                        <screen_item>
+                            <resourcetype>19</resourcetype>
+                            <width>500</width>
+                            <height>100</height>
+                            <x>1</x>
+                            <y>0</y>
+                            <colspan>1</colspan>
+                            <rowspan>1</rowspan>
+                            <elements>0</elements>
+                            <valign>0</valign>
+                            <halign>0</halign>
+                            <style>0</style>
+                            <url/>
+                            <dynamic>0</dynamic>
+                            <sort_triggers>0</sort_triggers>
+                            <resource>
+                                <key>Result.[{#JOBID}]</key>
+                                <host>Template VEEAM-BACKUP trapper</host>
+                            </resource>
+                            <max_columns>3</max_columns>
+                            <application/>
+                        </screen_item>
+                    </screen_items>
+                </screen>
+            </screens>
         </template>
     </templates>
     <triggers>
@@ -1405,19 +2161,6 @@
         </trigger>
     </triggers>
     <value_maps>
-        <value_map>
-            <name>sbrtaskresult</name>
-            <mappings>
-                <mapping>
-                    <value>0</value>
-                    <newvalue>Error</newvalue>
-                </mapping>
-                <mapping>
-                    <value>2</value>
-                    <newvalue>Succeeded</newvalue>
-                </mapping>
-            </mappings>
-        </value_map>
         <value_map>
             <name>vbrJobResult</name>
             <mappings>
@@ -1441,6 +2184,10 @@
                     <value>4</value>
                     <newvalue>First Backup (no history)</newvalue>
                 </mapping>
+                <mapping>
+                    <value>5</value>
+                    <newvalue>En cours</newvalue>
+                </mapping>
             </mappings>
         </value_map>
         <value_map>
@@ -1453,6 +2200,23 @@
                 <mapping>
                     <value>1</value>
                     <newvalue>Running</newvalue>
+                </mapping>
+            </mappings>
+        </value_map>
+        <value_map>
+            <name>vbrtaskresult</name>
+            <mappings>
+                <mapping>
+                    <value>0</value>
+                    <newvalue>Error</newvalue>
+                </mapping>
+                <mapping>
+                    <value>2</value>
+                    <newvalue>Succeeded</newvalue>
+                </mapping>
+                <mapping>
+                    <value>4</value>
+                    <newvalue>Canceled</newvalue>
                 </mapping>
             </mappings>
         </value_map>

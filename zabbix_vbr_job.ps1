@@ -233,9 +233,16 @@ switch ($ITEM)
 		}
 		else
 		{
-			$query3 = $query2.value
-			$query4 = "$query3" | veeam-replace
-			write-host "$query4"
+			if ($query2.value -like "none" -and $query1.State.Value -like "Working")
+			{
+				write-host "5"
+			}
+			else
+			{
+				$query3 = $query2.value
+				$query4 = "$query3" | veeam-replace
+				write-host "$query4"
+			}
 		}
 	}
 	
@@ -282,20 +289,38 @@ switch ($ITEM)
 			$query2 = $query.LastResult.Value
 			if (!$query2)
 			{
-			    write-host "4"
+				# Retrieve version veeam
+				$corePath = Get-ItemProperty -Path "HKLM:\Software\Veeam\Veeam Backup and Replication\" -Name "CorePath"
+				$depDLLPath = Join-Path -Path $corePath.CorePath -ChildPath "Packages\VeeamDeploymentDll.dll" -Resolve
+				$file = Get-Item -Path $depDLLPath
+				$version = $file.VersionInfo.ProductVersion
+				if ($version -lt "8")
+				{
+					$query = Get-VBRTapeJob | Where-Object { $_.Id -like "*$ID*" }
+					$query1 = $query.GetLastResult()
+					$query2 = "$query1" | veeam-replace
+					Write-Host "$query2"
+				}
+				else
+				{
+					write-host "4"
+				}
 			}
-            else {
-            if (($query.LastState.Value -like "WaitingTape") -and ($query2 -like "None"))
-            {
-                write-host "1"
-            }
-            else {
-				$query3 = $query2 | veeam-replace
-				write-host "$query3"
-            }
+			else
+			{
+				if (($query.LastState.Value -like "WaitingTape") -and ($query2 -like "None"))
+				{
+					write-host "1"
+				}
+				else
+				{
+					$query3 = $query2 | veeam-replace
+					write-host "$query3"
+				}
 			}
 		}
 	}
+	
 	
 	"ResultEndpoint"  {
 		if (!$ID)
@@ -327,24 +352,16 @@ switch ($ITEM)
 	"VmResultBackup" {
 		$xml1 = Import-Clixml "$pathxml\backuptasks.xml"
 		$query = $xml1 | Where-Object { $_.Name -like "$ID" -and $_.JobName -like "$ID0" }
-    # If current task doesn't contain vm value it's success for request vm   
-        if (!$query) {
-        write-host "2"}
-        else { 
 		$query1 = $query.Status.Value
 		$query2 = "$query1" | veeam-replace
-		[string]$query2}
+		[string]$query2
 	}
 	"VmResultBackupSync" {
 		$xml1 = Import-Clixml "$pathxml\backupsynctasks.xml"
 		$query = $xml1 | Where-Object { $_.Name -like "$ID" -and $_.JobName -like "$ID0" }
-        # If current task doesn't contain vm value it's success for request vm   
-        if (!$query) {
-        write-host "2"}
-        else { 
 		$query1 = $query.Status.Value
 		$query2 = "$query1" | veeam-replace
-		[string]$query2}
+		[string]$query2
 	}
 	"RepoCapacity" {
 		$query = Get-WmiObject -Class Repository -ComputerName $env:COMPUTERNAME -Namespace ROOT\VeeamBS | Where-Object { $_.Name -eq "$ID" }

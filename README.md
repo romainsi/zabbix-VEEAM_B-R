@@ -3,7 +3,7 @@
 This template use the VEEAM Backup & Replication PowerShell Cmdlets to discover and manage VEEAM Backup jobs, Veeam BackupSync, Veeam Tape Job, Veeam Endpoint Backup Jobs, All Repositories and Veeam Services.
 
 Work with Veeam backup & replication V7 to V9.5<br />
-Work with Zabbix 3.X & 4.0<br /> 
+Work with Zabbix 3.X (english template only for V3.X) & 4.X<br /> 
 French & English translation for the Template
 
 Explanation of how it works :<br />

@@ -57,10 +57,10 @@ Why? Because the execution of this command can take between 30 seconds and more 
 **-------- Discovery Jobs By VMs --------**
 
 **1. VEEAM Backup By VMs :**
-  - Result of each VMs in each Jobs (ZabbixTrapper)
+  - Result of each VMs in each Jobs
   
 **2. VEEAM BackupSync By VMs :**
-  - Result of each VMs in each Jobs (ZabbixTrapper)
+  - Result of each VMs in each Jobs
 <br />
 
 **-------- Triggers --------**
@@ -115,9 +115,8 @@ Name : "Veeam" ; Expression type : "**FALSE**" ; Expression : "Veeam.\*"<br />
 6. Purge and clean Template OS Windows if is linked to the host (you can relink it after).
 7. Associate "Template VEEAM - Backup and Replication" to the host.
 8. Wait about 1h for discovery, XML file to be generated and first informations retrieves.
-<br />
 ! If you use old version please Purge and clean "Template VEEAM-BACKUP trapper".
-<br />
+<br>
 With a large or very large backup tasks history, the XML size can be more than 500 MB (so script finish in timeout) you can reduce this with this link : <br /> 
 https://www.veeam.com/kb1995 <br />
 Use first : "Changing Session history retention" and if this is not enough, "Clear old job sessions".

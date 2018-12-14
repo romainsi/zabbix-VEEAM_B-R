@@ -114,7 +114,7 @@ Name : "Veeam" ; Expression type : "**FALSE**" ; Expression : "Veeam.\*"<br />
 5. Import TemplateVEEAM-BACKUPtrapper.xml file into Zabbix. 
 6. Purge and clean Template OS Windows if is linked to the host (you can relink it after).
 7. Associate "Template VEEAM - Backup and Replication" to the host.
-8. Wait about 1h for discovery, XML file to be generated and first informations retrieves.<br>
+8. Wait about 1h for discovery, XML file to be generated and first informations retrieves.<br><br>
 ! If you use old version please Purge and clean "Template VEEAM-BACKUP trapper".
 <br>
 With a large or very large backup tasks history, the XML size can be more than 500 MB (so script finish in timeout) you can reduce this with this link : <br /> 

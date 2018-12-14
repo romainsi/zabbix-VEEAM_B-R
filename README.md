@@ -3,14 +3,14 @@
 This template use the VEEAM Backup & Replication PowerShell Cmdlets to discover and manage VEEAM Backup jobs, Veeam BackupSync, Veeam Tape Job, Veeam Endpoint Backup Jobs, All Repositories and Veeam Services.
 
 Work with Veeam backup & replication V7 to V9.5<br />
-Work with Zabbix 3.X & 4.0<br /> 
+Work with Zabbix 3.X (english template only for V3.X) & 4.X<br /> 
 French & English translation for the Template
 
 Explanation of how it works :<br />
-The "Result Export Xml Veeam" item sends a powerhell command (with nowait option) to the host to create an xml file of the result of the Get-VBRBbackupSession,Get-VBRJob, Get-VRBBackup and Get-VBREPJob commands that is stored under C:\Program Files\Zabbix Agent\scripts\\*.xml (variable $pathxml)<br />
+The "Result Export Xml Veeam" item sends a powerhell command (with nowait option) to the host to create an xml file of the result of the Get-VBRBbackupSession,Get-VBRJob, Get-VRBBackup and Get-VBREPJob commands that is stored under C:\Program Files\Zabbix Agent\scripts\TempXmlVeeam\\*.xml (variable $pathxml)<br />
 Then, each request imports the xml to retrieve the information.<br />
 Why? Because the execution of this command can take between 30 seconds and more than 3 minutes (depending on the history and the number of tasks) and I end up with several scripts running for a certain time and the execution is in timeout.
-So, the result of the work is sent by Zabbix Sender to avoid Timeouts<br /><br />
+<br /><br />
 
 **-------- Items --------**
 
@@ -21,8 +21,7 @@ So, the result of the work is sent by Zabbix Sender to avoid Timeouts<br /><br /
 **-------- Discovery Jobs --------**
 
 **1. Veeam Jobs :** <br />
-  - Result of each jobs (ZabbixTrapper)<br />
-  - Result task ZabbixSender of each jobs<br />
+  - Result of each jobs<br />
   - Execution status for each jobs<br />
   - Number of VMs Failed in each jobs<br />
   - Number of VMs Warning in each jobs<br />
@@ -33,13 +32,11 @@ So, the result of the work is sent by Zabbix Sender to avoid Timeouts<br /><br /
   - Next run time of each jobs<br />
 
 **2. Veeam Tape Jobs :**<br />
-  - Result of each jobs (ZabbixTrapper)<br />
-  - Result task ZabbixSender of each jobs<br />
+  - Result of each jobs<br />
   - Execution status for each jobs<br />
 
 **3. Veeam BackupSync Jobs :**<br />
-  - Result of each jobs (ZabbixTrapper)<br />
-  - Result task ZabbixSender of each jobs<br />
+  - Result of each jobs<br />
   - Execution status for each jobs<br />
   - Number of VMs Failed in each jobs<br />
   - Number of VMs Warning in each jobs<br />
@@ -49,8 +46,7 @@ So, the result of the work is sent by Zabbix Sender to avoid Timeouts<br /><br /
   - Size excluded in each jobs (disabled by default)<br />
 
 **4. Veeam Jobs Endpoint Backup:**<br />
-  - Result of each jobs (ZabbixTrapper)<br />
-  - Result task ZabbixSender of each jobs<br />
+  - Result of each jobs<br />
   - Execution status for each jobs<br />
   - Next run time of each jobs<br />
 
@@ -61,10 +57,10 @@ So, the result of the work is sent by Zabbix Sender to avoid Timeouts<br /><br /
 **-------- Discovery Jobs By VMs --------**
 
 **1. VEEAM Backup By VMs :**
-  - Result of each VMs in each Jobs (ZabbixTrapper)
+  - Result of each VMs in each Jobs
   
 **2. VEEAM BackupSync By VMs :**
-  - Result of each VMs in each Jobs (ZabbixTrapper)
+  - Result of each VMs in each Jobs
 <br />
 
 **-------- Triggers --------**
@@ -117,9 +113,10 @@ And modify regular expression "Windows service startup states for discovery" : A
 Name : "Veeam" ; Expression type : "**FALSE**" ; Expression : "Veeam.\*"<br />
 5. Import TemplateVEEAM-BACKUPtrapper.xml file into Zabbix. 
 6. Purge and clean Template OS Windows if is linked to the host (you can relink it after).
-7. Associate "Template VEEAM-BACKUP trapper" to the host.
-8. Wait about 1h for discovery, XML file to be generated and first informations retrieves.
-<br />
+7. Associate "Template VEEAM - Backup and Replication" to the host.
+8. Wait about 1h for discovery, XML file to be generated and first informations retrieves.<br><br>
+! If you use old version (< v3) please Purge and clean "Template VEEAM-BACKUP trapper".
+<br>
 With a large or very large backup tasks history, the XML size can be more than 500 MB (so script finish in timeout) you can reduce this with this link : <br /> 
 https://www.veeam.com/kb1995 <br />
 Use first : "Changing Session history retention" and if this is not enough, "Clear old job sessions".

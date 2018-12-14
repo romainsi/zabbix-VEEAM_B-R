@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <zabbix_export>
     <version>3.0</version>
-    <date>2018-10-12T07:50:05Z</date>
+    <date>2018-12-14T10:25:30Z</date>
     <groups>
         <group>
             <name>Templates</name>
@@ -9,8 +9,8 @@
     </groups>
     <templates>
         <template>
-            <template>Template VEEAM-BACKUP trapper</template>
-            <name>Template VEEAM-BACKUP trapper</name>
+            <template>Template VEEAM - Backup and Replication</template>
+            <name>Template VEEAM - Backup and Replication</name>
             <description/>
             <groups>
                 <group>
@@ -269,7 +269,7 @@
                     </item_prototypes>
                     <trigger_prototypes>
                         <trigger_prototype>
-                            <expression>{Template VEEAM-BACKUP trapper:service.info[{#SERVICE.NAME},state].min(#3)}&lt;&gt;0</expression>
+                            <expression>{Template VEEAM - Backup and Replication:service.info[{#SERVICE.NAME},state].min(#3)}&lt;&gt;0</expression>
                             <name>{#SERVICE.DISPLAYNAME} is not running (start type {#SERVICE.STARTUPNAME})</name>
                             <url/>
                             <status>0</status>
@@ -315,52 +315,6 @@
                     <lifetime>1</lifetime>
                     <description/>
                     <item_prototypes>
-                        <item_prototype>
-                            <name>Result backup {#JOBNAME}</name>
-                            <type>2</type>
-                            <snmp_community/>
-                            <multiplier>0</multiplier>
-                            <snmp_oid/>
-                            <key>Result.[{#JOBID}]</key>
-                            <delay>0</delay>
-                            <history>90</history>
-                            <trends>365</trends>
-                            <status>0</status>
-                            <value_type>3</value_type>
-                            <allowed_hosts/>
-                            <units/>
-                            <delta>0</delta>
-                            <snmpv3_contextname/>
-                            <snmpv3_securityname/>
-                            <snmpv3_securitylevel>0</snmpv3_securitylevel>
-                            <snmpv3_authprotocol>0</snmpv3_authprotocol>
-                            <snmpv3_authpassphrase/>
-                            <snmpv3_privprotocol>0</snmpv3_privprotocol>
-                            <snmpv3_privpassphrase/>
-                            <formula>1</formula>
-                            <delay_flex/>
-                            <params/>
-                            <ipmi_sensor/>
-                            <data_type>0</data_type>
-                            <authtype>0</authtype>
-                            <username/>
-                            <password/>
-                            <publickey/>
-                            <privatekey/>
-                            <port/>
-                            <description/>
-                            <inventory_link>0</inventory_link>
-                            <applications>
-                                <application>
-                                    <name>VEEAM Backup &amp; Recovery - Backup Job(s)</name>
-                                </application>
-                            </applications>
-                            <valuemap>
-                                <name>vbrJobResult</name>
-                            </valuemap>
-                            <logtimefmt/>
-                            <application_prototypes/>
-                        </item_prototype>
                         <item_prototype>
                             <name>Excluded size in job {#JOBNAME}</name>
                             <type>0</type>
@@ -494,17 +448,17 @@
                             <application_prototypes/>
                         </item_prototype>
                         <item_prototype>
-                            <name>Result Zabbix Sender {#JOBNAME}</name>
+                            <name>Result backup {#JOBNAME}</name>
                             <type>0</type>
                             <snmp_community/>
                             <multiplier>0</multiplier>
                             <snmp_oid/>
-                            <key>vbr[Result,{#JOBID}]</key>
+                            <key>vbr[ResultBackup,{#JOBID}]</key>
                             <delay>900</delay>
-                            <history>7</history>
-                            <trends>0</trends>
+                            <history>90</history>
+                            <trends>365</trends>
                             <status>0</status>
-                            <value_type>4</value_type>
+                            <value_type>3</value_type>
                             <allowed_hosts/>
                             <units/>
                             <delta>0</delta>
@@ -533,7 +487,9 @@
                                     <name>VEEAM Backup &amp; Recovery - Backup Job(s)</name>
                                 </application>
                             </applications>
-                            <valuemap/>
+                            <valuemap>
+                                <name>vbrJobResult</name>
+                            </valuemap>
                             <logtimefmt/>
                             <application_prototypes/>
                         </item_prototype>
@@ -762,19 +718,8 @@
                     </item_prototypes>
                     <trigger_prototypes>
                         <trigger_prototype>
-                            <expression>{Template VEEAM-BACKUP trapper:Result.[{#JOBID}].avg(300)}&gt;0 and&#13;
-{Template VEEAM-BACKUP trapper:Result.[{#JOBID}].avg(300)}&lt;2</expression>
-                            <name>Backup {#JOBNAME} completed with Warning</name>
-                            <url/>
-                            <status>0</status>
-                            <priority>2</priority>
-                            <description/>
-                            <type>0</type>
-                            <dependencies/>
-                        </trigger_prototype>
-                        <trigger_prototype>
-                            <expression>{Template VEEAM-BACKUP trapper:Result.[{#JOBID}].avg(300)}&lt;1</expression>
-                            <name>Backup {#JOBNAME} in error</name>
+                            <expression>{Template VEEAM - Backup and Replication:vbr[ResultBackup,{#JOBID}].avg(300)}&lt;1</expression>
+                            <name>Backup {#JOBNAME} Failed</name>
                             <url/>
                             <status>0</status>
                             <priority>4</priority>
@@ -783,7 +728,17 @@
                             <dependencies/>
                         </trigger_prototype>
                         <trigger_prototype>
-                            <expression>{Template VEEAM-BACKUP trapper:vbr[RunStatus,{#JOBID}].avg(28800)}=1 and {Template VEEAM-BACKUP trapper:vbr[Type,{#JOBID}].regexp(BackupSync)}=0</expression>
+                            <expression>{Template VEEAM - Backup and Replication:vbr[ResultBackup,{#JOBID}].avg(300)}&gt;0 and {Template VEEAM - Backup and Replication:vbr[ResultBackup,{#JOBID}].avg(300)}&lt;2</expression>
+                            <name>Backup {#JOBNAME} Warning</name>
+                            <url/>
+                            <status>0</status>
+                            <priority>3</priority>
+                            <description/>
+                            <type>0</type>
+                            <dependencies/>
+                        </trigger_prototype>
+                        <trigger_prototype>
+                            <expression>{Template VEEAM - Backup and Replication:vbr[RunStatus,{#JOBID}].avg(28800)}=1 and {Template VEEAM - Backup and Replication:vbr[Type,{#JOBID}].regexp(BackupSync)}=0</expression>
                             <name>The VEEAM work {#JOBNAME} is still running (8h)</name>
                             <url/>
                             <status>0</status>
@@ -793,7 +748,7 @@
                             <dependencies/>
                         </trigger_prototype>
                         <trigger_prototype>
-                            <expression>{Template VEEAM-BACKUP trapper:vbr[Result,{#JOBID}].regexp(Execution non reussie)}=1 or {Template VEEAM-BACKUP trapper:vbr[Result,{#JOBID}].nodata(86400)}=1</expression>
+                            <expression>{Template VEEAM - Backup and Replication:vbr[ResultBackup,{#JOBID}].nodata(7200)}=1</expression>
                             <name>Veeam Backup Data Recovery Problem</name>
                             <url/>
                             <status>0</status>
@@ -839,52 +794,6 @@
                     <lifetime>1</lifetime>
                     <description/>
                     <item_prototypes>
-                        <item_prototype>
-                            <name>Result backup {#JOBBSNAME}</name>
-                            <type>2</type>
-                            <snmp_community/>
-                            <multiplier>0</multiplier>
-                            <snmp_oid/>
-                            <key>Result.[{#JOBBSID}]</key>
-                            <delay>0</delay>
-                            <history>90</history>
-                            <trends>365</trends>
-                            <status>0</status>
-                            <value_type>3</value_type>
-                            <allowed_hosts/>
-                            <units/>
-                            <delta>0</delta>
-                            <snmpv3_contextname/>
-                            <snmpv3_securityname/>
-                            <snmpv3_securitylevel>0</snmpv3_securitylevel>
-                            <snmpv3_authprotocol>0</snmpv3_authprotocol>
-                            <snmpv3_authpassphrase/>
-                            <snmpv3_privprotocol>0</snmpv3_privprotocol>
-                            <snmpv3_privpassphrase/>
-                            <formula>1</formula>
-                            <delay_flex/>
-                            <params/>
-                            <ipmi_sensor/>
-                            <data_type>0</data_type>
-                            <authtype>0</authtype>
-                            <username/>
-                            <password/>
-                            <publickey/>
-                            <privatekey/>
-                            <port/>
-                            <description/>
-                            <inventory_link>0</inventory_link>
-                            <applications>
-                                <application>
-                                    <name>VEEAM Backup &amp; Recovery - BackupSync Job(s)</name>
-                                </application>
-                            </applications>
-                            <valuemap>
-                                <name>vbrJobResult</name>
-                            </valuemap>
-                            <logtimefmt/>
-                            <application_prototypes/>
-                        </item_prototype>
                         <item_prototype>
                             <name>Excluded size in job {#JOBBSNAME}</name>
                             <type>0</type>
@@ -974,17 +883,17 @@
                             <application_prototypes/>
                         </item_prototype>
                         <item_prototype>
-                            <name>Result Zabbix Sender {#JOBBSNAME}</name>
+                            <name>Result backup {#JOBBSNAME}</name>
                             <type>0</type>
                             <snmp_community/>
                             <multiplier>0</multiplier>
                             <snmp_oid/>
-                            <key>vbr[Result,{#JOBBSID}]</key>
+                            <key>vbr[ResultBackupSync,{#JOBBSID}]</key>
                             <delay>900</delay>
-                            <history>900</history>
-                            <trends>0</trends>
+                            <history>90</history>
+                            <trends>365</trends>
                             <status>0</status>
-                            <value_type>4</value_type>
+                            <value_type>3</value_type>
                             <allowed_hosts/>
                             <units/>
                             <delta>0</delta>
@@ -1013,7 +922,9 @@
                                     <name>VEEAM Backup &amp; Recovery - BackupSync Job(s)</name>
                                 </application>
                             </applications>
-                            <valuemap/>
+                            <valuemap>
+                                <name>vbrJobResult</name>
+                            </valuemap>
                             <logtimefmt/>
                             <application_prototypes/>
                         </item_prototype>
@@ -1242,18 +1153,8 @@
                     </item_prototypes>
                     <trigger_prototypes>
                         <trigger_prototype>
-                            <expression>{Template VEEAM-BACKUP trapper:Result.[{#JOBBSID}].avg(300)}&gt;0 and {Template VEEAM-BACKUP trapper:Result.[{#JOBBSID}].avg(300)}&lt;2</expression>
-                            <name>Backup {#JOBBSNAME} completed with Warning</name>
-                            <url/>
-                            <status>0</status>
-                            <priority>2</priority>
-                            <description/>
-                            <type>0</type>
-                            <dependencies/>
-                        </trigger_prototype>
-                        <trigger_prototype>
-                            <expression>{Template VEEAM-BACKUP trapper:Result.[{#JOBBSID}].avg(300)}&lt;1</expression>
-                            <name>Backup {#JOBBSNAME} in error</name>
+                            <expression>{Template VEEAM - Backup and Replication:vbr[ResultBackupSync,{#JOBBSID}].avg(300)}&lt;1</expression>
+                            <name>Backup {#JOBBSNAME} Failed</name>
                             <url/>
                             <status>0</status>
                             <priority>4</priority>
@@ -1262,7 +1163,17 @@
                             <dependencies/>
                         </trigger_prototype>
                         <trigger_prototype>
-                            <expression>{Template VEEAM-BACKUP trapper:vbr[Result,{#JOBBSID}].regexp(Execution non reussie)}=1 or {Template VEEAM-BACKUP trapper:vbr[Result,{#JOBBSID}].nodata(86400)}=1</expression>
+                            <expression>{Template VEEAM - Backup and Replication:vbr[ResultBackupSync,{#JOBBSID}].avg(300)}&gt;0 and {Template VEEAM - Backup and Replication:vbr[ResultBackupSync,{#JOBBSID}].avg(300)}&lt;2</expression>
+                            <name>Backup {#JOBBSNAME} Warning</name>
+                            <url/>
+                            <status>0</status>
+                            <priority>3</priority>
+                            <description/>
+                            <type>0</type>
+                            <dependencies/>
+                        </trigger_prototype>
+                        <trigger_prototype>
+                            <expression>{Template VEEAM - Backup and Replication:vbr[ResultBackupSync,{#JOBBSID}].nodata(7200)}=1</expression>
                             <name>Veeam Backup Data Recovery Problem</name>
                             <url/>
                             <status>0</status>
@@ -1478,12 +1389,12 @@
                     <item_prototypes>
                         <item_prototype>
                             <name>Result backup {#JOBENDPOINTNAME}</name>
-                            <type>2</type>
+                            <type>0</type>
                             <snmp_community/>
                             <multiplier>0</multiplier>
                             <snmp_oid/>
-                            <key>ResultEndpoint.[{#JOBENDPOINTID}]</key>
-                            <delay>0</delay>
+                            <key>vbr[ResultEndpoint,{#JOBENDPOINTID}]</key>
+                            <delay>900</delay>
                             <history>90</history>
                             <trends>365</trends>
                             <status>0</status>
@@ -1519,50 +1430,6 @@
                             <valuemap>
                                 <name>vbrJobResult</name>
                             </valuemap>
-                            <logtimefmt/>
-                            <application_prototypes/>
-                        </item_prototype>
-                        <item_prototype>
-                            <name>Result Zabbix Sender {#JOBENDPOINTNAME}</name>
-                            <type>0</type>
-                            <snmp_community/>
-                            <multiplier>0</multiplier>
-                            <snmp_oid/>
-                            <key>vbr[ResultEndpoint,{#JOBENDPOINTID}]</key>
-                            <delay>900</delay>
-                            <history>90</history>
-                            <trends>0</trends>
-                            <status>0</status>
-                            <value_type>4</value_type>
-                            <allowed_hosts/>
-                            <units/>
-                            <delta>0</delta>
-                            <snmpv3_contextname/>
-                            <snmpv3_securityname/>
-                            <snmpv3_securitylevel>0</snmpv3_securitylevel>
-                            <snmpv3_authprotocol>0</snmpv3_authprotocol>
-                            <snmpv3_authpassphrase/>
-                            <snmpv3_privprotocol>0</snmpv3_privprotocol>
-                            <snmpv3_privpassphrase/>
-                            <formula>1</formula>
-                            <delay_flex/>
-                            <params/>
-                            <ipmi_sensor/>
-                            <data_type>0</data_type>
-                            <authtype>0</authtype>
-                            <username/>
-                            <password/>
-                            <publickey/>
-                            <privatekey/>
-                            <port/>
-                            <description/>
-                            <inventory_link>0</inventory_link>
-                            <applications>
-                                <application>
-                                    <name>VEEAM Backup &amp; Recovery - EndPoint Backup job(s)</name>
-                                </application>
-                            </applications>
-                            <valuemap/>
                             <logtimefmt/>
                             <application_prototypes/>
                         </item_prototype>
@@ -1659,19 +1526,8 @@
                     </item_prototypes>
                     <trigger_prototypes>
                         <trigger_prototype>
-                            <expression>{Template VEEAM-BACKUP trapper:ResultEndpoint.[{#JOBENDPOINTID}].avg(300)}&gt;0 and&#13;
-{Template VEEAM-BACKUP trapper:ResultEndpoint.[{#JOBENDPOINTID}].avg(300)}&lt;2</expression>
-                            <name>Backup {#JOBENDPOINTNAME} completed with Warning</name>
-                            <url/>
-                            <status>0</status>
-                            <priority>2</priority>
-                            <description/>
-                            <type>0</type>
-                            <dependencies/>
-                        </trigger_prototype>
-                        <trigger_prototype>
-                            <expression>{Template VEEAM-BACKUP trapper:ResultEndpoint.[{#JOBENDPOINTID}].avg(300)}&lt;1</expression>
-                            <name>Backup {#JOBENDPOINTNAME} in error</name>
+                            <expression>{Template VEEAM - Backup and Replication:vbr[ResultEndpoint,{#JOBENDPOINTID}].avg(300)}&lt;1</expression>
+                            <name>Backup {#JOBENDPOINTNAME} Failed</name>
                             <url/>
                             <status>0</status>
                             <priority>4</priority>
@@ -1680,7 +1536,17 @@
                             <dependencies/>
                         </trigger_prototype>
                         <trigger_prototype>
-                            <expression>{Template VEEAM-BACKUP trapper:vbr[RunStatus,{#JOBENDPOINTID}].avg(28800)}=1</expression>
+                            <expression>{Template VEEAM - Backup and Replication:vbr[ResultEndpoint,{#JOBENDPOINTID}].avg(300)}&gt;0 and {Template VEEAM - Backup and Replication:vbr[ResultEndpoint,{#JOBENDPOINTID}].avg(300)}&lt;2</expression>
+                            <name>Backup {#JOBENDPOINTNAME} Warning</name>
+                            <url/>
+                            <status>0</status>
+                            <priority>3</priority>
+                            <description/>
+                            <type>0</type>
+                            <dependencies/>
+                        </trigger_prototype>
+                        <trigger_prototype>
+                            <expression>{Template VEEAM - Backup and Replication:vbr[RunStatus,{#JOBENDPOINTID}].avg(28800)}=1</expression>
                             <name>The VEEAM work {#JOBENDPOINTNAME} is still running (8h)</name>
                             <url/>
                             <status>0</status>
@@ -1690,8 +1556,7 @@
                             <dependencies/>
                         </trigger_prototype>
                         <trigger_prototype>
-                            <expression>{Template VEEAM-BACKUP trapper:vbr[ResultEndpoint,{#JOBENDPOINTID}].regexp(Execution non reussie)}=1 or&#13;
-{Template VEEAM-BACKUP trapper:ResultEndpoint.[{#JOBENDPOINTID}].nodata(86400)}=1</expression>
+                            <expression>{Template VEEAM - Backup and Replication:vbr[ResultEndpoint,{#JOBENDPOINTID}].nodata(7200)}=1</expression>
                             <name>Veeam Backup Data Recovery Problem</name>
                             <url/>
                             <status>0</status>
@@ -1828,7 +1693,7 @@
                     </item_prototypes>
                     <trigger_prototypes>
                         <trigger_prototype>
-                            <expression>{Template VEEAM-BACKUP trapper:vbr[RepoFree,&quot;{#REPONAME}&quot;].last()}&lt;2147483648</expression>
+                            <expression>{Template VEEAM - Backup and Replication:vbr[RepoFree,&quot;{#REPONAME}&quot;].last()}&lt;2147483648</expression>
                             <name>Less than 2Gb remaining on the repository {#REPONAME}</name>
                             <url/>
                             <status>0</status>
@@ -1865,7 +1730,7 @@
                                     <calc_fnc>2</calc_fnc>
                                     <type>0</type>
                                     <item>
-                                        <host>Template VEEAM-BACKUP trapper</host>
+                                        <host>Template VEEAM - Backup and Replication</host>
                                         <key>vbr[RepoFree,&quot;{#REPONAME}&quot;]</key>
                                     </item>
                                 </graph_item>
@@ -1909,12 +1774,12 @@
                     <item_prototypes>
                         <item_prototype>
                             <name>Result backup {#JOBTAPENAME}</name>
-                            <type>2</type>
+                            <type>0</type>
                             <snmp_community/>
                             <multiplier>0</multiplier>
                             <snmp_oid/>
-                            <key>ResultTape.[{#JOBTAPEID}]</key>
-                            <delay>0</delay>
+                            <key>vbr[ResultTape,{#JOBTAPEID}]</key>
+                            <delay>900</delay>
                             <history>90</history>
                             <trends>365</trends>
                             <status>0</status>
@@ -1950,50 +1815,6 @@
                             <valuemap>
                                 <name>vbrJobResult</name>
                             </valuemap>
-                            <logtimefmt/>
-                            <application_prototypes/>
-                        </item_prototype>
-                        <item_prototype>
-                            <name>Result Zabbix Sender {#JOBTAPENAME}</name>
-                            <type>0</type>
-                            <snmp_community/>
-                            <multiplier>0</multiplier>
-                            <snmp_oid/>
-                            <key>vbr[ResultTape,{#JOBTAPEID}]</key>
-                            <delay>900</delay>
-                            <history>90</history>
-                            <trends>0</trends>
-                            <status>0</status>
-                            <value_type>4</value_type>
-                            <allowed_hosts/>
-                            <units/>
-                            <delta>0</delta>
-                            <snmpv3_contextname/>
-                            <snmpv3_securityname/>
-                            <snmpv3_securitylevel>0</snmpv3_securitylevel>
-                            <snmpv3_authprotocol>0</snmpv3_authprotocol>
-                            <snmpv3_authpassphrase/>
-                            <snmpv3_privprotocol>0</snmpv3_privprotocol>
-                            <snmpv3_privpassphrase/>
-                            <formula>1</formula>
-                            <delay_flex/>
-                            <params/>
-                            <ipmi_sensor/>
-                            <data_type>0</data_type>
-                            <authtype>0</authtype>
-                            <username/>
-                            <password/>
-                            <publickey/>
-                            <privatekey/>
-                            <port/>
-                            <description/>
-                            <inventory_link>0</inventory_link>
-                            <applications>
-                                <application>
-                                    <name>VEEAM Backup &amp; Recovery - Tape job(s)</name>
-                                </application>
-                            </applications>
-                            <valuemap/>
                             <logtimefmt/>
                             <application_prototypes/>
                         </item_prototype>
@@ -2046,19 +1867,8 @@
                     </item_prototypes>
                     <trigger_prototypes>
                         <trigger_prototype>
-                            <expression>{Template VEEAM-BACKUP trapper:ResultTape.[{#JOBTAPEID}].avg(300)}&gt;0 and&#13;
-{Template VEEAM-BACKUP trapper:ResultTape.[{#JOBTAPEID}].avg(300)}&lt;2</expression>
-                            <name>Backup {#JOBTAPENAME} completed with Warning</name>
-                            <url/>
-                            <status>0</status>
-                            <priority>2</priority>
-                            <description/>
-                            <type>0</type>
-                            <dependencies/>
-                        </trigger_prototype>
-                        <trigger_prototype>
-                            <expression>{Template VEEAM-BACKUP trapper:ResultTape.[{#JOBTAPEID}].avg(300)}&lt;1</expression>
-                            <name>Backup {#JOBTAPENAME} in error</name>
+                            <expression>{Template VEEAM - Backup and Replication:vbr[ResultTape,{#JOBTAPEID}].avg(300)}&lt;1</expression>
+                            <name>Backup {#JOBTAPENAME} Failed</name>
                             <url/>
                             <status>0</status>
                             <priority>4</priority>
@@ -2067,21 +1877,31 @@
                             <dependencies/>
                         </trigger_prototype>
                         <trigger_prototype>
-                            <expression>{Template VEEAM-BACKUP trapper:vbr[ResultTape,{#JOBTAPEID}].nodata(1)}=1</expression>
-                            <name>No data recovery for 24 hours</name>
+                            <expression>{Template VEEAM - Backup and Replication:vbr[ResultTape,{#JOBTAPEID}].avg(300)}&gt;0 and {Template VEEAM - Backup and Replication:vbr[ResultTape,{#JOBTAPEID}].avg(300)}&lt;2</expression>
+                            <name>Backup {#JOBTAPENAME} Warning</name>
                             <url/>
                             <status>0</status>
-                            <priority>1</priority>
+                            <priority>3</priority>
                             <description/>
                             <type>0</type>
                             <dependencies/>
                         </trigger_prototype>
                         <trigger_prototype>
-                            <expression>{Template VEEAM-BACKUP trapper:vbr[RunStatus,{#JOBTAPEID}].avg(28800)}=1</expression>
+                            <expression>{Template VEEAM - Backup and Replication:vbr[RunStatus,{#JOBTAPEID}].avg(28800)}=1</expression>
                             <name>The VEEAM work {#JOBTAPENAME} is still running (8h)</name>
                             <url/>
                             <status>0</status>
                             <priority>4</priority>
+                            <description/>
+                            <type>0</type>
+                            <dependencies/>
+                        </trigger_prototype>
+                        <trigger_prototype>
+                            <expression>{Template VEEAM - Backup and Replication:vbr[ResultTape,{#JOBTAPEID}].nodata(7200)}=1</expression>
+                            <name>Veeam Backup Data Recovery Problem</name>
+                            <url/>
+                            <status>0</status>
+                            <priority>2</priority>
                             <description/>
                             <type>0</type>
                             <dependencies/>
@@ -2116,29 +1936,7 @@
                             <sort_triggers>0</sort_triggers>
                             <resource>
                                 <key>vbr[&quot;RunningJob&quot;]</key>
-                                <host>Template VEEAM-BACKUP trapper</host>
-                            </resource>
-                            <max_columns>3</max_columns>
-                            <application/>
-                        </screen_item>
-                        <screen_item>
-                            <resourcetype>19</resourcetype>
-                            <width>500</width>
-                            <height>100</height>
-                            <x>1</x>
-                            <y>0</y>
-                            <colspan>1</colspan>
-                            <rowspan>1</rowspan>
-                            <elements>0</elements>
-                            <valign>0</valign>
-                            <halign>0</halign>
-                            <style>0</style>
-                            <url/>
-                            <dynamic>0</dynamic>
-                            <sort_triggers>0</sort_triggers>
-                            <resource>
-                                <key>Result.[{#JOBID}]</key>
-                                <host>Template VEEAM-BACKUP trapper</host>
+                                <host>Template VEEAM - Backup and Replication</host>
                             </resource>
                             <max_columns>3</max_columns>
                             <application/>
@@ -2150,7 +1948,7 @@
     </templates>
     <triggers>
         <trigger>
-            <expression>{Template VEEAM-BACKUP trapper:system.run[powershell -NoProfile -ExecutionPolicy Bypass -File &quot;C:\Program Files\Zabbix Agent\scripts\zabbix_vbr_job.ps1&quot; exportxml,nowait].last()}&lt;1</expression>
+            <expression>{Template VEEAM - Backup and Replication:system.run[powershell -NoProfile -ExecutionPolicy Bypass -File &quot;C:\Program Files\Zabbix Agent\scripts\zabbix_vbr_job.ps1&quot; exportxml,nowait].last()}&lt;1</expression>
             <name>Export XML Veeam Error</name>
             <url/>
             <status>0</status>
@@ -2182,11 +1980,15 @@
                 </mapping>
                 <mapping>
                     <value>4</value>
-                    <newvalue>First Backup (no history)</newvalue>
+                    <newvalue>Disabled, First Backup or no history</newvalue>
                 </mapping>
                 <mapping>
                     <value>5</value>
-                    <newvalue>En cours</newvalue>
+                    <newvalue>In progress</newvalue>
+                </mapping>
+                <mapping>
+                    <value>6</value>
+                    <newvalue>On standby</newvalue>
                 </mapping>
             </mappings>
         </value_map>

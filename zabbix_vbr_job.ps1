@@ -114,7 +114,7 @@ function ConvertTo-ZabbixDiscoveryJson
 function veeam-replace
 {
 	[CmdletBinding()]
-	Param ([Parameter(ValueFromPipeline)]
+	Param ([Parameter(ValueFromPipeline = $true)]
 		$item)
 	$item.replace('Failed', '0').replace('Warning', '1').replace('Success', '2').replace('None', '4').replace('idle', '3').replace('InProgress', '5').replace('Pending', '6')
 }

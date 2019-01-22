@@ -116,7 +116,7 @@ function veeam-replace
 	[CmdletBinding()]
 	Param ([Parameter(ValueFromPipeline = $true)]
 		$item)
-	$item.replace('Failed', '0').replace('Warning', '1').replace('Success', '2').replace('None', '4').replace('idle', '3').replace('InProgress', '5').replace('Pending', '6')
+	$item.replace('Failed', '0').replace('Warning', '1').replace('Success', '2').replace('None', '2').replace('idle', '3').replace('InProgress', '5').replace('Pending', '6')
 }
 
 # Load Veeam Module
@@ -233,16 +233,10 @@ switch ($ITEM)
 		}
 		else
 		{
-        if ($query2.value -like "none" -and $query1.State.Value -like "Working")
-		{
-	        write-host "5"
-		}
-        else {
 			$query3 = $query2.value
 			$query4 = "$query3" | veeam-replace
 			write-host "$query4"
-            }		
-}
+		}
 	}
 	
 	"ResultBackupSync"  {
@@ -253,7 +247,7 @@ switch ($ITEM)
 		$warning = ($xml1.Status | Where { $_.Value -like "*Warning*" }).count
 		$failed = ($xml1.Status | Where { $_.Value -like "*Failed*" }).count
 		$pending = ($xml1.Status | Where { $_.Value -like "*Pending*" }).count
-        $inprogress = ($xml1.Status | Where { $_.Value -like "*InProgress*" }).count
+        $InProgress = ($xml1.Status | Where { $_.Value -like "*InProgress*" }).count
 		if ($count.count -eq $success) { write-host "2" }
 		else
 		{
@@ -263,7 +257,7 @@ switch ($ITEM)
 				if ($warning -gt 0) { write-host "1" }
 				else
 				{
-					if ($pending -gt 0 -or $inprogress -gt 0)
+					if ($pending -gt 0 -or $InProgress -gt 0)
 					{
 						$xml2 = Import-Clixml "$pathxml\backupsession.xml"
 						$query1 = $xml2 | Where { $_.jobId -like "*$ID*" } | Sort creationtime -Descending | Select -First 2 | Select -Index 1
@@ -286,34 +280,15 @@ switch ($ITEM)
 		{
 			$xml1 = Import-Clixml "$pathxml\backuptape.xml"
 			$query = $xml1 | Where-Object { $_.Id -like "*$ID*" } | Sort creationtime -Descending | Select -First 1
-			$query2 = $query.LastResult.Value
+			$query2 = $query.LastResult
 			if (!$query2)
 			{
-                # Retrieve version veeam
-            $corePath = Get-ItemProperty -Path "HKLM:\Software\Veeam\Veeam Backup and Replication\" -Name "CorePath"
-            $depDLLPath = Join-Path -Path $corePath.CorePath -ChildPath "Packages\VeeamDeploymentDll.dll" -Resolve
-            $file = Get-Item -Path $depDLLPath
-            $version = $file.VersionInfo.ProductVersion
-                if ($version -lt "8"){
-            $query = Get-VBRTapeJob | Where-Object {$_.Id -like "*$ID*"}
-            $query1 = $query.GetLastResult()
-            $query2 = "$query1" | veeam-replace
-            Write-Host "$query2"
-                                     }
-                else {
-				write-host "4"}
+				write-host "4"
 			}
 			else
 			{
-				if (($query.LastState.Value -like "WaitingTape") -and ($query2 -like "None"))
-				{
-					write-host "1"
-				}
-				else
-				{
-					$query3 = $query2 | veeam-replace
-					write-host "$query3"
-				}
+				$query3 = "$query2" | veeam-replace
+				write-host "$query3"
 			}
 		}
 	}
@@ -348,24 +323,16 @@ switch ($ITEM)
 	"VmResultBackup" {
 		$xml1 = Import-Clixml "$pathxml\backuptasks.xml"
 		$query = $xml1 | Where-Object { $_.Name -like "$ID" -and $_.JobName -like "$ID0" }
-    # If current task doesn't contain vm value it's success for request vm   
-        if (!$query) {
-        write-host "2"}
-        else { 
 		$query1 = $query.Status.Value
 		$query2 = "$query1" | veeam-replace
-		[string]$query2}
+		[string]$query2
 	}
 	"VmResultBackupSync" {
 		$xml1 = Import-Clixml "$pathxml\backupsynctasks.xml"
 		$query = $xml1 | Where-Object { $_.Name -like "$ID" -and $_.JobName -like "$ID0" }
-        # If current task doesn't contain vm value it's success for request vm   
-        if (!$query) {
-        write-host "2"}
-        else { 
 		$query1 = $query.Status.Value
 		$query2 = "$query1" | veeam-replace
-		[string]$query2}
+		[string]$query2
 	}
 	"RepoCapacity" {
 		$query = Get-WmiObject -Class Repository -ComputerName $env:COMPUTERNAME -Namespace ROOT\VeeamBS | Where-Object { $_.Name -eq "$ID" }

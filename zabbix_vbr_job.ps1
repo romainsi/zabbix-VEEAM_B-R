@@ -254,12 +254,15 @@ switch ($ITEM)
 			if ($failed -gt 0) { write-host "0" }
 			if ($warning -gt 0) { write-host "1" }
 			if ($InProgress -gt 0) { write-host "5" }
-			if ($pending -gt 0)
+			else
 			{
-				$xml2 = Import-Clixml "$pathxml\backupsession.xml"
-				$query1 = $xml2 | Where { $_.jobId -like "*$ID*" } | Sort creationtime -Descending | Select -First 2 | Select -Index 1
-				$query2 = $query1.Result.Value | veeam-replace
-				write-host "$query2"
+				if ($pending -gt 0)
+				{
+					$xml2 = Import-Clixml "$pathxml\backupsession.xml"
+					$query1 = $xml2 | Where { $_.jobId -like "*$ID*" } | Sort creationtime -Descending | Select -First 2 | Select -Index 1
+					$query2 = $query1.Result.Value | veeam-replace
+					write-host "$query2"
+				}
 			}
 		}
 	}

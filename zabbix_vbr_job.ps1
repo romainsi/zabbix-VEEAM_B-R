@@ -247,24 +247,19 @@ switch ($ITEM)
 		$warning = ($xml1.Status | Where { $_.Value -like "*Warning*" }).count
 		$failed = ($xml1.Status | Where { $_.Value -like "*Failed*" }).count
 		$pending = ($xml1.Status | Where { $_.Value -like "*Pending*" }).count
-        $InProgress = ($xml1.Status | Where { $_.Value -like "*InProgress*" }).count
+		$InProgress = ($xml1.Status | Where { $_.Value -like "*InProgress*" }).count
 		if ($count.count -eq $success) { write-host "2" }
 		else
 		{
 			if ($failed -gt 0) { write-host "0" }
-			else
+			if ($warning -gt 0) { write-host "1" }
+			if ($InProgress -gt 0) { write-host "5" }
+			if ($pending -gt 0)
 			{
-				if ($warning -gt 0) { write-host "1" }
-				else
-				{
-					if ($pending -gt 0 -or $InProgress -gt 0)
-					{
-						$xml2 = Import-Clixml "$pathxml\backupsession.xml"
-						$query1 = $xml2 | Where { $_.jobId -like "*$ID*" } | Sort creationtime -Descending | Select -First 2 | Select -Index 1
-						$query2 = $query1.Result.Value | veeam-replace
-						write-host "$query2"
-					}
-				}
+				$xml2 = Import-Clixml "$pathxml\backupsession.xml"
+				$query1 = $xml2 | Where { $_.jobId -like "*$ID*" } | Sort creationtime -Descending | Select -First 2 | Select -Index 1
+				$query2 = $query1.Result.Value | veeam-replace
+				write-host "$query2"
 			}
 		}
 	}

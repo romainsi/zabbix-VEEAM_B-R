@@ -1,4 +1,4 @@
-**================ VEEAM-Backup-Recovery-jobs ================**
+# VEEAM-Backup-Recovery-jobs
 
 This template use the VEEAM Backup & Replication PowerShell Cmdlets to discover and manage VEEAM Backup jobs, Veeam BackupSync, Veeam Tape Job, Veeam Endpoint Backup Jobs, All Repositories and Veeam Services.
 
@@ -12,15 +12,15 @@ Then, each request imports the xml to retrieve the information.<br />
 Why? Because the execution of this command can take between 30 seconds and more than 3 minutes (depending on the history and the number of tasks) and I end up with several scripts running for a certain time and the execution is in timeout.
 <br /><br />
 
-**-------- Items --------**
+## Items
 
   - Number of tasks jobs<br />
   - Number of running jobs<br />
   - Result Export Xml Veeam<br />
 
-**-------- Discovery Jobs --------**
+## Discovery Jobs
 
-**1. Veeam Jobs :** <br />
+### 1. Veeam Jobs:
   - Result of each jobs<br />
   - Execution status for each jobs<br />
   - Number of VMs Failed in each jobs<br />
@@ -31,11 +31,11 @@ Why? Because the execution of this command can take between 30 seconds and more 
   - Size excluded in each jobs (disabled by default)<br />
   - Next run time of each jobs<br />
 
-**2. Veeam Tape Jobs :**<br />
+### 2. Veeam Tape Jobs:
   - Result of each jobs<br />
   - Execution status for each jobs<br />
 
-**3. Veeam BackupSync Jobs :**<br />
+### 3. Veeam BackupSync Jobs:
   - Result of each jobs<br />
   - Execution status for each jobs<br />
   - Number of VMs Failed in each jobs<br />
@@ -45,59 +45,59 @@ Why? Because the execution of this command can take between 30 seconds and more 
   - Size included in each jobs (disabled by default)<br />
   - Size excluded in each jobs (disabled by default)<br />
 
-**4. Veeam Jobs Endpoint Backup:**<br />
+### 4. Veeam Jobs Endpoint Backup:
   - Result of each jobs<br />
   - Execution status for each jobs<br />
   - Next run time of each jobs<br />
 
-**5. Veeam Repository :**<br />
+### 5. Veeam Repository:
   - Remaining space in repository for each repo<br />
   - Total space in repository for each repo<br /><br />
 
-**-------- Discovery Jobs By VMs --------**
+## Discovery Jobs By VMs
 
-**1. VEEAM Backup By VMs :**
+### 1. VEEAM Backup By VMs:
   - Result of each VMs in each Jobs
-  
-**2. VEEAM BackupSync By VMs :**
+
+### 2. VEEAM BackupSync By VMs:
   - Result of each VMs in each Jobs
 <br />
 
-**-------- Triggers --------**
+## Triggers
 <br><br />
 [WARNING] => Export XML Veeam Error<br />
 
--------- Discovery Veeam Jobs --------<br />
+### Discovery Veeam Jobs
 [HIGH] => Job has FAILED <br />
 [AVERAGE] => Job has completed with warning
 [HIGH] => Job is still running (8 hours)<br />
 [WARNING] => Backup Veeam data recovery problem
 
--------- Discovery Veeam Tape Jobs --------<br />
+### Discovery Veeam Tape Jobs
 [HIGH] => Job has FAILED <br />
 [AVERAGE] => Job has completed with warning<br />
 [HIGH] => Job is still running (8 hours)<br />
 [INFORMATION] => No data recovery for 24 hours<br />
 
--------- Discovery Veeam BackupSync Jobs --------<br />
+### Discovery Veeam BackupSync Jobs
 [HIGH] => Job has FAILED <br />
 [AVERAGE] => Job has completed with warning<br />
 [INFORMATION] => No data recovery for 24 hours<br />
 
--------- Discovery Veeam Jobs Endpoint Agent --------<br />
+### Discovery Veeam Jobs Endpoint Agent
 [HIGH] => Job has FAILED <br />
 [AVERAGE] => Job has completed with warning<br />
 [HIGH] => Job is still running (8 hours)<br />
 [INFORMATION] => No data recovery for 24 hours<br />
 
--------- Discovery Veeam Repository --------<br />
+### Discovery Veeam Repository
 [HIGH] => Less than 2Gb remaining on the repository
 
--------- Discovery Veeam Services --------<br />
+### Discovery Veeam Services
 [AVERAGE] => Veeam Service is down for each services<br />
 <br />
 
-**-------- Setup --------**
+## Setup
 
 1. Install the Zabbix agent on your host
 2. Copy zabbix_vbr_job.ps1 in the directory : "C:\Program Files\Zabbix Agent\scripts\" (create folder if not exist)

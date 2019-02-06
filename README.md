@@ -66,36 +66,36 @@ Why? Because the execution of this command can take between 30 seconds and more 
 
 ## Triggers
 
-[WARNING] => Export XML Veeam Error
+- [WARNING] => Export XML Veeam Error
 
 ### Discovery Veeam Jobs
-[HIGH] => Job has FAILED
-[AVERAGE] => Job has completed with warning
-[HIGH] => Job is still running (8 hours)
-[WARNING] => Backup Veeam data recovery problem
+- [HIGH] => Job has FAILED
+- [AVERAGE] => Job has completed with warning
+- [HIGH] => Job is still running (8 hours)
+- [WARNING] => Backup Veeam data recovery problem
 
 ### Discovery Veeam Tape Jobs
-[HIGH] => Job has FAILED
-[AVERAGE] => Job has completed with warning
-[HIGH] => Job is still running (8 hours)
-[INFORMATION] => No data recovery for 24 hours
+- [HIGH] => Job has FAILED
+- [AVERAGE] => Job has completed with warning
+- [HIGH] => Job is still running (8 hours)
+- [INFORMATION] => No data recovery for 24 hours
 
 ### Discovery Veeam BackupSync Jobs
-[HIGH] => Job has FAILED
-[AVERAGE] => Job has completed with warning
-[INFORMATION] => No data recovery for 24 hours
+- [HIGH] => Job has FAILED
+- [AVERAGE] => Job has completed with warning
+- [INFORMATION] => No data recovery for 24 hours
 
 ### Discovery Veeam Jobs Endpoint Agent
-[HIGH] => Job has FAILED
-[AVERAGE] => Job has completed with warning
-[HIGH] => Job is still running (8 hours)
-[INFORMATION] => No data recovery for 24 hours
+- [HIGH] => Job has FAILED
+- [AVERAGE] => Job has completed with warning
+- [HIGH] => Job is still running (8 hours)
+- [INFORMATION] => No data recovery for 24 hours
 
 ### Discovery Veeam Repository
-[HIGH] => Less than 2Gb remaining on the repository
+- [HIGH] => Less than 2Gb remaining on the repository
 
 ### Discovery Veeam Services
-[AVERAGE] => Veeam Service is down for each services
+- [AVERAGE] => Veeam Service is down for each services
 
 
 ## Setup

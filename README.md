@@ -101,21 +101,28 @@ Why? Because the execution of this command can take between 30 seconds and more 
 ## Setup
 
 1. Install the Zabbix agent on your host
-2. Copy zabbix_vbr_job.ps1 in the directory : "C:\Program Files\Zabbix Agent\scripts\" (create folder if not exist)
-3. Add the following line to your Zabbix agent configuration file.
-EnableRemoteCommands=1
-UnsafeUserParameters=1
-ServerActive="IP or DNS Zabbix Server"
-Alias=service.discovery.veeam:service.discovery
-UserParameter=vbr[*],powershell -NoProfile -ExecutionPolicy Bypass -File "C:\Program Files\Zabbix Agent\scripts\zabbix_vbr_job.ps1" "$1" "$2" "$3"
-4. In Zabbix : Administration, General, Regular Expression : Add a new regular expression :
-Name : "Veeam"    ;     Expression type : "**TRUE**"     ;     	Expression : "Veeam.\*"
-And modify regular expression "Windows service startup states for discovery" : Add :
-Name : "Veeam" ; Expression type : "**FALSE**" ; Expression : "Veeam.\*"
+2. Copy `zabbix_vbr_job.ps1` in the directory : `C:\Program Files\Zabbix Agent\scripts\` (create folder if not exist)
+3. Add the following line to your Zabbix agent configuration file:
+    ```
+    EnableRemoteCommands=1
+    UnsafeUserParameters=1
+    ServerActive="IP or DNS Zabbix Server"
+    Alias=service.discovery.veeam:service.discovery
+    UserParameter=vbr[*],powershell -NoProfile -ExecutionPolicy Bypass -File "C:\Program Files\Zabbix Agent\scripts\zabbix_vbr_job.ps1" "$1" "$2" "$3"
+    ```
+4. In Zabbix : Administration, General, Regular Expression:
+    ```
+    Add a new regular expression:
+    Name : "Veeam"    ;     Expression type : "**TRUE**"     ;     	Expression : "Veeam.\*"
+
+    And modify regular expression "Windows service startup states for discovery" : Add :
+    Name : "Veeam" ; Expression type : "**FALSE**" ; Expression : "Veeam.\*"
+    ```
 5. Import TemplateVEEAM-BACKUPtrapper.xml file into Zabbix.
 6. Purge and clean Template OS Windows if is linked to the host (you can relink it after).
 7. Associate "Template VEEAM - Backup and Replication" to the host.
 8. Wait about 1h for discovery, XML file to be generated and first informations retrieves.
+
 ! If you use old version (< v3) please Purge and clean "Template VEEAM-BACKUP trapper".
 
 With a large or very large backup tasks history, the XML size can be more than 500 MB (so script finish in timeout) you can reduce this with this link :

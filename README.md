@@ -3,7 +3,7 @@
 This template use the VEEAM Backup & Replication PowerShell Cmdlets to discover and manage VEEAM Backup jobs, Veeam BackupSync, Veeam Tape Job, Veeam Endpoint Backup Jobs, All Repositories and Veeam Services.
 
 Work with Veeam backup & replication V7 to V9.5<br />
-Work with Zabbix 3.X (english template only for V3.X) & 4.X<br /> 
+Work with Zabbix 3.X (english template only for V3.X) & 4.X<br />
 French & English translation for the Template
 
 Explanation of how it works :<br />
@@ -69,7 +69,7 @@ Why? Because the execution of this command can take between 30 seconds and more 
 
 -------- Discovery Veeam Jobs --------<br />
 [HIGH] => Job has FAILED <br />
-[AVERAGE] => Job has completed with warning  
+[AVERAGE] => Job has completed with warning
 [HIGH] => Job is still running (8 hours)<br />
 [WARNING] => Backup Veeam data recovery problem
 
@@ -107,16 +107,16 @@ UnsafeUserParameters=1 <br />
 ServerActive="IP or DNS Zabbix Server"<br />
 Alias=service.discovery.veeam:service.discovery<br />
 UserParameter=vbr[*],powershell -NoProfile -ExecutionPolicy Bypass -File "C:\Program Files\Zabbix Agent\scripts\zabbix_vbr_job.ps1" "$1" "$2" "$3"
-4. In Zabbix : Administration, General, Regular Expression : Add a new regular expression :<br /> 
+4. In Zabbix : Administration, General, Regular Expression : Add a new regular expression :<br />
 Name : "Veeam"    ;     Expression type : "**TRUE**"     ;     	Expression : "Veeam.\*"<br />
 And modify regular expression "Windows service startup states for discovery" : Add : <br />
 Name : "Veeam" ; Expression type : "**FALSE**" ; Expression : "Veeam.\*"<br />
-5. Import TemplateVEEAM-BACKUPtrapper.xml file into Zabbix. 
+5. Import TemplateVEEAM-BACKUPtrapper.xml file into Zabbix.
 6. Purge and clean Template OS Windows if is linked to the host (you can relink it after).
 7. Associate "Template VEEAM - Backup and Replication" to the host.
 8. Wait about 1h for discovery, XML file to be generated and first informations retrieves.<br><br>
 ! If you use old version (< v3) please Purge and clean "Template VEEAM-BACKUP trapper".
 <br>
-With a large or very large backup tasks history, the XML size can be more than 500 MB (so script finish in timeout) you can reduce this with this link : <br /> 
+With a large or very large backup tasks history, the XML size can be more than 500 MB (so script finish in timeout) you can reduce this with this link : <br />
 https://www.veeam.com/kb1995 <br />
 Use first : "Changing Session history retention" and if this is not enough, "Clear old job sessions".

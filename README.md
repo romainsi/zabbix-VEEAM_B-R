@@ -2,13 +2,14 @@
 
 This template use the VEEAM Backup & Replication PowerShell Cmdlets to discover and manage VEEAM Backup jobs, Veeam BackupSync, Veeam Tape Job, Veeam Endpoint Backup Jobs, All Repositories and Veeam Services.
 
-Work with Veeam backup & replication V7 to V9.5
-Work with Zabbix 3.X (english template only for V3.X) & 4.X
-French & English translation for the Template
+- Work with Veeam backup & replication V7 to V9.5
+- Work with Zabbix 3.X (english template only for V3.X) & 4.X
+- French & English translation for the Template
 
-Explanation of how it works :
-The "Result Export Xml Veeam" item sends a powerhell command (with nowait option) to the host to create an xml file of the result of the Get-VBRBbackupSession,Get-VBRJob, Get-VRBBackup and Get-VBREPJob commands that is stored under C:\Program Files\Zabbix Agent\scripts\TempXmlVeeam\\*.xml (variable $pathxml)
+### Explanation of how it works:
+The "Result Export Xml Veeam" item sends a powershell command (with `nowait` option) to the host to create an xml file of the result of the `Get-VBRBbackupSession`, `Get-VBRJob`, `Get-VRBBackup` and `Get-VBREPJob` commands that is stored under `C:\Program Files\Zabbix Agent\scripts\TempXmlVeeam\*.xml` (variable `$pathxml`).
 Then, each request imports the xml to retrieve the information.
+
 Why? Because the execution of this command can take between 30 seconds and more than 3 minutes (depending on the history and the number of tasks) and I end up with several scripts running for a certain time and the execution is in timeout.
 
 

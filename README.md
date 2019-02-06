@@ -111,13 +111,15 @@ Why? Because the execution of this command can take between 30 seconds and more 
     UserParameter=vbr[*],powershell -NoProfile -ExecutionPolicy Bypass -File "C:\Program Files\Zabbix Agent\scripts\zabbix_vbr_job.ps1" "$1" "$2" "$3"
     ```
 4. In Zabbix : Administration, General, Regular Expression:
-    ```
-    Add a new regular expression:
-    Name : "Veeam"    ;     Expression type : "**TRUE**"     ;     	Expression : "Veeam.\*"
 
-    And modify regular expression "Windows service startup states for discovery" : Add :
-    Name : "Veeam" ; Expression type : "**FALSE**" ; Expression : "Veeam.\*"
-    ```
+    1. Add a new regular expression:
+        + Name: `Veeam`
+        + Expression Type: `Result is TRUE`
+        + Expression: `Veeam.*`
+    2.  Modify the "Windows Service Startup States for Discovery regex by adding a new expression:
+        + Expression Type: `Result is FALSE`
+        + Expression: `Veeam.*`
+
 5. Import TemplateVEEAM-BACKUPtrapper.xml file into Zabbix.
 6. Purge and clean Template OS Windows if is linked to the host (you can relink it after).
 7. Associate "Template VEEAM - Backup and Replication" to the host.

@@ -289,15 +289,37 @@ switch ($ITEM)
 		{
 			$xml1 = Import-Clixml "$pathxml\backuptape.xml"
 			$query = $xml1 | Where-Object { $_.Id -like "*$ID*" } | Sort creationtime -Descending | Select -First 1
-			$query2 = $query.LastResult
+			$query2 = $query.LastResult.Value
 			if (!$query2)
 			{
-				write-host "4"
+				# Retrieve version veeam
+				$corePath = Get-ItemProperty -Path "HKLM:\Software\Veeam\Veeam Backup and Replication\" -Name "CorePath"
+				$depDLLPath = Join-Path -Path $corePath.CorePath -ChildPath "Packages\VeeamDeploymentDll.dll" -Resolve
+				$file = Get-Item -Path $depDLLPath
+				$version = $file.VersionInfo.ProductVersion
+				if ($version -lt "8")
+				{
+					$query = Get-VBRTapeJob | Where-Object { $_.Id -like "*$ID*" }
+					$query1 = $query.GetLastResult()
+					$query2 = "$query1" | veeam-replace
+					Write-Host "$query2"
+				}
+				else
+				{
+					write-host "4"
+				}
 			}
 			else
 			{
-				$query3 = "$query2" | veeam-replace
-				write-host "$query3"
+				if (($query.LastState.Value -like "WaitingTape") -and ($query2 -like "None"))
+				{
+					write-host "1"
+				}
+				else
+				{
+					$query3 = $query2 | veeam-replace
+					write-host "$query3"
+				}
 			}
 		}
 	}

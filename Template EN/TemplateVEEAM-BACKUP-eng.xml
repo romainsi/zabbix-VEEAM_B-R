@@ -54,7 +54,7 @@
                     <multiplier>0</multiplier>
                     <snmp_oid/>
                     <key>system.run[powershell -NoProfile -ExecutionPolicy Bypass -File &quot;C:\Program Files\Zabbix Agent\scripts\zabbix_vbr_job.ps1&quot; exportxml,nowait]</key>
-                    <delay>1200</delay>
+                    <delay>120</delay>
                     <history>5</history>
                     <trends>15</trends>
                     <status>0</status>
@@ -142,7 +142,7 @@
                     <multiplier>0</multiplier>
                     <snmp_oid/>
                     <key>vbr[JobsCount]</key>
-                    <delay>60</delay>
+                    <delay>3600</delay>
                     <history>7</history>
                     <trends>365</trends>
                     <status>0</status>

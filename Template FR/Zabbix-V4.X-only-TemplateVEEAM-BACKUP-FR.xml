@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <zabbix_export>
     <version>4.0</version>
-    <date>2018-12-14T10:22:23Z</date>
+    <date>2019-02-26T14:23:21Z</date>
     <groups>
         <group>
             <name>Templates</name>
@@ -53,7 +53,7 @@
                     <snmp_community/>
                     <snmp_oid/>
                     <key>system.run[powershell -NoProfile -ExecutionPolicy Bypass -File &quot;C:\Program Files\Zabbix Agent\scripts\zabbix_vbr_job.ps1&quot; exportxml,nowait]</key>
-                    <delay>20m</delay>
+                    <delay>2m</delay>
                     <history>5d</history>
                     <trends>15d</trends>
                     <status>0</status>
@@ -173,7 +173,7 @@
                     <snmp_community/>
                     <snmp_oid/>
                     <key>vbr[JobsCount]</key>
-                    <delay>1m</delay>
+                    <delay>1h</delay>
                     <history>1w</history>
                     <trends>365d</trends>
                     <status>0</status>

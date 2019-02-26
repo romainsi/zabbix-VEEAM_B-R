@@ -5,12 +5,55 @@
 #
 # USAGE:
 #
-#   as a script:    powershell.exe -NoProfile -ExecutionPolicy Bypass -File "C:\Program Files\Zabbix Agent\scripts\zabbix_vbr_job.ps1" <ITEM_TO_QUERY> <JOBID>"
+#   as a script:    powershell.exe -NoProfile -ExecutionPolicy Bypass -File "C:\Program Files\Zabbix Agent\scripts\zabbix_vbr_job.ps1" <ITEM_TO_QUERY> <JOBID>
 #   as an item:     vbr[<ITEM_TO_QUERY>,<JOBID>]
+#
+# ITEMS availables (Switch) :
+# - DiscoveryBackupJobs
+# - DiscoveryBackupSyncJobs
+# - DiscoveryTapeJobs
+# - DiscoveryEndpointJobs
+# - DiscoveryRepo
+# - DiscoveryBackupVmsByJobs
+# - ExportXml
+# - JobsCount
+# - RunningJob
+#
+# Examples:
+# powershell.exe -NoProfile -ExecutionPolicy Bypass -File "C:\Program Files\Zabbix Agent\scripts\zabbix_vbr_job.ps1" DiscoveryBackupJobs
+# Return a Json Value with all Backups Name and JobID 
+# Xml must be present in 'C:\Program Files\Zabbix Agent\scripts\TempXmlVeeam\*.xml', if not, you can launch manually : powershell.exe -NoProfile -ExecutionPolicy Bypass -File "C:\Program Files\Zabbix Agent\scripts\zabbix_vbr_job.ps1" ExportXml
+#
+# ITEMS availables (Switch) with JOBID Mandatory :
+# - ResultBackup
+# - ResultBackupSync
+# - ResultTape
+# - ResultEndpoint
+# - VmResultBackup
+# - VmResultBackupSync
+# - RepoCapacity
+# - RepoFree
+# - RunStatus
+# - VmCount
+# - VmCountResultBackup
+# - VmCountResultBackupSync
+# - Type
+# - NextRunTime
+#
+# Examples:
+# powershell.exe -NoProfile -ExecutionPolicy Bypass -File "C:\Program Files\Zabbix Agent\scripts\zabbix_vbr_job.ps1" ResultBackup "2fd246be-b32a-4c65-be3e-1ca5546ef225"
+# Return the value of result (see the veeam-replace function for correspondence)
+# or
+# powershell.exe -NoProfile -ExecutionPolicy Bypass -File "C:\Program Files\Zabbix Agent\scripts\zabbix_vbr_job.ps1" VmCountResultBackup "BackupJob1" "Warning"
+#
+# Xml must be present in 'C:\Program Files\Zabbix Agent\scripts\TempXmlVeeam\*.xml', if not, you can launch manually : powershell.exe -NoProfile -ExecutionPolicy Bypass -File "C:\Program Files\Zabbix Agent\scripts\zabbix_vbr_job.ps1" ExportXml
+#
+#
 #
 # Add to Zabbix Agent
 #   UserParameter=vbr[*],powershell -NoProfile -ExecutionPolicy Bypass -File "C:\Program Files\Zabbix Agent\scripts\zabbix_vbr_job.ps1" "$1" "$2" "$3"
 #
+
 
 $pathxml = 'C:\Program Files\Zabbix Agent\scripts\TempXmlVeeam'
 
@@ -18,21 +61,90 @@ $ITEM = [string]$args[0]
 $ID = [string]$args[1]
 $ID0 = [string]$args[2]
 
-# The function is to bring to the format understands zabbix
-function convertto-encoding ([string]$from, [string]$to)
+
+#Multiprocess ExportXml
+function ExportXml
 {
-	begin
+	[CmdletBinding()]
+	Param (
+		[Parameter(Mandatory = $true)]
+		[string]$switch,
+		[Parameter(Mandatory = $true)]
+		[string]$name,
+		[Parameter(Mandatory = $false)]
+		[string]$command,
+		[Parameter(Mandatory = $false)]
+		[string]$type
+	)
+	
+	PROCESS
 	{
-		$encfrom = [system.text.encoding]::getencoding($from)
-		$encto = [system.text.encoding]::getencoding($to)
-	}
-	process
-	{
-		$bytes = $encto.getbytes($_)
-		$bytes = [system.text.encoding]::convert($encfrom, $encto, $bytes)
-		$encto.getstring($bytes)
+		$path = "$pathxml\$name" + "temp.xml"
+		$newpath = "$pathxml\$name" + ".xml"
+		
+		if ($switch -like "normal")
+		{
+			if ((Get-WMIObject -Class Win32_Process -Filter "Name='PowerShell.EXE'" | Where { $_.CommandLine -Like "*exportxml*" } | Select Handle, CommandLine).count -lt "1")
+			{
+				Start-Job -Name $name -ScriptBlock {
+					Add-PSSnapin -Name VeeamPSSnapIn -ErrorAction SilentlyContinue
+					$connectVeeam = Connect-VBRServer
+					Invoke-Expression $args[0] | Export-Clixml $args[1]
+					$disconnectVeeam = Disconnect-VBRServer
+					Copy-Item -Path $args[1] -Destination $args[3]
+					Remove-Item $args[1]
+				} -ArgumentList "$command", "$path", "$name", "$newpath"
+			}
+		}
+		
+		if ($switch -like "byvm")
+		{
+			if ((Get-WMIObject -Class Win32_Process -Filter "Name='PowerShell.EXE'" | Where { $_.CommandLine -Like "*exportxml*" } | Select Handle, CommandLine).count -lt "1")
+			{
+				$commandnew = "$command " + "| ?{ `$_.JobType -eq `"$type`" }"
+				Start-Job -Name $name -ScriptBlock {
+					Add-PSSnapin -Name VeeamPSSnapIn -ErrorAction SilentlyContinue
+					$connectVeeam = Connect-VBRServer
+					$BackupVmByJob = Invoke-Expression $args[0] | %{
+						$JobName = $_.Name
+						$_ | Get-VBRJobObject | ?{ $_.Object.Type -eq "VM" } | Select @{ L = "Job"; E = { $JobName } }, Name | Sort -Property Job, Name
+					}
+					$BackupVmByJob | Export-Clixml $args[1]
+					$disconnectVeeam = Disconnect-VBRServer
+					Copy-Item -Path $args[1] -Destination $args[3]
+					Remove-Item $args[1]
+				} -ArgumentList "$commandnew", "$path", "$name", "$newpath"
+			}
+		}
+		
+		if ($switch -like "bytasks")
+		{
+			if ((Get-WMIObject -Class Win32_Process -Filter "Name='PowerShell.EXE'" | Where { $_.CommandLine -Like "*exportxml*" } | Select Handle, CommandLine).count -lt "1")
+			{
+				$commandnew = "$command " + "| ?{ `$_.JobType -eq `"$type`" }"
+				Start-Job -Name $name -ScriptBlock {
+					Add-PSSnapin -Name VeeamPSSnapIn -ErrorAction SilentlyContinue
+					$connectVeeam = Connect-VBRServer
+					foreach ($Job in (Invoke-Expression $args[0]))
+					{
+						$Session = $Job.FindLastSession()
+						if (!$Session) { continue; }
+						$TasksBackupJob += $Session.GetTaskSessions()
+					}
+					$TasksBackupJob | Export-Clixml $args[1]
+					$disconnectVeeam = Disconnect-VBRServer
+					Copy-Item -Path $args[1] -Destination $args[3]
+					Remove-Item $args[1]
+				} -ArgumentList "$commandnew", "$path", "$name", "$newpath"
+			}
+		}
+		# Purge completed Job 
+		$purge = get-job | ? { $_.State -eq 'Completed' } | Remove-Job
 	}
 }
+
+
+
 
 # Converts an object to a JSON-formatted string
 $GlobalConstant = @{
@@ -165,60 +277,23 @@ switch ($ITEM)
 	}
 	
 	"ExportXml" {
-		write-host "Command Send"
+		
 		$test = Test-Path -Path "$pathxml"
-		if ($test -like "False") { $query = New-Item -ItemType Directory -Force -Path "$pathxml" }
-		$connectVeeam = Connect-VBRServer
-		Get-VBRBackupSession | Export-Clixml "$pathxml\backupsessiontemp.xml"
-		Get-VBRJob | Export-Clixml "$pathxml\backupjobtemp.xml"
-		Get-VBRBackup | Export-Clixml "$pathxml\backupbackuptemp.xml"
-		Get-VBRTapeJob | Export-Clixml "$pathxml\backuptapetemp.xml"
-		Get-VBREPJob | Export-Clixml "$pathxml\backupendpointtemp.xml"
-		$BackupVmByJob = Get-VBRJob | ?{ $_.JobType -eq "Backup" } | %{
-			$JobName = $_.Name
-			$_ | Get-VBRJobObject | ?{ $_.Object.Type -eq "VM" } | Select @{ L = "Job"; E = { $JobName } }, Name | Sort -Property Job, Name
-		}
-		$BackupVmByJob | Export-Clixml "$pathxml\backupvmbyjobtemp.xml"
-		$BackupSyncVmByJob = Get-VBRJob | ?{ $_.JobType -eq "BackupSync" } | %{
-			$JobName = $_.Name
-			$_ | Get-VBRJobObject | ?{ $_.Object.Type -eq "VM" } | Select @{ L = "Job"; E = { $JobName } }, Name | Sort -Property Job, Name
-		}
-		$BackupSyncVmByJob | Export-Clixml "$pathxml\backupsyncvmbyjobtemp.xml"
-		$TasksBackupJob = $null
-		$TasksBackupSyncJob = $null
-		foreach ($Job in (Get-VBRJob | where-object { $_.JobType -like "Backup" }))
+		if ($test -like "False")
 		{
-			$Session = $Job.FindLastSession()
-			if (!$Session) { continue; }
-			$TasksBackupJob += $Session.GetTaskSessions()
+			$query = New-Item -ItemType Directory -Force -Path "$pathxml"
 		}
-		$TasksBackupJob | Export-Clixml "$pathxml\backuptaskstemp.xml"
-		foreach ($Job in (Get-VBRJob | Where-Object { $_.JobType -eq "BackupSync" }))
-		{
-			$Session = $Job.FindLastSession()
-			if (!$Session) { continue; }
-			$TasksBackupSyncJob += $Session.GetTaskSessions()
-		}
-		$TasksBackupSyncJob | Export-Clixml "$pathxml\backupsynctaskstemp.xml"
-		$disconnectVeeam = Disconnect-VBRServer
-		Copy-Item -Path $pathxml\backupsessiontemp.xml -Destination "$pathxml\backupsession.xml"
-		Copy-Item -Path $pathxml\backupjobtemp.xml -Destination "$pathxml\backupjob.xml"
-		Copy-Item -Path $pathxml\backupbackuptemp.xml -Destination "$pathxml\backupbackup.xml"
-		Copy-Item -Path $pathxml\backuptapetemp.xml -Destination "$pathxml\backuptape.xml"
-		Copy-Item -Path $pathxml\backupendpointtemp.xml -Destination "$pathxml\backupendpoint.xml"
-		Copy-Item -Path $pathxml\backuptaskstemp.xml -Destination "$pathxml\backuptasks.xml"
-		Copy-Item -Path $pathxml\backupsynctaskstemp.xml -Destination "$pathxml\backupsynctasks.xml"
-		Copy-Item -Path $pathxml\backupvmbyjobtemp.xml -Destination "$pathxml\backupvmbyjob.xml"
-		Copy-Item -Path $pathxml\backupsyncvmbyjobtemp.xml -Destination "$pathxml\backupsyncvmbyjob.xml"
-		Remove-Item "$pathxml\backupsessiontemp.xml"
-		Remove-Item "$pathxml\backupjobtemp.xml"
-		Remove-Item "$pathxml\backupbackuptemp.xml"
-		Remove-Item "$pathxml\backuptapetemp.xml"
-		Remove-Item "$pathxml\backupendpointtemp.xml"
-		Remove-Item "$pathxml\backuptaskstemp.xml"
-		Remove-Item "$pathxml\backupsynctaskstemp.xml"
-		Remove-Item "$pathxml\backupvmbyjobtemp.xml"
-		Remove-Item "$pathxml\backupsyncvmbyjobtemp.xml"
+		$job = ExportXml -command Get-VBRBackupSession -name backupsession -switch normal
+		$job0 = ExportXml -command Get-VBRJob -name backupjob -switch normal
+		$job1 = ExportXml -command Get-VBRBackup -name backupbackup -switch normal
+		$job2 = ExportXml -command Get-VBRTapeJob -name backuptape -switch normal
+		$job3 = ExportXml -command Get-VBREPJob -name backupendpoint -switch normal
+		$job4 = ExportXml -command Get-VBRJob -name backupvmbyjob -switch byvm -type Backup
+		$job5 = ExportXml -command Get-VBRJob -name backupsyncvmbyjob -switch byvm -type BackupSync
+		$job6 = ExportXml -command Get-VBRJob -name backuptasks -switch bytasks -type Backup
+		$job7 = ExportXml -command Get-VBRJob -name backupsynctasks -switch bytasks -type BackupSync
+		Get-Job | Wait-Job
+		
 	}
 	
 	"ResultBackup"  {
@@ -354,9 +429,15 @@ switch ($ITEM)
 	"VmResultBackup" {
 		$xml1 = Import-Clixml "$pathxml\backuptasks.xml"
 		$query = $xml1 | Where-Object { $_.Name -like "$ID" -and $_.JobName -like "$ID0" }
-		$query1 = $query.Status.Value
-		$query2 = "$query1" | veeam-replace
-		[string]$query2
+		# If vm is empty in task : idle veeam waiting for retry vm failed but not show the vm already processed (vm can be warning or success)
+		if (!$query) { write-host "3" }
+		else
+		{
+			$query1 = $query.Status.Value
+			$query2 = "$query1" | veeam-replace
+			[string]$query2
+		}
+		
 	}
 	"VmResultBackupSync" {
 		$xml1 = Import-Clixml "$pathxml\backupsynctasks.xml"

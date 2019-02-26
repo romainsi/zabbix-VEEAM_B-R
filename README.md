@@ -9,7 +9,7 @@ French & English translation for the Template
 Explanation of how it works :<br />
 The "Result Export Xml Veeam" item sends a powerhell command (with nowait option) to the host to create an xml file of the result of the Get-VBRBbackupSession,Get-VBRJob, Get-VRBBackup and Get-VBREPJob commands that is stored under C:\Program Files\Zabbix Agent\scripts\TempXmlVeeam\\*.xml (variable $pathxml)<br />
 Then, each request imports the xml to retrieve the information.<br />
-Why? Because the execution of this command can take between 30 seconds and more than 3 minutes (depending on the history and the number of tasks) and I end up with several scripts running for a certain time and the execution is in timeout.
+Why? Because the execution of this command can take between 30 seconds and more than 5 minutes (depending on the history and the number of tasks) and I end up with several scripts running for a certain time and the execution is in timeout.
 <br /><br />
 
 **-------- Items --------**

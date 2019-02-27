@@ -125,7 +125,7 @@ Why? Because the execution of this command can take between 30 seconds and more 
 7. Associate "Template VEEAM - Backup and Replication" to the host.
 8. Wait about 1h for discovery, XML file to be generated and first informations retrieves.
 
-! If you use old version (< v3) please Purge and clean "Template VEEAM-BACKUP trapper".
+! If you use old version of this script (< v3) please Purge and clean "Template VEEAM-BACKUP trapper".
 
 With a large or very large backup tasks history, the XML size can be more than 500 MB (so script finish in timeout) you can reduce this with this link :
 https://www.veeam.com/kb1995

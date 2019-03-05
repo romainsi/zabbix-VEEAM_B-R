@@ -57,25 +57,30 @@
 
 $pathxml = 'C:\Program Files\Zabbix Agent\scripts\TempXmlVeeam'
 
-$ITEM = [string]$args[0]
-$ID = [string]$args[1]
-$ID0 = [string]$args[2]
 
-# The function is to bring to the format understands zabbix
-function convertto-encoding ([string]$from, [string]$to)
+# Function convert return Json String to html
+function convertto-encoding
 {
-	begin
+	[CmdletBinding()]
+	Param (
+		[Parameter(ValueFromPipeline = $true)]
+		[string]$item,
+		[Parameter(Mandatory = $true)]
+		[string]$switch
+	)
+	if ($switch -like "in")
 	{
-		$encfrom = [system.text.encoding]::getencoding($from)
-		$encto = [system.text.encoding]::getencoding($to)
+		$item.replace('&', '&amp;').replace('à', '&agrave;').replace('â', '&acirc;').replace('è', '&egrave;').replace('é', '&eacute;').replace('ê', '&ecirc;')
 	}
-	process
+	if ($switch -like "out")
 	{
-		$bytes = $encto.getbytes($_)
-		$bytes = [system.text.encoding]::convert($encfrom, $encto, $bytes)
-		$encto.getstring($bytes)
+		$item.replace('&amp;', '&').replace('&agrave;', 'à').replace('&acirc;', 'â').replace('&egrave;', 'è').replace('&eacute;', 'é').replace('&ecirc;', 'ê')
 	}
 }
+
+$ITEM = [string]$args[0]
+$ID = [string]$args[1] | convertto-encoding -switch out
+$ID0 = [string]$args[2] | convertto-encoding -switch out
 
 # Function Multiprocess ExportXml
 function ExportXml
@@ -173,8 +178,6 @@ function ExportXml
 
 
 
-
-
 # Converts an object to a JSON-formatted string
 $GlobalConstant = @{
 	'ZabbixJsonHost' = 'host'
@@ -243,7 +246,7 @@ function ConvertTo-ZabbixDiscoveryJson
 	end
 	{
 		$Result = @{ $ZabbixJsonData = $Result }
-		return $Result | ConvertTo-Json -Compress
+		return $Result | ConvertTo-Json -Compress | % { [System.Text.RegularExpressions.Regex]::Unescape($_) }
 	}
 }
 
@@ -289,41 +292,41 @@ switch ($ITEM)
 {
 	"DiscoveryBackupJobs" {
 		$xml1 = Import-Clixml "$pathxml\backupjob.xml"
-		$query = $xml1 | Where-Object { $_.IsScheduleEnabled -eq "true" -and $_.JobType -like "Backup" } | Select @{ N = "JOBID"; E = { $_.ID | convertto-encoding "utf-8" "windows-1251" } }, @{ N = "JOBNAME"; E = { $_.NAME | convertto-encoding "utf-8" "windows-1251" } }
+		$query = $xml1 | Where-Object { $_.IsScheduleEnabled -eq "true" -and $_.JobType -like "Backup" } | Select @{ N = "JOBID"; E = { $_.ID | convertto-encoding -switch in } }, @{ N = "JOBNAME"; E = { $_.NAME | convertto-encoding -switch in } }
 		$query | ConvertTo-ZabbixDiscoveryJson JOBNAME, JOBID
 	}
 	
 	"DiscoveryBackupSyncJobs" {
 		$xml1 = Import-Clixml "$pathxml\backupjob.xml"
-		$query = $xml1 | Where-Object { $_.IsScheduleEnabled -eq "true" -and $_.JobType -like "BackupSync" } | Select @{ N = "JOBBSID"; E = { $_.ID | convertto-encoding "utf-8" "windows-1251" } }, @{ N = "JOBBSNAME"; E = { $_.NAME | convertto-encoding "utf-8" "windows-1251" } }
+		$query = $xml1 | Where-Object { $_.IsScheduleEnabled -eq "true" -and $_.JobType -like "BackupSync" } | Select @{ N = "JOBBSID"; E = { $_.ID | convertto-encoding -switch in } }, @{ N = "JOBBSNAME"; E = { $_.NAME | convertto-encoding -switch in } }
 		$query | ConvertTo-ZabbixDiscoveryJson JOBBSNAME, JOBBSID
 	}
 	
 	"DiscoveryTapeJobs" {
 		$xml1 = Import-Clixml "$pathxml\backuptape.xml"
-		$query = $xml1 | Select @{ N = "JOBTAPEID"; E = { $_.ID | convertto-encoding "utf-8" "windows-1251" } }, @{ N = "JOBTAPENAME"; E = { $_.NAME | convertto-encoding "utf-8" "windows-1251" } }
+		$query = $xml1 | Select @{ N = "JOBTAPEID"; E = { $_.ID | convertto-encoding -switch in } }, @{ N = "JOBTAPENAME"; E = { $_.NAME | convertto-encoding -switch in } }
 		$query | ConvertTo-ZabbixDiscoveryJson JOBTAPENAME, JOBTAPEID
 	}
 	
 	"DiscoveryEndpointJobs" {
 		$xml1 = Import-Clixml "$pathxml\backupendpoint.xml"
-		$query = $xml1 | Select-Object Id, Name | Select @{ N = "JOBENDPOINTID"; E = { $_.ID | convertto-encoding "utf-8" "windows-1251" } }, @{ N = "JOBENDPOINTNAME"; E = { $_.NAME | convertto-encoding "utf-8" "windows-1251" } }
+		$query = $xml1 | Select-Object Id, Name | Select @{ N = "JOBENDPOINTID"; E = { $_.ID | convertto-encoding -switch in } }, @{ N = "JOBENDPOINTNAME"; E = { $_.NAME | convertto-encoding -switch in } }
 		$query | ConvertTo-ZabbixDiscoveryJson JOBENDPOINTNAME, JOBENDPOINTID
 	}
 	
 	"DiscoveryRepo" {
-		$query = Get-WmiObject -Class Repository -ComputerName $env:COMPUTERNAME -Namespace ROOT\VeeamBS | Select @{ N = "REPONAME"; E = { $_.NAME | convertto-encoding "utf-8" "windows-1251" } }
+		$query = Get-WmiObject -Class Repository -ComputerName $env:COMPUTERNAME -Namespace ROOT\VeeamBS | Select @{ N = "REPONAME"; E = { $_.NAME | convertto-encoding -switch in } }
 		$query | ConvertTo-ZabbixDiscoveryJson REPONAME
 	}
 	
 	"DiscoveryBackupVmsByJobs" {
 		if ($ID -like "BackupSync")
 		{
-			Import-Clixml "$pathxml\backupsyncvmbyjob.xml" | Select @{ N = "JOBNAME"; E = { $_.Job | convertto-encoding "utf-8" "windows-1251" } }, @{ N = "JOBVMNAME"; E = { $_.NAME | convertto-encoding "utf-8" "windows-1251" } } | ConvertTo-ZabbixDiscoveryJson JOBVMNAME, JOBNAME
+			Import-Clixml "$pathxml\backupsyncvmbyjob.xml" | Select @{ N = "JOBNAME"; E = { $_.Job | convertto-encoding -switch in } }, @{ N = "JOBVMNAME"; E = { $_.NAME | convertto-encoding -switch in } } | ConvertTo-ZabbixDiscoveryJson JOBVMNAME, JOBNAME
 		}
 		else
 		{
-			Import-Clixml "$pathxml\backupvmbyjob.xml" | Select @{ N = "JOBNAME"; E = { $_.Job | convertto-encoding "utf-8" "windows-1251" } }, @{ N = "JOBVMNAME"; E = { $_.NAME | convertto-encoding "utf-8" "windows-1251" } } | ConvertTo-ZabbixDiscoveryJson JOBVMNAME, JOBNAME
+			Import-Clixml "$pathxml\backupvmbyjob.xml" | Select @{ N = "JOBNAME"; E = { $_.Job | convertto-encoding -switch in } }, @{ N = "JOBVMNAME"; E = { $_.NAME | convertto-encoding -switch in } } | ConvertTo-ZabbixDiscoveryJson JOBVMNAME, JOBNAME
 		}
 	}
 	
@@ -364,10 +367,9 @@ switch ($ITEM)
 	
 	"ResultBackupSync"  {
 		$xml = Import-Clixml "$pathxml\backupjob.xml" | Where-Object { $_.Id -like "$ID" }
-		
-		
 		$result = veeam-backuptask-unique -ID $xml.name -jobtype jobname
-		$unique = $result.count
+		$query = $result | Measure-Object
+		$unique = $query.count
 		$count = $unique | measure-object
 		$success = ($Result.Status | Where { $_.Value -like "*Success*" }).count
 		$warning = ($Result.Status | Where { $_.Value -like "*Warning*" }).count

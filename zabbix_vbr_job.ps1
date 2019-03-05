@@ -545,7 +545,7 @@ switch ($ITEM)
 	}
 	"VmCountResultBackupSync" {
 		$query = veeam-backuptask-unique -ID $ID -jobtype jobname
-		$result = $query | where { $_.Status -like $ID0 }
+		$result = $query | where { $_.Status -like $ID0 } | Measure-Object
 		[string]$result.count
 	}
 	"Type" {

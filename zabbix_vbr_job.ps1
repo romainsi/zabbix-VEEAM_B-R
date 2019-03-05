@@ -135,7 +135,7 @@ function ExportXml
 				Start-Job -Name $name -ScriptBlock {
 					Add-PSSnapin -Name VeeamPSSnapIn -ErrorAction SilentlyContinue
 					$connectVeeam = Connect-VBRServer
-					$StartDate = (Get-Date).adddays(-32)
+					$StartDate = (Get-Date).adddays(-40)
 					$BackupSessions = Get-VBRBackupSession | where { $_.CreationTime -ge $StartDate } | Sort JobName, CreationTime
 					$Result = & {
 						ForEach ($BackupSession in ($BackupSessions | ?{ $_.IsRetryMode -eq $false }))
@@ -535,7 +535,7 @@ switch ($ITEM)
 		[string]$xml1.Count
 	}
 	"VmCount" {
-		$result = veeam-backuptask-unique -ID $ID -jobtype jobname
+		$result = veeam-backuptask-unique -ID $ID -jobtype jobname | Measure-Object
 		[string]$result.count
 	}
 	"VmCountResultBackup" {

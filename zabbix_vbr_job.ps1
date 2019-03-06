@@ -366,17 +366,16 @@ switch ($ITEM)
 	}
 	
 	"ResultBackupSync"  {
-		$xml = Import-Clixml "$pathxml\backupjob.xml" | Where-Object { $_.Id -like "$ID" }
+		$xml = Import-Clixml "$pathxml\backupjob.xml" | Where-Object { $_.Id -like $ID }
 		$result = veeam-backuptask-unique -ID $xml.name -jobtype jobname
 		$query = $result | Measure-Object
-		$unique = $query.count
-		$count = $unique | measure-object
+		$count = $query.count
 		$success = ($Result.Status | Where { $_.Value -like "*Success*" }).count
 		$warning = ($Result.Status | Where { $_.Value -like "*Warning*" }).count
 		$failed = ($Result.Status | Where { $_.Value -like "*Failed*" }).count
 		$pending = ($Result.Status | Where { $_.Value -like "*Pending*" }).count
 		$InProgress = ($Result.Status | Where { $_.Value -like "*InProgress*" }).count
-		if ($count.count -eq $success) { write-host "2" }
+		if ($count -eq $success) { write-host "2" }
 		else
 		{
 			if ($failed -gt 0) { write-host "0" }

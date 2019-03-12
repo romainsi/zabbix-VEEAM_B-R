@@ -5,8 +5,9 @@
 #
 # USAGE:
 #
-#   as a script:    powershell.exe -NoProfile -ExecutionPolicy Bypass -File "C:\Program Files\Zabbix Agent\scripts\zabbix_vbr_job.ps1" <ITEM_TO_QUERY> <JOBID>
-#   as an item:     vbr[<ITEM_TO_QUERY>,<JOBID>]
+#   as a script:    powershell.exe -NoProfile -ExecutionPolicy Bypass -File "C:\Program Files\Zabbix Agent\scripts\zabbix_vbr_job.ps1" <ITEM_TO_QUERY> <JOBID>or<JOBNAME> <TRIGGERLEVEL>
+#   as an item:     vbr[<ITEM_TO_QUERY>,<JOBID>or<JOBNAME>,<TRIGGERLEVEL>]
+#
 #
 # ITEMS availables (Switch) :
 # - DiscoveryBackupJobs
@@ -54,15 +55,34 @@
 #   UserParameter=vbr[*],powershell -NoProfile -ExecutionPolicy Bypass -File "C:\Program Files\Zabbix Agent\scripts\zabbix_vbr_job.ps1" "$1" "$2" "$3"
 #
 
-
 $pathxml = 'C:\Program Files\Zabbix Agent\scripts\TempXmlVeeam'
 
+
+# Function convert return Json String to html
+function convertto-encoding
+{
+	[CmdletBinding()]
+	Param (
+		[Parameter(ValueFromPipeline = $true)]
+		[string]$item,
+		[Parameter(Mandatory = $true)]
+		[string]$switch
+	)
+	if ($switch -like "in")
+	{
+		$item.replace('&', '&amp;').replace('à', '&agrave;').replace('â', '&acirc;').replace('è', '&egrave;').replace('é', '&eacute;').replace('ê', '&ecirc;')
+	}
+	if ($switch -like "out")
+	{
+		$item.replace('&amp;', '&').replace('&agrave;', 'à').replace('&acirc;', 'â').replace('&egrave;', 'è').replace('&eacute;', 'é').replace('&ecirc;', 'ê')
+	}
+}
+
 $ITEM = [string]$args[0]
-$ID = [string]$args[1]
-$ID0 = [string]$args[2]
+$ID = [string]$args[1] | convertto-encoding -switch out
+$ID0 = [string]$args[2] | convertto-encoding -switch out
 
-
-#Multiprocess ExportXml
+# Function Multiprocess ExportXml
 function ExportXml
 {
 	[CmdletBinding()]
@@ -82,9 +102,10 @@ function ExportXml
 		$path = "$pathxml\$name" + "temp.xml"
 		$newpath = "$pathxml\$name" + ".xml"
 		
-		if ($switch -like "normal")
+		if ((Get-WMIObject -Class Win32_Process -Filter "Name='PowerShell.EXE'" | Where { $_.CommandLine -Like "*exportxml*" } | Select Handle, CommandLine).count -lt "1")
 		{
-			if ((Get-WMIObject -Class Win32_Process -Filter "Name='PowerShell.EXE'" | Where { $_.CommandLine -Like "*exportxml*" } | Select Handle, CommandLine).count -lt "1")
+			
+			if ($switch -like "normal")
 			{
 				Start-Job -Name $name -ScriptBlock {
 					Add-PSSnapin -Name VeeamPSSnapIn -ErrorAction SilentlyContinue
@@ -95,11 +116,9 @@ function ExportXml
 					Remove-Item $args[1]
 				} -ArgumentList "$command", "$path", "$name", "$newpath"
 			}
-		}
-		
-		if ($switch -like "byvm")
-		{
-			if ((Get-WMIObject -Class Win32_Process -Filter "Name='PowerShell.EXE'" | Where { $_.CommandLine -Like "*exportxml*" } | Select Handle, CommandLine).count -lt "1")
+			
+			
+			if ($switch -like "byvm")
 			{
 				$commandnew = "$command " + "| ?{ `$_.JobType -eq `"$type`" }"
 				Start-Job -Name $name -ScriptBlock {
@@ -115,34 +134,47 @@ function ExportXml
 					Remove-Item $args[1]
 				} -ArgumentList "$commandnew", "$path", "$name", "$newpath"
 			}
-		}
-		
-		if ($switch -like "bytasks")
-		{
-			if ((Get-WMIObject -Class Win32_Process -Filter "Name='PowerShell.EXE'" | Where { $_.CommandLine -Like "*exportxml*" } | Select Handle, CommandLine).count -lt "1")
+			
+			if ($switch -like "bytaskswithretry")
 			{
-				$commandnew = "$command " + "| ?{ `$_.JobType -eq `"$type`" }"
 				Start-Job -Name $name -ScriptBlock {
 					Add-PSSnapin -Name VeeamPSSnapIn -ErrorAction SilentlyContinue
 					$connectVeeam = Connect-VBRServer
-					foreach ($Job in (Invoke-Expression $args[0]))
-					{
-						$Session = $Job.FindLastSession()
-						if (!$Session) { continue; }
-						$TasksBackupJob += $Session.GetTaskSessions()
+					$StartDate = (Get-Date).adddays(-40)
+					$BackupSessions = Get-VBRBackupSession | where { $_.CreationTime -ge $StartDate } | Sort JobName, CreationTime
+					$Result = & {
+						ForEach ($BackupSession in ($BackupSessions | ?{ $_.IsRetryMode -eq $false }))
+						{
+							[System.Collections.ArrayList]$TaskSessions = @($BackupSession | Get-VBRTaskSession)
+							If ($BackupSession.Result -eq "Failed")
+							{
+								$RetrySessions = $BackupSessions | ?{ ($_.IsRetryMode -eq $true) -and ($_.OriginalSessionId -eq $BackupSession.Id) }
+								ForEach ($RetrySession in $RetrySessions)
+								{
+									[System.Collections.ArrayList]$RetryTaskSessions = @($RetrySession | Get-VBRTaskSession)
+									ForEach ($RetryTaskSession in $RetryTaskSessions)
+									{
+										$PriorTaskSession = $TaskSessions | ?{ $_.Name -eq $RetryTaskSession.Name }
+										If ($PriorTaskSession) { $TaskSessions.Remove($PriorTaskSession) }
+										$TaskSessions.Add($RetryTaskSession) | Out-Null
+									}
+								}
+							}
+							$TaskSessions | Select @{ N = "JobName"; E = { $BackupSession.JobName } }, @{ N = "JobId"; E = { $BackupSession.JobId } }, @{ N = "SessionName"; E = { $_.JobSess.Name } }, @{ N = "JobResult"; E = { $_.JobSess.Result } }, @{ N = "JobStart"; E = { $_.JobSess.CreationTime } }, @{ N = "JobEnd"; E = { $_.JobSess.EndTime } }, @{ N = "Date"; E = { $_.JobSess.CreationTime.ToString("yyyy-MM-dd") } }, name, status
+						}
 					}
-					$TasksBackupJob | Export-Clixml $args[1]
+					$Result | Export-Clixml $args[1]
 					$disconnectVeeam = Disconnect-VBRServer
 					Copy-Item -Path $args[1] -Destination $args[3]
 					Remove-Item $args[1]
 				} -ArgumentList "$commandnew", "$path", "$name", "$newpath"
 			}
+			
+			# Purge completed Job 
+			$purge = get-job | ? { $_.State -eq 'Completed' } | Remove-Job
 		}
-		# Purge completed Job 
-		$purge = get-job | ? { $_.State -eq 'Completed' } | Remove-Job
 	}
 }
-
 
 
 
@@ -201,24 +233,20 @@ function ConvertTo-ZabbixDiscoveryJson
 				if ($Obj)
 				{
 					$Element = @{ }
-					
 					foreach ($P in $Property)
 					{
 						$Key = $ZabbixJsonDiscoveryKey -f $P.ToUpper()
 						$Element[$Key] = [String]$Obj.$P
 					}
-					
 					$Element
 				}
 			}
 		}
 	}
-	
 	end
 	{
 		$Result = @{ $ZabbixJsonData = $Result }
-		
-		return $Result | ConvertTo-Json -Compress
+		return $Result | ConvertTo-Json -Compress | % { [System.Text.RegularExpressions.Regex]::Unescape($_) }
 	}
 }
 
@@ -231,6 +259,32 @@ function veeam-replace
 	$item.replace('Failed', '0').replace('Warning', '1').replace('Success', '2').replace('None', '2').replace('idle', '3').replace('InProgress', '5').replace('Pending', '6')
 }
 
+# Function sort VMs by jobs on last backup (with unique name if retry)
+function veeam-backuptask-unique
+{
+	[CmdletBinding()]
+	Param (
+		[Parameter(Mandatory = $true)]
+		$jobtype,
+		[Parameter(Mandatory = $true)]
+		$ID
+	)
+	$xml1 = Import-Clixml "$pathxml\backuptaskswithretry.xml" | Where { $_.$jobtype -like "$ID" }
+	$unique = $xml1.Name | sort-object -Unique
+	
+	$output = & {
+		foreach ($object in $unique)
+		{
+			$query = $xml1 | where { $_.Name -like $object } | Sort JobStart -Descending | Select -First 1
+			foreach ($object1 in $query)
+			{
+				$query | Select @{ N = "JobName"; E = { $object1.JobName } }, @{ N = "JobId"; E = { $object1.JobId } }, @{ N = "SessionName"; E = { $object1.SessionName } }, @{ N = "JobResult"; E = { $object1.JobResult } }, @{ N = "JobStart"; E = { $object1.JobStart } }, @{ N = "JobEnd"; E = { $object1.JobEnd } }, @{ N = "Date"; E = { $object1.Date.ToString("yyyy-MM-dd") } }, @{ N = "Name"; E = { $object1.Name } }, @{ N = "Status"; E = { $object1.Status } }
+			}
+		}
+	}
+	$output
+}
+
 # Load Veeam Module
 Add-PSSnapin -Name VeeamPSSnapIn -ErrorAction SilentlyContinue
 
@@ -238,41 +292,41 @@ switch ($ITEM)
 {
 	"DiscoveryBackupJobs" {
 		$xml1 = Import-Clixml "$pathxml\backupjob.xml"
-		$query = $xml1 | Where-Object { $_.IsScheduleEnabled -eq "true" -and $_.JobType -like "Backup" } | Select @{ N = "JOBID"; E = { $_.ID } }, @{ N = "JOBNAME"; E = { $_.NAME } }
+		$query = $xml1 | Where-Object { $_.IsScheduleEnabled -eq "true" -and $_.JobType -like "Backup" } | Select @{ N = "JOBID"; E = { $_.ID | convertto-encoding -switch in } }, @{ N = "JOBNAME"; E = { $_.NAME | convertto-encoding -switch in } }
 		$query | ConvertTo-ZabbixDiscoveryJson JOBNAME, JOBID
 	}
 	
 	"DiscoveryBackupSyncJobs" {
 		$xml1 = Import-Clixml "$pathxml\backupjob.xml"
-		$query = $xml1 | Where-Object { $_.IsScheduleEnabled -eq "true" -and $_.JobType -like "BackupSync" } | Select @{ N = "JOBBSID"; E = { $_.ID } }, @{ N = "JOBBSNAME"; E = { $_.NAME } }
+		$query = $xml1 | Where-Object { $_.IsScheduleEnabled -eq "true" -and $_.JobType -like "BackupSync" } | Select @{ N = "JOBBSID"; E = { $_.ID | convertto-encoding -switch in } }, @{ N = "JOBBSNAME"; E = { $_.NAME | convertto-encoding -switch in } }
 		$query | ConvertTo-ZabbixDiscoveryJson JOBBSNAME, JOBBSID
 	}
 	
 	"DiscoveryTapeJobs" {
 		$xml1 = Import-Clixml "$pathxml\backuptape.xml"
-		$query = $xml1 | Select @{ N = "JOBTAPEID"; E = { $_.ID } }, @{ N = "JOBTAPENAME"; E = { $_.NAME } }
+		$query = $xml1 | Select @{ N = "JOBTAPEID"; E = { $_.ID | convertto-encoding -switch in } }, @{ N = "JOBTAPENAME"; E = { $_.NAME | convertto-encoding -switch in } }
 		$query | ConvertTo-ZabbixDiscoveryJson JOBTAPENAME, JOBTAPEID
 	}
 	
 	"DiscoveryEndpointJobs" {
 		$xml1 = Import-Clixml "$pathxml\backupendpoint.xml"
-		$query = $xml1 | Select-Object Id, Name | Select @{ N = "JOBENDPOINTID"; E = { $_.ID } }, @{ N = "JOBENDPOINTNAME"; E = { $_.NAME } }
+		$query = $xml1 | Select-Object Id, Name | Select @{ N = "JOBENDPOINTID"; E = { $_.ID | convertto-encoding -switch in } }, @{ N = "JOBENDPOINTNAME"; E = { $_.NAME | convertto-encoding -switch in } }
 		$query | ConvertTo-ZabbixDiscoveryJson JOBENDPOINTNAME, JOBENDPOINTID
 	}
 	
 	"DiscoveryRepo" {
-		$query = Get-WmiObject -Class Repository -ComputerName $env:COMPUTERNAME -Namespace ROOT\VeeamBS | Select @{ N = "REPONAME"; E = { $_.NAME } }
+		$query = Get-WmiObject -Class Repository -ComputerName $env:COMPUTERNAME -Namespace ROOT\VeeamBS | Select @{ N = "REPONAME"; E = { $_.NAME | convertto-encoding -switch in } }
 		$query | ConvertTo-ZabbixDiscoveryJson REPONAME
 	}
 	
 	"DiscoveryBackupVmsByJobs" {
 		if ($ID -like "BackupSync")
 		{
-			Import-Clixml "$pathxml\backupsyncvmbyjob.xml" | Select @{ N = "JOBNAME"; E = { $_.Job } }, @{ N = "JOBVMNAME"; E = { $_.NAME } } | ConvertTo-ZabbixDiscoveryJson JOBVMNAME, JOBNAME
+			Import-Clixml "$pathxml\backupsyncvmbyjob.xml" | Select @{ N = "JOBNAME"; E = { $_.Job | convertto-encoding -switch in } }, @{ N = "JOBVMNAME"; E = { $_.NAME | convertto-encoding -switch in } } | ConvertTo-ZabbixDiscoveryJson JOBVMNAME, JOBNAME
 		}
 		else
 		{
-			Import-Clixml "$pathxml\backupvmbyjob.xml" | Select @{ N = "JOBNAME"; E = { $_.Job } }, @{ N = "JOBVMNAME"; E = { $_.NAME } } | ConvertTo-ZabbixDiscoveryJson JOBVMNAME, JOBNAME
+			Import-Clixml "$pathxml\backupvmbyjob.xml" | Select @{ N = "JOBNAME"; E = { $_.Job | convertto-encoding -switch in } }, @{ N = "JOBVMNAME"; E = { $_.NAME | convertto-encoding -switch in } } | ConvertTo-ZabbixDiscoveryJson JOBVMNAME, JOBNAME
 		}
 	}
 	
@@ -290,18 +344,15 @@ switch ($ITEM)
 		$job3 = ExportXml -command Get-VBREPJob -name backupendpoint -switch normal
 		$job4 = ExportXml -command Get-VBRJob -name backupvmbyjob -switch byvm -type Backup
 		$job5 = ExportXml -command Get-VBRJob -name backupsyncvmbyjob -switch byvm -type BackupSync
-		$job6 = ExportXml -command Get-VBRJob -name backuptasks -switch bytasks -type Backup
-		$job7 = ExportXml -command Get-VBRJob -name backupsynctasks -switch bytasks -type BackupSync
+		$job6 = ExportXml -name backuptaskswithretry -switch bytaskswithretry
 		Get-Job | Wait-Job
 		
 	}
 	
 	"ResultBackup"  {
-		$xml1 = Import-Clixml "$pathxml\backupjob.xml"
-		$query = $xml1 | Where-Object { $_.Id -like "*$ID*" }
-		$xml = Import-Clixml "$pathxml\backupsession.xml"
-		$query1 = $xml | Where { $_.jobId -eq $query.Id.Guid } | Sort creationtime -Descending | Select -First 1
-		$query2 = $query1.Result
+		$xml = Import-Clixml "$pathxml\backuptaskswithretry.xml"
+		$query1 = $xml | Where { $_.jobId -like "$ID" } | Sort JobStart -Descending | Select -First 1
+		$query2 = $query1.JobResult
 		if (!$query2.value)
 		{
 			write-host "4" # If empty Send 4 : First Backup (or no history)
@@ -315,15 +366,16 @@ switch ($ITEM)
 	}
 	
 	"ResultBackupSync"  {
-		$xml = Import-Clixml "$pathxml\backupjob.xml" | Where-Object { $_.Id -like "*$ID*" }
-		$xml1 = Import-Clixml "$pathxml\backupsynctasks.xml" | Where { $_.JobName -like $xml.Name } | select name, jobname, status
-		$count = $xml1 | measure-object
-		$success = ($xml1.Status | Where { $_.Value -like "*Success*" }).count
-		$warning = ($xml1.Status | Where { $_.Value -like "*Warning*" }).count
-		$failed = ($xml1.Status | Where { $_.Value -like "*Failed*" }).count
-		$pending = ($xml1.Status | Where { $_.Value -like "*Pending*" }).count
-		$InProgress = ($xml1.Status | Where { $_.Value -like "*InProgress*" }).count
-		if ($count.count -eq $success) { write-host "2" }
+		$xml = Import-Clixml "$pathxml\backupjob.xml" | Where-Object { $_.Id -like $ID }
+		$result = veeam-backuptask-unique -ID $xml.name -jobtype jobname
+		$query = $result | Measure-Object
+		$count = $query.count
+		$success = ($Result.Status | Where { $_.Value -like "*Success*" }).count
+		$warning = ($Result.Status | Where { $_.Value -like "*Warning*" }).count
+		$failed = ($Result.Status | Where { $_.Value -like "*Failed*" }).count
+		$pending = ($Result.Status | Where { $_.Value -like "*Pending*" }).count
+		$InProgress = ($Result.Status | Where { $_.Value -like "*InProgress*" }).count
+		if ($count -eq $success) { write-host "2" }
 		else
 		{
 			if ($failed -gt 0) { write-host "0" }
@@ -427,24 +479,33 @@ switch ($ITEM)
 	}
 	
 	"VmResultBackup" {
-		$xml1 = Import-Clixml "$pathxml\backuptasks.xml"
-		$query = $xml1 | Where-Object { $_.Name -like "$ID" -and $_.JobName -like "$ID0" }
-		# If vm is empty in task : idle veeam waiting for retry vm failed but not show the vm already processed (vm can be warning or success)
-		if (!$query) { write-host "3" }
+		$query = veeam-backuptask-unique -ID $ID0 -jobtype jobname
+		$result = $query | where { $_.Name -like "$ID" }
+		if (!$result)
+		{
+			write-host "4" # If empty Send 4 : First Backup (or no history)
+		}
 		else
 		{
-			$query1 = $query.Status.Value
-			$query2 = "$query1" | veeam-replace
-			[string]$query2
+			$query3 = $Result.Status.Value
+			$query4 = $query3 | veeam-replace
+			[string]$query4
 		}
-		
 	}
+	
 	"VmResultBackupSync" {
-		$xml1 = Import-Clixml "$pathxml\backupsynctasks.xml"
-		$query = $xml1 | Where-Object { $_.Name -like "$ID" -and $_.JobName -like "$ID0" }
-		$query1 = $query.Status.Value
-		$query2 = "$query1" | veeam-replace
-		[string]$query2
+		$query = veeam-backuptask-unique -ID $ID0 -jobtype jobname
+		$result = $query | where { $_.Name -like "$ID" }
+		if (!$result)
+		{
+			write-host "4" # If empty Send 4 : First Backup (or no history)
+		}
+		else
+		{
+			$query3 = $Result.Status.Value
+			$query4 = $query3 | veeam-replace
+			[string]$query4
+		}
 	}
 	"RepoCapacity" {
 		$query = Get-WmiObject -Class Repository -ComputerName $env:COMPUTERNAME -Namespace ROOT\VeeamBS | Where-Object { $_.Name -eq "$ID" }
@@ -475,34 +536,22 @@ switch ($ITEM)
 		[string]$xml1.Count
 	}
 	"VmCount" {
-		$xml1 = Import-Clixml "$pathxml\backuptasks.xml"
-		$query = $xml1 | Where-Object { $_.JobName -like "$ID" } | Select Name | Measure-Object
-		if ($query.count -eq "0")
-		{
-			$xml1 = Import-Clixml "$pathxml\backupsynctasks.xml"
-			$query = $xml1 | Where-Object { $_.JobName -like "$ID" } | Select Name | Measure-Object
-			[string]$query.Count
-		}
-		else
-		{
-			[string]$query.Count
-		}
+		$result = veeam-backuptask-unique -ID $ID -jobtype jobname | Measure-Object
+		[string]$result.count
 	}
 	"VmCountResultBackup" {
-		$xml1 = Import-Clixml "$pathxml\backuptasks.xml"
-		$query = $xml1 | Where-Object { $_.JobName -like "$ID" -and $_.Status -like "$ID0" }
-		$query1 = $query.Status.Value | Measure-Object
-		[string]$query1.count
+		$query = veeam-backuptask-unique -ID $ID -jobtype jobname
+		$result = $query | where { $_.Status -like $ID0 } | Measure-Object
+		[string]$result.count
 	}
 	"VmCountResultBackupSync" {
-		$xml1 = Import-Clixml "$pathxml\backupsynctasks.xml"
-		$query = $xml1 | Where-Object { $_.JobName -like "$ID" -and $_.Status -like "$ID0" }
-		$query1 = $query.Status.Value | Measure-Object
-		[string]$query1.count
+		$query = veeam-backuptask-unique -ID $ID -jobtype jobname
+		$result = $query | where { $_.Status -like $ID0 } | Measure-Object
+		[string]$result.count
 	}
 	"Type" {
 		$xml1 = Import-Clixml "$pathxml\backupbackup.xml"
-		$query = $xml1 | Where-Object { $_.JobId -like "*$ID*" }
+		$query = $xml1 | Where-Object { $_.JobId -like "$ID" }
 		[string]$query.JobType
 	}
 	"NextRunTime" {

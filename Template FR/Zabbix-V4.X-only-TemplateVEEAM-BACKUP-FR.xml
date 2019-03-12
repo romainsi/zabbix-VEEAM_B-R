@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <zabbix_export>
     <version>4.0</version>
-    <date>2019-02-26T14:23:21Z</date>
+    <date>2019-03-08T10:16:37Z</date>
     <groups>
         <group>
             <name>Templates</name>
@@ -53,7 +53,7 @@
                     <snmp_community/>
                     <snmp_oid/>
                     <key>system.run[powershell -NoProfile -ExecutionPolicy Bypass -File &quot;C:\Program Files\Zabbix Agent\scripts\zabbix_vbr_job.ps1&quot; exportxml,nowait]</key>
-                    <delay>2m</delay>
+                    <delay>5m</delay>
                     <history>5d</history>
                     <trends>15d</trends>
                     <status>0</status>
@@ -587,7 +587,7 @@
                             <snmp_community/>
                             <snmp_oid/>
                             <key>vbr[ResultBackup,{#JOBID}]</key>
-                            <delay>15m</delay>
+                            <delay>10m</delay>
                             <history>1w</history>
                             <trends>365d</trends>
                             <status>0</status>
@@ -1193,7 +1193,7 @@ and &#13;
                             <snmp_community/>
                             <snmp_oid/>
                             <key>vbr[ResultBackupSync,{#JOBBSID}]</key>
-                            <delay>15m</delay>
+                            <delay>10m</delay>
                             <history>90d</history>
                             <trends>365d</trends>
                             <status>0</status>
@@ -1663,7 +1663,7 @@ and&#13;
                             <snmp_community/>
                             <snmp_oid/>
                             <key>vbr[VMResultBackupSync,&quot;{#JOBVMNAME}&quot;,&quot;{#JOBNAME}&quot;]</key>
-                            <delay>15m</delay>
+                            <delay>10m</delay>
                             <history>90d</history>
                             <trends>365d</trends>
                             <status>0</status>
@@ -1780,7 +1780,7 @@ and&#13;
                             <snmp_community/>
                             <snmp_oid/>
                             <key>vbr[VMResultBackup,&quot;{#JOBVMNAME}&quot;,&quot;{#JOBNAME}&quot;]</key>
-                            <delay>15m</delay>
+                            <delay>10m</delay>
                             <history>90d</history>
                             <trends>365d</trends>
                             <status>0</status>
@@ -1897,7 +1897,7 @@ and&#13;
                             <snmp_community/>
                             <snmp_oid/>
                             <key>vbr[ResultEndpoint,{#JOBENDPOINTID}]</key>
-                            <delay>15m</delay>
+                            <delay>10m</delay>
                             <history>90d</history>
                             <trends>365d</trends>
                             <status>0</status>
@@ -2427,7 +2427,7 @@ and&#13;
                             <snmp_community/>
                             <snmp_oid/>
                             <key>vbr[ResultTape,{#JOBTAPEID}]</key>
-                            <delay>15m</delay>
+                            <delay>10m</delay>
                             <history>90d</history>
                             <trends>365d</trends>
                             <status>0</status>

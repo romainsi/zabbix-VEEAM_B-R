@@ -50,8 +50,13 @@ Why? Because the execution of this command can take between 30 seconds and more 
   - Result of each jobs
   - Execution status for each jobs
   - Next run time of each jobs
+  
+### 5. Veeam Jobs Replication Backup:
+  - Result of each jobs
+  - Execution status for each jobs
+  - Type for each jobs
 
-### 5. Veeam Repository:
+### 6. Veeam Repository:
   - Remaining space in repository for each repo
   - Total space in repository for each repo
 
@@ -89,6 +94,11 @@ Why? Because the execution of this command can take between 30 seconds and more 
 - [HIGH] => Job has FAILED
 - [AVERAGE] => Job has completed with warning
 - [HIGH] => Job is still running (8 hours)
+- [INFORMATION] => No data recovery for 24 hours
+
+### Discovery Veeam Replication Jobs
+- [HIGH] => Job has FAILED
+- [AVERAGE] => Job has completed with warning
 - [INFORMATION] => No data recovery for 24 hours
 
 ### Discovery Veeam Repository

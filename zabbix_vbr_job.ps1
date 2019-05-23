@@ -14,6 +14,7 @@
 # - DiscoveryBackupSyncJobs
 # - DiscoveryTapeJobs
 # - DiscoveryEndpointJobs
+# - DiscoveryReplicaJobs
 # - DiscoveryRepo
 # - DiscoveryBackupVmsByJobs
 # - ExportXml
@@ -30,6 +31,7 @@
 # - ResultBackupSync
 # - ResultTape
 # - ResultEndpoint
+# - ResultReplica
 # - VmResultBackup
 # - VmResultBackupSync
 # - RepoCapacity
@@ -314,6 +316,12 @@ switch ($ITEM)
 		$query | ConvertTo-ZabbixDiscoveryJson JOBENDPOINTNAME, JOBENDPOINTID
 	}
 	
+	"DiscoveryReplicaJobs" {
+		$xml1 = Import-Clixml "$pathxml\backupjob.xml"
+		$query = $xml1 | Where-Object { $_.IsScheduleEnabled -eq "true" -and $_.JobType -like "Replica" } | Select @{ N = "JOBREPLICAID"; E = { $_.ID | convertto-encoding -switch in } }, @{ N = "JOBREPLICANAME"; E = { $_.NAME | convertto-encoding -switch in } }
+		$query | ConvertTo-ZabbixDiscoveryJson JOBREPLICANAME, JOBREPLICAID
+	}
+	
 	"DiscoveryRepo" {
 		$query = Get-WmiObject -Class Repository -ComputerName $env:COMPUTERNAME -Namespace ROOT\VeeamBS | Select @{ N = "REPONAME"; E = { $_.NAME | convertto-encoding -switch in } }
 		$query | ConvertTo-ZabbixDiscoveryJson REPONAME
@@ -475,6 +483,22 @@ switch ($ITEM)
 				$query3 = $query4 | veeam-replace
 				write-host "$query3"
 			}
+		}
+	}
+	
+	"ResultReplica"  {
+		$xml = Import-Clixml "$pathxml\backupsession.xml"
+		$query1 = $xml | Where { $_.jobId -like "$ID" } | Sort JobStart -Descending | Select -First 1
+		$query2 = $query1.Result
+		if (!$query2.value)
+		{
+			write-host "4" # If empty Send 4 : First Backup (or no history)
+		}
+		else
+		{
+			$query3 = $query2.value
+			$query4 = "$query3" | veeam-replace
+			write-host "$query4"
 		}
 	}
 	

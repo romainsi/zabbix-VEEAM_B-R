@@ -55,8 +55,9 @@
 #
 # Add to Zabbix Agent
 #   UserParameter=vbr[*],powershell -NoProfile -ExecutionPolicy Bypass -File "C:\Program Files\Zabbix Agent\scripts\zabbix_vbr_job.ps1" "$1" "$2" "$3"
-#
 
+
+# If you change the pathxml modify also the item Result Export XML with the new location in zabbix template
 $pathxml = 'C:\Program Files\Zabbix Agent\scripts\TempXmlVeeam'
 
 

@@ -60,6 +60,14 @@
 # If you change the pathxml modify also the item Result Export XML with the new location in zabbix template
 $pathxml = 'C:\Program Files\Zabbix Agent\scripts\TempXmlVeeam'
 
+# ONLY FOR VMs RESULTS :
+# Ajust the start date for retrieve backup vms history
+#
+# Example : If you have a backup job that runs every 30 days this value must be at least '-31' days
+# but if you have only daily job ajust to '-2' days.
+# ! This request can consume a lot of cpu resources, adjust carefully !
+# 
+$days = '-31'
 
 # Function convert return Json String to html
 function convertto-encoding
@@ -73,11 +81,11 @@ function convertto-encoding
 	)
 	if ($switch -like "in")
 	{
-		$item.replace('&', '&amp;').replace('à', '&agrave;').replace('â', '&acirc;').replace('è', '&egrave;').replace('é', '&eacute;').replace('ê', '&ecirc;')
+		$item.replace('&', '&amp;').replace('Ã ', '&agrave;').replace('Ã¢', '&acirc;').replace('Ã¨', '&egrave;').replace('Ã©', '&eacute;').replace('Ãª', '&ecirc;')
 	}
 	if ($switch -like "out")
 	{
-		$item.replace('&amp;', '&').replace('&agrave;', 'à').replace('&acirc;', 'â').replace('&egrave;', 'è').replace('&eacute;', 'é').replace('&ecirc;', 'ê')
+		$item.replace('&amp;', '&').replace('&agrave;', 'Ã ').replace('&acirc;', 'Ã¢').replace('&egrave;', 'Ã¨').replace('&eacute;', 'Ã©').replace('&ecirc;', 'Ãª')
 	}
 }
 
@@ -104,9 +112,6 @@ function ExportXml
 	{
 		$path = "$pathxml\$name" + "temp.xml"
 		$newpath = "$pathxml\$name" + ".xml"
-		
-		if ((Get-WMIObject -Class Win32_Process -Filter "Name='PowerShell.EXE'" | Where { $_.CommandLine -Like "*exportxml*" } | Select Handle, CommandLine).count -lt "1")
-		{
 			
 			if ($switch -like "normal")
 			{
@@ -143,7 +148,7 @@ function ExportXml
 				Start-Job -Name $name -ScriptBlock {
 					Add-PSSnapin -Name VeeamPSSnapIn -ErrorAction SilentlyContinue
 					$connectVeeam = Connect-VBRServer
-					$StartDate = (Get-Date).adddays(-40)
+					$StartDate = (Get-Date).adddays($args[4])
 					$BackupSessions = Get-VBRBackupSession | where { $_.CreationTime -ge $StartDate } | Sort JobName, CreationTime
 					$Result = & {
 						ForEach ($BackupSession in ($BackupSessions | ?{ $_.IsRetryMode -eq $false }))
@@ -170,12 +175,11 @@ function ExportXml
 					$disconnectVeeam = Disconnect-VBRServer
 					Copy-Item -Path $args[1] -Destination $args[3]
 					Remove-Item $args[1]
-				} -ArgumentList "$commandnew", "$path", "$name", "$newpath"
+				} -ArgumentList "$commandnew", "$path", "$name", "$newpath", "$days"
 			}
 			
 			# Purge completed Job 
 			$purge = get-job | ? { $_.State -eq 'Completed' } | Remove-Job
-		}
 	}
 }
 
@@ -346,6 +350,8 @@ switch ($ITEM)
 		{
 			$query = New-Item -ItemType Directory -Force -Path "$pathxml"
 		}
+		if ((Get-WMIObject -Class Win32_Process -Filter "Name='PowerShell.EXE'" | Where { $_.CommandLine -Like "*exportxml*" } | measure).count -eq 1)
+		{
 		$job = ExportXml -command Get-VBRBackupSession -name backupsession -switch normal
 		$job0 = ExportXml -command Get-VBRJob -name backupjob -switch normal
 		$job1 = ExportXml -command Get-VBRBackup -name backupbackup -switch normal
@@ -355,7 +361,7 @@ switch ($ITEM)
 		$job5 = ExportXml -command Get-VBRJob -name backupsyncvmbyjob -switch byvm -type BackupSync
 		$job6 = ExportXml -name backuptaskswithretry -switch bytaskswithretry
 		Get-Job | Wait-Job
-		
+		}
 	}
 	
 	"ResultBackup"  {
@@ -584,11 +590,14 @@ switch ($ITEM)
 		$query = $xml1 | where { $_.Id -like "*$ID*" }
 		$query1 = $query.ScheduleOptions
 		$result = $query1.NextRun
+        if (!$result) {}
+        else {
 		$result1 = $nextdate, $nexttime = $result.Split(" ")
 		$newdate = [datetime]("$($nextdate -replace "(\d{2})-(\d{2})", "`$2-`$1") $nexttime")
 		$date = get-date -date "01/01/1970"
 		$result2 = (New-TimeSpan -Start $date -end $newdate).TotalSeconds
 		[string]$result2
+        }
 	}
 	"RunningJob" {
 		$xml1 = Import-Clixml "$pathxml\backupjob.xml"

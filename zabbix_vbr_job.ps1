@@ -81,11 +81,11 @@ function convertto-encoding
 	)
 	if ($switch -like "in")
 	{
-		$item.replace('&', '&amp;').replace('Ã ', '&agrave;').replace('Ã¢', '&acirc;').replace('Ã¨', '&egrave;').replace('Ã©', '&eacute;').replace('Ãª', '&ecirc;')
+		$item.replace('&', '&amp;').replace('à', '&agrave;').replace('â', '&acirc;').replace('è', '&egrave;').replace('é', '&eacute;').replace('ê', '&ecirc;')
 	}
 	if ($switch -like "out")
 	{
-		$item.replace('&amp;', '&').replace('&agrave;', 'Ã ').replace('&acirc;', 'Ã¢').replace('&egrave;', 'Ã¨').replace('&eacute;', 'Ã©').replace('&ecirc;', 'Ãª')
+		$item.replace('&', '&amp;').replace('à', '&agrave;').replace('â', '&acirc;').replace('è', '&egrave;').replace('é', '&eacute;').replace('ê', '&ecirc;')
 	}
 }
 

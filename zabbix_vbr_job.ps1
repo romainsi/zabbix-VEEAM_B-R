@@ -280,7 +280,7 @@ function ImportXml
 	{
 		$err = $_
 	}
-	If ($err �ne $null)
+	If ($err -ne $null)
 	{
 		Start-Sleep -Seconds 2
 		$xmlquery = Import-Clixml "$path"

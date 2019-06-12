@@ -257,6 +257,37 @@ function ConvertTo-ZabbixDiscoveryJson
 	}
 }
 
+# Function import xml with check & delay time if copy process running
+function ImportXml
+{
+	[CmdletBinding()]
+	Param ([Parameter(ValueFromPipeline = $true)]
+		$item)
+	
+	$path = "$pathxml\$item" + ".xml"
+	$result = Test-Path -Path $path
+	if ($result -like 'False')
+	{
+		start-sleep -Seconds 5
+	}
+	
+	$err = $null
+	try
+	{
+		$xmlquery = Import-Clixml "$path"
+	}
+	catch
+	{
+		$err = $_
+	}
+	If ($err �ne $null)
+	{
+		Start-Sleep -Seconds 2
+		$xmlquery = Import-Clixml "$path"
+	}
+	$xmlquery
+}
+
 # Replace Function for Veeam Correlation
 function veeam-replace
 {
@@ -276,7 +307,7 @@ function veeam-backuptask-unique
 		[Parameter(Mandatory = $true)]
 		$ID
 	)
-	$xml1 = Import-Clixml "$pathxml\backuptaskswithretry.xml" | Where { $_.$jobtype -like "$ID" }
+	$xml1 = ImportXml -item backuptaskswithretry | Where { $_.$jobtype -like "$ID" }
 	$unique = $xml1.Name | sort-object -Unique
 	
 	$output = & {
@@ -298,31 +329,31 @@ Add-PSSnapin -Name VeeamPSSnapIn -ErrorAction SilentlyContinue
 switch ($ITEM)
 {
 	"DiscoveryBackupJobs" {
-		$xml1 = Import-Clixml "$pathxml\backupjob.xml"
+		$xml1 = ImportXml -item backupjob
 		$query = $xml1 | Where-Object { $_.IsScheduleEnabled -eq "true" -and $_.JobType -like "Backup" } | Select @{ N = "JOBID"; E = { $_.ID | convertto-encoding -switch in } }, @{ N = "JOBNAME"; E = { $_.NAME | convertto-encoding -switch in } }
 		$query | ConvertTo-ZabbixDiscoveryJson JOBNAME, JOBID
 	}
 	
 	"DiscoveryBackupSyncJobs" {
-		$xml1 = Import-Clixml "$pathxml\backupjob.xml"
+		$xml1 = ImportXml -item backupjob
 		$query = $xml1 | Where-Object { $_.IsScheduleEnabled -eq "true" -and $_.JobType -like "BackupSync" } | Select @{ N = "JOBBSID"; E = { $_.ID | convertto-encoding -switch in } }, @{ N = "JOBBSNAME"; E = { $_.NAME | convertto-encoding -switch in } }
 		$query | ConvertTo-ZabbixDiscoveryJson JOBBSNAME, JOBBSID
 	}
 	
 	"DiscoveryTapeJobs" {
-		$xml1 = Import-Clixml "$pathxml\backuptape.xml"
+		$xml1 = ImportXml -item backuptape
 		$query = $xml1 | Select @{ N = "JOBTAPEID"; E = { $_.ID | convertto-encoding -switch in } }, @{ N = "JOBTAPENAME"; E = { $_.NAME | convertto-encoding -switch in } }
 		$query | ConvertTo-ZabbixDiscoveryJson JOBTAPENAME, JOBTAPEID
 	}
 	
 	"DiscoveryEndpointJobs" {
-		$xml1 = Import-Clixml "$pathxml\backupendpoint.xml"
+		$xml1 = ImportXml -item backupendpoint
 		$query = $xml1 | Select-Object Id, Name | Select @{ N = "JOBENDPOINTID"; E = { $_.ID | convertto-encoding -switch in } }, @{ N = "JOBENDPOINTNAME"; E = { $_.NAME | convertto-encoding -switch in } }
 		$query | ConvertTo-ZabbixDiscoveryJson JOBENDPOINTNAME, JOBENDPOINTID
 	}
 	
 	"DiscoveryReplicaJobs" {
-		$xml1 = Import-Clixml "$pathxml\backupjob.xml"
+		$xml1 = ImportXml -item backupjob
 		$query = $xml1 | Where-Object { $_.IsScheduleEnabled -eq "true" -and $_.JobType -like "Replica" } | Select @{ N = "JOBREPLICAID"; E = { $_.ID | convertto-encoding -switch in } }, @{ N = "JOBREPLICANAME"; E = { $_.NAME | convertto-encoding -switch in } }
 		$query | ConvertTo-ZabbixDiscoveryJson JOBREPLICANAME, JOBREPLICAID
 	}
@@ -335,11 +366,11 @@ switch ($ITEM)
 	"DiscoveryBackupVmsByJobs" {
 		if ($ID -like "BackupSync")
 		{
-			Import-Clixml "$pathxml\backupsyncvmbyjob.xml" | Select @{ N = "JOBNAME"; E = { $_.Job | convertto-encoding -switch in } }, @{ N = "JOBVMNAME"; E = { $_.NAME | convertto-encoding -switch in } } | ConvertTo-ZabbixDiscoveryJson JOBVMNAME, JOBNAME
+			ImportXml -item backupsyncvmbyjob | Select @{ N = "JOBNAME"; E = { $_.Job | convertto-encoding -switch in } }, @{ N = "JOBVMNAME"; E = { $_.NAME | convertto-encoding -switch in } } | ConvertTo-ZabbixDiscoveryJson JOBVMNAME, JOBNAME
 		}
 		else
 		{
-			Import-Clixml "$pathxml\backupvmbyjob.xml" | Select @{ N = "JOBNAME"; E = { $_.Job | convertto-encoding -switch in } }, @{ N = "JOBVMNAME"; E = { $_.NAME | convertto-encoding -switch in } } | ConvertTo-ZabbixDiscoveryJson JOBVMNAME, JOBNAME
+			ImportXml -item backupvmbyjob | Select @{ N = "JOBNAME"; E = { $_.Job | convertto-encoding -switch in } }, @{ N = "JOBVMNAME"; E = { $_.NAME | convertto-encoding -switch in } } | ConvertTo-ZabbixDiscoveryJson JOBVMNAME, JOBNAME
 		}
 	}
 	
@@ -365,7 +396,7 @@ switch ($ITEM)
 	}
 	
 	"ResultBackup"  {
-		$xml = Import-Clixml "$pathxml\backuptaskswithretry.xml"
+		$xml = ImportXml -item backuptaskswithretry
 		$query1 = $xml | Where { $_.jobId -like "$ID" } | Sort JobStart -Descending | Select -First 1
 		$query2 = $query1.JobResult
 		if (!$query2.value)
@@ -381,7 +412,7 @@ switch ($ITEM)
 	}
 	
 	"ResultBackupSync"  {
-		$xml = Import-Clixml "$pathxml\backupjob.xml" | Where-Object { $_.Id -like $ID }
+		$xml = ImportXml -item backupjob | Where-Object { $_.Id -like $ID }
 		$result = veeam-backuptask-unique -ID $xml.name -jobtype jobname
 		$query = $result | Measure-Object
 		$count = $query.count
@@ -405,7 +436,7 @@ switch ($ITEM)
 					{
 						if ($pending -gt 0)
 						{
-							$xml2 = Import-Clixml "$pathxml\backupsession.xml"
+							$xml2 = ImportXml -item backupsession
 							$query1 = $xml2 | Where { $_.jobId -like "*$ID*" } | Sort creationtime -Descending | Select -First 2 | Select -Index 1
 							if (!$query1.Result.Value) { write-host "4" }
 							else
@@ -429,7 +460,7 @@ switch ($ITEM)
 		}
 		else
 		{
-			$xml1 = Import-Clixml "$pathxml\backuptape.xml"
+			$xml1 = ImportXml -item backuptape
 			$query = $xml1 | Where-Object { $_.Id -like "*$ID*" } | Sort creationtime -Descending | Select -First 1
 			$query2 = $query.LastResult.Value
 			if (!$query2)
@@ -475,7 +506,7 @@ switch ($ITEM)
 		}
 		else
 		{
-			$xml3 = Import-Clixml "$pathxml\backupendpoint.xml"
+			$xml3 = ImportXml -item backupendpoint
 			$query = $xml3 | Where-Object { $_.Id -like "*$ID*" }
 			$query1 = $query | Where { $_.Id -eq $query.Id } | Sort creationtime -Descending | Select -First 1
 			$query2 = $query1.LastResult
@@ -494,7 +525,7 @@ switch ($ITEM)
 	}
 	
 	"ResultReplica"  {
-		$xml = Import-Clixml "$pathxml\backupsession.xml"
+		$xml = ImportXml -item backupsession
 		$query1 = $xml | Where { $_.jobId -like "$ID" } | Sort JobStart -Descending | Select -First 1
 		$query2 = $query1.Result
 		if (!$query2.value)
@@ -547,23 +578,23 @@ switch ($ITEM)
 		$query | Select-Object -ExpandProperty FreeSpace
 	}
 	"RunStatus" {
-		$xml1 = Import-Clixml "$pathxml\backupjob.xml"
+		$xml1 = ImportXml -item backupjob
 		$query = $xml1 | Where-Object { $_.Id -like "*$ID*" }
 		if ($query.IsRunning) { return "1" }
 		else { return "0" }
 	}
 	"IncludedSize"{
-		$xml1 = Import-Clixml "$pathxml\backupjob.xml"
+		$xml1 = ImportXml -item backupjob
 		$query = $xml1 | Where-Object { $_.Id -like "*$ID*" }
 		[string]$query.Info.IncludedSize
 	}
 	"ExcludedSize"{
-		$xml1 = Import-Clixml "$pathxml\backupjob.xml"
+		$xml1 = ImportXml -item backupjob
 		$query = $xml1 | Where-Object { $_.Id -like "*$ID*" }
 		[string]$query.Info.ExcludedSize
 	}
 	"JobsCount" {
-		$xml1 = Import-Clixml "$pathxml\backupjob.xml" | Measure-Object
+		$xml1 = ImportXml -item backupjob | Measure-Object
 		[string]$xml1.Count
 	}
 	"VmCount" {
@@ -581,16 +612,16 @@ switch ($ITEM)
 		[string]$result.count
 	}
 	"Type" {
-		$xml1 = Import-Clixml "$pathxml\backupbackup.xml"
+		$xml1 = ImportXml -item backupbackup
 		$query = $xml1 | Where-Object { $_.JobId -like "$ID" }
 		[string]$query.JobType
 	}
 	"NextRunTime" {
-		$xml1 = Import-Clixml "$pathxml\backupjob.xml"
+		$xml1 = ImportXml -item backupjob
 		$query = $xml1 | where { $_.Id -like "*$ID*" }
 		$query1 = $query.ScheduleOptions
 		$result = $query1.NextRun
-        if (!$result) {}
+        if (!$result) { Write-Host "0000000001" }
         else {
 		$result1 = $nextdate, $nexttime = $result.Split(" ")
 		$newdate = [datetime]("$($nextdate -replace "(\d{2})-(\d{2})", "`$2-`$1") $nexttime")
@@ -600,7 +631,7 @@ switch ($ITEM)
         }
 	}
 	"RunningJob" {
-		$xml1 = Import-Clixml "$pathxml\backupjob.xml"
+		$xml1 = ImportXml -item backupjob
 		$query = $xml1 | where { $_.isCompleted -eq $false } | Measure
 		if ($query)
 		{

@@ -613,7 +613,8 @@ switch ($ITEM)
 	}
 	"Type" {
 		$xml1 = ImportXml -item backupbackup
-		$query = $xml1 | Where-Object { $_.JobId -like "$ID" }
+        if (!$xml1) { $xml1 = ImportXml -item backupsession }
+		$query = $xml1 | Where-Object { $_.JobId -like "$ID" } | Select -First 1
 		[string]$query.JobType
 	}
 	"NextRunTime" {

@@ -268,7 +268,7 @@ function ImportXml
 	$result = Test-Path -Path $path
 	if ($result -like 'False')
 	{
-		start-sleep -Seconds 5
+		start-sleep -Seconds 2
 	}
 	
 	$err = $null

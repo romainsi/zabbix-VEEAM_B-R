@@ -526,7 +526,7 @@ switch ($ITEM)
 	
 	"ResultReplica"  {
 		$xml = ImportXml -item backupsession
-		$query1 = $xml | Where { $_.jobId -like "$ID" } | Sort JobStart -Descending | Select -First 1
+		$query1 = $xml | Where { $_.jobId -like "$ID" } | Sort creationtime -Descending | Select -First 1
 		$query2 = $query1.Result
 		if (!$query2.value)
 		{

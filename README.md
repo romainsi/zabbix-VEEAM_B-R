@@ -118,7 +118,7 @@ Why? Because the execution of this command can take between 30 seconds and more 
     UnsafeUserParameters=1
     ServerActive="IP or DNS Zabbix Server"
     Alias=service.discovery.veeam:service.discovery
-    Timeout=(to adjust if items arrive in timeout)
+    Timeout=(to adjust if items arrive in timeout and don't forget to ajust the zabbixserver timeout)
     UserParameter=vbr[*],powershell -NoProfile -ExecutionPolicy Bypass -File "C:\Program Files\Zabbix Agent\scripts\zabbix_vbr_job.ps1" "$1" "$2" "$3"
     ```
 4. In Zabbix : Administration, General, Regular Expression:

@@ -31,6 +31,8 @@ Why? Because the execution of this command can take between 30 seconds and more 
   - Size included in each jobs (disabled by default)
   - Size excluded in each jobs (disabled by default)
   - Next run time of each jobs
+  - Last end time of each jobs
+  - Last run time of each jobs
 
 ### 2. Veeam Tape Jobs:
   - Result of each jobs

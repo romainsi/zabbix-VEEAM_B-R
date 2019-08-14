@@ -31,6 +31,8 @@ Why? Because the execution of this command can take between 30 seconds and more 
   - Size included in each jobs (disabled by default)
   - Size excluded in each jobs (disabled by default)
   - Next run time of each jobs
+  - Last end time of each jobs
+  - Last run time of each jobs
 
 ### 2. Veeam Tape Jobs:
   - Result of each jobs
@@ -118,7 +120,6 @@ Why? Because the execution of this command can take between 30 seconds and more 
     UnsafeUserParameters=1
     ServerActive="IP or DNS Zabbix Server"
     Alias=service.discovery.veeam:service.discovery
-    Timeout=(to adjust if items arrive in timeout and don't forget to ajust the zabbixserver timeout)
     UserParameter=vbr[*],powershell -NoProfile -ExecutionPolicy Bypass -File "C:\Program Files\Zabbix Agent\scripts\zabbix_vbr_job.ps1" "$1" "$2" "$3"
     ```
 4. In Zabbix : Administration, General, Regular Expression:
@@ -136,7 +137,7 @@ Why? Because the execution of this command can take between 30 seconds and more 
 7. Associate "Template VEEAM - Backup and Replication" to the host.
 8. Wait about 1h for discovery, XML file to be generated and first informations retrieves.
 
-! If you use old version of this script (< v3) please Purge and clean "Template VEEAM-BACKUP trapper".
+! If you use old version (< v3) please Purge and clean "Template VEEAM-BACKUP trapper".
 
 With a large or very large backup tasks history, the XML size can be more than 500 MB (so script finish in timeout) you can reduce this with this link :
 https://www.veeam.com/kb1995

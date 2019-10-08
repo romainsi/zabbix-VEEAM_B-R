@@ -129,9 +129,6 @@ Why? Because the execution of this command can take between 30 seconds and more 
         + Name: `Veeam`
         + Expression Type: `Result is TRUE`
         + Expression: `Veeam.*`
-    2.  Modify the "Windows Service Startup States for Discovery regex by adding a new expression:
-        + Expression Type: `Result is FALSE`
-        + Expression: `Veeam.*`
 
 5. Import TemplateVEEAM-BACKUPtrapper.xml file into Zabbix.
 6. Purge and clean Template OS Windows if is linked to the host (you can relink it after).

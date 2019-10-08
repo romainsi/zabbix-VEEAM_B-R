@@ -123,7 +123,7 @@ Why? Because the execution of this command can take between 30 seconds and more 
     Timeout=(to adjust if items arrive in timeout and don't forget to ajust the zabbixserver timeout)
     UserParameter=vbr[*],powershell -NoProfile -ExecutionPolicy Bypass -File "C:\Program Files\Zabbix Agent\scripts\zabbix_vbr_job.ps1" "$1" "$2" "$3"
     ```
-4. In Zabbix : Administration, General, Regular Expression:
+4. ** In Zabbix : Administration, General, Regular Expression:
 
     1. Add a new regular expression:
         + Name: `Veeam`
@@ -143,3 +143,8 @@ Why? Because the execution of this command can take between 30 seconds and more 
 With a large or very large backup tasks history, the XML size can be more than 500 MB (so script finish in timeout) you can reduce this with this link :
 https://www.veeam.com/kb1995
 Use first : "Changing Session history retention" and if this is not enough, "Clear old job sessions".
+
+
+** **If you already use the default Template OS Windows with Services Discovery we've two solutions :**
+1. Remove the key service.discovery in "Template OS Windows" : only veeam services will be monitored. And proceeded to step 4.
+2. Remove the key service.discovery in "Template VEEAM - Backup and Replication" : all services will be monitored included Veeam. And skip step 4 and 6.

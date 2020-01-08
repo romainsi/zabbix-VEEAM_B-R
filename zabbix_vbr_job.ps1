@@ -42,12 +42,10 @@
 # - VmCountResultBackupSync
 # - Type
 # - NextRunTime
-# - LastEndTime
-# - LastRunTime
 #
 # Examples:
 # powershell.exe -NoProfile -ExecutionPolicy Bypass -File "C:\Program Files\Zabbix Agent\scripts\zabbix_vbr_job.ps1" ResultBackup "2fd246be-b32a-4c65-be3e-1ca5546ef225"
-# Return the value of result (see the veeam-replace function for correspondence)
+# Return the value of result (see the VeeamStatusReplace function for correspondence)
 # or
 # powershell.exe -NoProfile -ExecutionPolicy Bypass -File "C:\Program Files\Zabbix Agent\scripts\zabbix_vbr_job.ps1" VmCountResultBackup "BackupJob1" "Warning"
 #
@@ -71,29 +69,12 @@ $pathxml = 'C:\Program Files\Zabbix Agent\scripts\TempXmlVeeam'
 # 
 $days = '-31'
 
-# Function convert return Json String to html
-function convertto-encoding
-{
-	[CmdletBinding()]
-	Param (
-		[Parameter(ValueFromPipeline = $true)]
-		[string]$item,
-		[Parameter(Mandatory = $true)]
-		[string]$switch
-	)
-	if ($switch -like "in")
-	{
-		$item.replace('&', '&amp;').replace('à', '&agrave;').replace('â', '&acirc;').replace('è', '&egrave;').replace('é', '&eacute;').replace('ê', '&ecirc;')
-	}
-	if ($switch -like "out")
-	{
-		$item.replace('&amp;', '&').replace('&agrave;', 'à').replace('&acirc;', 'â').replace('&egrave;', 'è').replace('&eacute;', 'é').replace('&ecirc;', 'ê')
-	}
-}
-
 $ITEM = [string]$args[0]
-$ID = [string]$args[1] | convertto-encoding -switch out
-$ID0 = [string]$args[2] | convertto-encoding -switch out
+$ID = [string]$args[1]
+$ID0 = [string]$args[2]
+
+# Load Veeam Module
+Add-PSSnapin -Name VeeamPSSnapIn -ErrorAction SilentlyContinue
 
 # Function Multiprocess ExportXml
 function ExportXml
@@ -107,7 +88,9 @@ function ExportXml
 		[Parameter(Mandatory = $false)]
 		[string]$command,
 		[Parameter(Mandatory = $false)]
-		[string]$type
+		[string]$type,
+		[Parameter(Mandatory = $false)]
+		[string]$options
 	)
 	
 	PROCESS
@@ -117,6 +100,12 @@ function ExportXml
 		
 		if ($switch -like "normal")
 		{
+			[System.DateTime]$Date = (Get-Date).adddays($days) #.ToString('dd/MM/yyyy HH:mm:ss')
+			if ($options -like "true")
+			{
+				$commandnew = "$command " + "| Where-Object { `$_.CreationTime -ge `"$Date`" }"
+				$command = $commandnew
+			}
 			Start-Job -Name $name -ScriptBlock {
 				Add-PSSnapin -Name VeeamPSSnapIn -ErrorAction SilentlyContinue
 				$connectVeeam = Connect-VBRServer
@@ -126,7 +115,6 @@ function ExportXml
 				Remove-Item $args[1]
 			} -ArgumentList "$command", "$path", "$name", "$newpath"
 		}
-		
 		
 		if ($switch -like "byvm")
 		{
@@ -151,7 +139,7 @@ function ExportXml
 				Add-PSSnapin -Name VeeamPSSnapIn -ErrorAction SilentlyContinue
 				$connectVeeam = Connect-VBRServer
 				$StartDate = (Get-Date).adddays($args[4])
-				$BackupSessions = Get-VBRBackupSession | Where-Object { $_.CreationTime -ge $StartDate } | Sort-Object JobName, CreationTime
+				$BackupSessions = [Veeam.Backup.Core.CBackupSession]::GetAll() | Where-Object { $_.CreationTime -ge $StartDate } | Sort-Object JobName, CreationTime
 				$Result = & {
 					ForEach ($BackupSession in ($BackupSessions | Where-Object { $_.IsRetryMode -eq $false }))
 					{
@@ -185,80 +173,6 @@ function ExportXml
 	}
 }
 
-
-
-# Converts an object to a JSON-formatted string
-$GlobalConstant = @{
-	'ZabbixJsonHost' = 'host'
-	'ZabbixJsonKey' = 'key'
-	'ZabbixJsonValue' = 'value'
-	'ZabbixJsonTimestamp' = 'clock'
-	'ZabbixJsonRequest' = 'request'
-	'ZabbixJsonData' = 'data'
-	'ZabbixJsonSenderData' = 'sender data'
-	'ZabbixJsonDiscoveryKey' = '{{#{0}}}'
-}
-
-$GlobalConstant += @{
-	'ZabbixMappingProperty' = 'Property'
-	'ZabbixMappingKey' = 'Key'
-	'ZabbixMappingKeyProperty' = 'KeyProperty'
-}
-
-foreach ($Constant in $GlobalConstant.GetEnumerator())
-{
-	Set-Variable -Scope Global -Option ReadOnly -Name $Constant.Key -Value $Constant.Value -Force
-}
-
-$ExportFunction = ('ConvertTo-ZabbixDiscoveryJson')
-
-if ($Host.Version.Major -le 2)
-{
-	$ExportFunction += ('ConvertTo-Json', 'ConvertFrom-Json')
-}
-
-function ConvertTo-ZabbixDiscoveryJson
-{
-	[CmdletBinding()]
-	param
-	(
-		[Parameter(ValueFromPipeline = $true)]
-		$InputObject,
-		[Parameter(Position = 0)]
-		[String[]]$Property = "#JOBID"
-	)
-	
-	begin
-	{
-		$Result = @()
-	}
-	
-	process
-	{
-		if ($InputObject)
-		{
-			$Result += foreach ($Obj in $InputObject)
-			{
-				if ($Obj)
-				{
-					$Element = @{ }
-					foreach ($P in $Property)
-					{
-						$Key = $ZabbixJsonDiscoveryKey -f $P.ToUpper()
-						$Element[$Key] = [String]$Obj.$P
-					}
-					$Element
-				}
-			}
-		}
-	}
-	end
-	{
-		$Result = @{ $ZabbixJsonData = $Result }
-		return $Result | ConvertTo-Json -Compress | ForEach-Object { [System.Text.RegularExpressions.Regex]::Unescape($_) }
-	}
-}
-
 # Function import xml with check & delay time if copy process running
 function ImportXml
 {
@@ -270,7 +184,7 @@ function ImportXml
 	$result = Test-Path -Path $path
 	if ($result -like 'False')
 	{
-		start-sleep -Seconds 1
+		start-sleep -Milliseconds 10
 	}
 	
 	$err = $null
@@ -284,19 +198,34 @@ function ImportXml
 	}
 	If ($err -ne $null)
 	{
-		Start-Sleep -Seconds 1
+		start-sleep -Milliseconds 50
 		$xmlquery = Import-Clixml "$path"
 	}
 	$xmlquery
 }
 
 # Replace Function for Veeam Correlation
-function veeam-replace
+function VeeamStatusReplace
 {
 	[CmdletBinding()]
 	Param ([Parameter(ValueFromPipeline = $true)]
 		$item)
-	$item.replace('Failed', '0').replace('Warning', '1').replace('Success', '2').replace('None', '2').replace('idle', '3').replace('InProgress', '5').replace('Pending', '6')
+	$item.replace('Failed', '0').
+	replace('Warning', '1').
+	replace('Success', '2').
+	replace('None', '2').
+	replace('idle', '3').
+	replace('InProgress', '5').
+	replace('Pending', '6').
+	replace('Pausing', '7').
+	replace('Postprocessing', '8').
+	replace('Resuming', '9').
+	replace('Starting', '10').
+	replace('Stopped', '11').
+	replace('Stopping', '12').
+	replace('WaitingRepository', '13').
+	replace('WaitingTape', '13').
+	replace('Working', '13')
 }
 
 # Function Sort-Object VMs by jobs on last backup (with unique name if retry)
@@ -325,54 +254,90 @@ function veeam-backuptask-unique
 	$output
 }
 
-# Load Veeam Module
-Add-PSSnapin -Name VeeamPSSnapIn -ErrorAction SilentlyContinue
+function ConvertTo-ZabbixDiscoveryJson
+{
+	[CmdletBinding()]
+	param
+	(
+		[Parameter(ValueFromPipeline = $true)]
+		$InputObject,
+		[Parameter(Position = 0)]
+		[String[]]$Property = @("ID", "NAME", "JOBTYPE")
+	)
+	
+	begin
+	{
+		$out = @()
+	}
+	
+	process
+	{
+		if ($InputObject)
+		{
+			$InputObject | ForEach-Object {
+				if ($_)
+				{
+					$Element = @{ }
+					foreach ($P in $Property)
+					{
+						$Element.Add("{#$($P.ToUpper())}", [String]$_.$P)
+					}
+					$out += $Element
+				}
+			}
+		}
+	}
+	end
+	{
+		@{ 'data' = $out } | ConvertTo-Json -Compress
+	}
+}
 
 switch ($ITEM)
 {
 	"DiscoveryBackupJobs" {
 		$xml1 = ImportXml -item backupjob
-		$query = $xml1 | Where-Object { $_.IsScheduleEnabled -eq "true" -and $_.JobType -like "Backup" } | Select-Object @{ N = "JOBID"; E = { $_.ID | convertto-encoding -switch in } }, @{ N = "JOBNAME"; E = { $_.NAME | convertto-encoding -switch in } }
+		$query = $xml1 | Where-Object { $_.IsScheduleEnabled -eq "true" -and ($_.JobType -like "Backup" -or $_.JobType -like "EpAgentBackup") } | Select-Object @{ N = "JOBID"; E = { $_.ID } }, @{ N = "JOBNAME"; E = { $_.NAME } }
 		$query | ConvertTo-ZabbixDiscoveryJson JOBNAME, JOBID
 	}
 	
 	"DiscoveryBackupSyncJobs" {
 		$xml1 = ImportXml -item backupjob
-		$query = $xml1 | Where-Object { $_.IsScheduleEnabled -eq "true" -and $_.JobType -like "BackupSync" } | Select-Object @{ N = "JOBBSID"; E = { $_.ID | convertto-encoding -switch in } }, @{ N = "JOBBSNAME"; E = { $_.NAME | convertto-encoding -switch in } }
+		$query = $xml1 | Where-Object { $_.IsScheduleEnabled -eq "true" -and $_.JobType -like "BackupSync" } | Select-Object @{ N = "JOBBSID"; E = { $_.ID } }, @{ N = "JOBBSNAME"; E = { $_.NAME } }
 		$query | ConvertTo-ZabbixDiscoveryJson JOBBSNAME, JOBBSID
 	}
 	
 	"DiscoveryTapeJobs" {
 		$xml1 = ImportXml -item backuptape
-		$query = $xml1 | Select-Object @{ N = "JOBTAPEID"; E = { $_.ID | convertto-encoding -switch in } }, @{ N = "JOBTAPENAME"; E = { $_.NAME | convertto-encoding -switch in } }
+		$query = $xml1 | Select-Object @{ N = "JOBTAPEID"; E = { $_.ID } }, @{ N = "JOBTAPENAME"; E = { $_.NAME } }
 		$query | ConvertTo-ZabbixDiscoveryJson JOBTAPENAME, JOBTAPEID
 	}
 	
 	"DiscoveryEndpointJobs" {
 		$xml1 = ImportXml -item backupendpoint
-		$query = $xml1 | Select-Object Id, Name | Select-Object @{ N = "JOBENDPOINTID"; E = { $_.ID | convertto-encoding -switch in } }, @{ N = "JOBENDPOINTNAME"; E = { $_.NAME | convertto-encoding -switch in } }
+		$query = $xml1 | Select-Object Id, Name | Select-Object @{ N = "JOBENDPOINTID"; E = { $_.ID } }, @{ N = "JOBENDPOINTNAME"; E = { $_.NAME } }
 		$query | ConvertTo-ZabbixDiscoveryJson JOBENDPOINTNAME, JOBENDPOINTID
 	}
 	
 	"DiscoveryReplicaJobs" {
 		$xml1 = ImportXml -item backupjob
-		$query = $xml1 | Where-Object { $_.IsScheduleEnabled -eq "true" -and $_.JobType -like "Replica" } | Select-Object @{ N = "JOBREPLICAID"; E = { $_.ID | convertto-encoding -switch in } }, @{ N = "JOBREPLICANAME"; E = { $_.NAME | convertto-encoding -switch in } }
+		$query = $xml1 | Where-Object { $_.IsScheduleEnabled -eq "true" -and $_.JobType -like "Replica" } | Select-Object @{ N = "JOBREPLICAID"; E = { $_.ID } }, @{ N = "JOBREPLICANAME"; E = { $_.NAME } }
 		$query | ConvertTo-ZabbixDiscoveryJson JOBREPLICANAME, JOBREPLICAID
 	}
 	
 	"DiscoveryRepo" {
-		$query = Get-CimInstance -Class Repository -ComputerName $env:COMPUTERNAME -Namespace ROOT\VeeamBS | Select-Object @{ N = "REPONAME"; E = { $_.NAME | convertto-encoding -switch in } }
+		$query = Get-CimInstance -Class Repository -ComputerName $env:COMPUTERNAME -Namespace ROOT\VeeamBS | Select-Object @{ N = "REPONAME"; E = { $_.NAME } }
 		$query | ConvertTo-ZabbixDiscoveryJson REPONAME
 	}
 	
 	"DiscoveryBackupVmsByJobs" {
 		if ($ID -like "BackupSync")
 		{
-			ImportXml -item backupsyncvmbyjob | Select-Object @{ N = "JOBNAME"; E = { $_.Job | convertto-encoding -switch in } }, @{ N = "JOBVMNAME"; E = { $_.NAME | convertto-encoding -switch in } } | ConvertTo-ZabbixDiscoveryJson JOBVMNAME, JOBNAME
+			ImportXml -item backupsyncvmbyjob | Select-Object @{ N = "JOBNAME"; E = { $_.Job } }, @{ N = "JOBVMNAME"; E = { $_.NAME } } | ConvertTo-ZabbixDiscoveryJson JOBVMNAME, JOBNAME
 		}
 		else
 		{
-			ImportXml -item backupvmbyjob | Select-Object @{ N = "JOBNAME"; E = { $_.Job | convertto-encoding -switch in } }, @{ N = "JOBVMNAME"; E = { $_.NAME | convertto-encoding -switch in } } | ConvertTo-ZabbixDiscoveryJson JOBVMNAME, JOBNAME
+			ImportXml -item backupvmbyjob | Select-Object @{ N = "JOBNAME"; E = { $_.Job } }, @{ N = "JOBVMNAME"; E = { $_.NAME } } | ConvertTo-ZabbixDiscoveryJson JOBVMNAME, JOBNAME
 		}
 	}
 	
@@ -385,14 +350,13 @@ switch ($ITEM)
 		}
 		if ((Get-CimInstance -Class Win32_Process -Filter "Name='PowerShell.EXE'" | Where-Object { $_.CommandLine -Like "*exportxml*" } | Measure-Object).count -eq 1)
 		{
-			$job = ExportXml -command Get-VBRBackupSession -name backupsession -switch normal
-			$job0 = ExportXml -command Get-VBRJob -name backupjob -switch normal
-			$job1 = ExportXml -command Get-VBRBackup -name backupbackup -switch normal
-			$job2 = ExportXml -command Get-VBRTapeJob -name backuptape -switch normal
-			$job3 = ExportXml -command Get-VBREPJob -name backupendpoint -switch normal
-			$job4 = ExportXml -command Get-VBRJob -name backupvmbyjob -switch byvm -type Backup
-			$job5 = ExportXml -command Get-VBRJob -name backupsyncvmbyjob -switch byvm -type BackupSync
-			$job6 = ExportXml -name backuptaskswithretry -switch bytaskswithretry
+			$job = ExportXml -command "[Veeam.Backup.Core.CBackupSession]::GetAll()" -name backupsession -switch normal -options true
+			$job0 = ExportXml -command "[Veeam.Backup.Core.CBackupJob]::GetAll()" -name backupjob -switch normal
+			$job1 = ExportXml -command Get-VBRTapeJob -name backuptape -switch normal
+			$job2 = ExportXml -command Get-VBREPJob -name backupendpoint -switch normal
+			$job3 = ExportXml -command "[Veeam.Backup.Core.CBackupJob]::GetAll()" -name backupvmbyjob -switch byvm -type Backup
+			$job4 = ExportXml -command "[Veeam.Backup.Core.CBackupJob]::GetAll()" -name backupsyncvmbyjob -switch byvm -type BackupSync
+			$job5 = ExportXml -name backuptaskswithretry -switch bytaskswithretry
 			Get-Job | Wait-Job
 		}
 	}
@@ -408,15 +372,17 @@ switch ($ITEM)
 		else
 		{
 			$query3 = $query2.value
-			$query4 = "$query3" | veeam-replace
+			$query4 = "$query3" | VeeamStatusReplace
 			write-output "$query4"
 		}
 	}
 	
 	"ResultBackupSync"  {
+		[System.DateTime]$ExcludeDate = (Get-Date).adddays(-7)
 		$xml = ImportXml -item backupjob | Where-Object { $_.Id -like $ID }
-		$result = veeam-backuptask-unique -ID $xml.name -jobtype jobname
-		$query = $result | Measure-Object
+		$result = veeam-backuptask-unique -ID $xml.name -jobtype jobname | Where-Object { $_.JobEnd -ge $ExcludeDate }
+		$result1 = $result | Where-Object { $_.JobEnd -ge $ExcludeDate } # If the Vm have not a backup for 7 days, exclusion
+		$query = $result1 | Measure-Object
 		$count = $query.count
 		$success = ($Result.Status | Where-Object { $_.Value -like "*Success*" }).count
 		$warning = ($Result.Status | Where-Object { $_.Value -like "*Warning*" }).count
@@ -443,7 +409,7 @@ switch ($ITEM)
 							if (!$query1.Result.Value) { write-output "4" }
 							else
 							{
-								$query2 = $query1.Result.Value | veeam-replace
+								$query2 = $query1.Result.Value | VeeamStatusReplace
 								write-output "$query2"
 							}
 						}
@@ -476,7 +442,7 @@ switch ($ITEM)
 				{
 					$query = Get-VBRTapeJob | Where-Object { $_.Id -like "*$ID*" }
 					$query1 = $query.GetLastResult()
-					$query2 = "$query1" | veeam-replace
+					$query2 = "$query1" | VeeamStatusReplace
 					write-output "$query2"
 				}
 				else
@@ -492,7 +458,7 @@ switch ($ITEM)
 				}
 				else
 				{
-					$query3 = $query2 | veeam-replace
+					$query3 = $query2 | VeeamStatusReplace
 					write-output "$query3"
 				}
 			}
@@ -520,7 +486,7 @@ switch ($ITEM)
 			else
 			{
 				$query4 = $query2.value
-				$query3 = $query4 | veeam-replace
+				$query3 = $query4 | VeeamStatusReplace
 				write-output "$query3"
 			}
 		}
@@ -537,7 +503,7 @@ switch ($ITEM)
 		else
 		{
 			$query3 = $query2.value
-			$query4 = "$query3" | veeam-replace
+			$query4 = "$query3" | VeeamStatusReplace
 			write-output "$query4"
 		}
 	}
@@ -552,7 +518,7 @@ switch ($ITEM)
 		else
 		{
 			$query3 = $Result.Status.Value
-			$query4 = $query3 | veeam-replace
+			$query4 = $query3 | VeeamStatusReplace
 			[string]$query4
 		}
 	}
@@ -567,7 +533,7 @@ switch ($ITEM)
 		else
 		{
 			$query3 = $Result.Status.Value
-			$query4 = $query3 | veeam-replace
+			$query4 = $query3 | VeeamStatusReplace
 			[string]$query4
 		}
 	}
@@ -623,16 +589,15 @@ switch ($ITEM)
 	}
 	
 	"Type" {
-		$xml1 = ImportXml -item backupbackup
-		if (!$xml1) { $xml1 = ImportXml -item backupsession }
+		$xml1 = ImportXml -item backupsession
 		$query = $xml1 | Where-Object { $_.JobId -like "$ID" } | Select-Object -First 1
 		[string]$query.JobType
 	}
 	
 	"LastRunTime" {
-		$xml1 = ImportXml -item backupbackup
-		$query = $xml1 | Where-Object { $_.JobId -like "*$ID*" }
-		[string]$query1 = $query.LastPointCreationTime
+		$xml1 = ImportXml -item backupsession
+		$query = $xml1 | Where-Object { $_.JobId -like "*$ID*" } | Sort-Object creationtime -Descending | Select-Object -First 1
+		[string]$query1 = $query.CreationTimeUTC.ToString('dd/MM/yyyy HH:mm:ss')
 		$result1 = $nextdate, $nexttime = $query1.Split(" ")
 		$newdate = ("$($nextdate -replace "(\d{2})-(\d{2})", "`$2-`$1") $nexttime")
 		$date = get-date -date "01/01/1970"
@@ -641,9 +606,9 @@ switch ($ITEM)
 	}
 	
 	"LastEndTime" {
-		$xml1 = ImportXml -item backupbackup
-		$query = $xml1 | Where-Object { $_.JobId -like "*$ID*" }
-		[string]$query1 = $query.MetaUpdateTime
+		$xml1 = ImportXml -item backupsession
+		$query = $xml1 | Where-Object { $_.JobId -like "*$ID*" } | Sort-Object creationtime -Descending | Select-Object -First 1
+		[string]$query1 = $query.EndTime
 		$result1 = $nextdate, $nexttime = $query1.Split(" ")
 		$newdate = [datetime]("$($nextdate -replace "(\d{2})-(\d{2})", "`$2-`$1") $nexttime")
 		$date = get-date -date "01/01/1970"

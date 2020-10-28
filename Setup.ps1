@@ -73,4 +73,10 @@ UserParameter=vbr[*],powershell -NoProfile -ExecutionPolicy Bypass -File ""${zab
     Restart-Zabbix
 }
 
-Setup-VeeamAgent
+# Run as administrator
+$loop = [string]$args[0]
+if ([bool](([System.Security.Principal.WindowsIdentity]::GetCurrent()).groups -match "S-1-5-32-544")) {
+    Setup-VeeamAgent
+} elseif ($loop -eq "") {
+    Start-Process Powershell -Verb runAs -ArgumentList "-NoProfile -ExecutionPolicy Bypass -File `"$PSCommandPath`" NoLoop"
+}

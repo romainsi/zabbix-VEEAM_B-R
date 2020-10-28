@@ -1,9 +1,11 @@
+param(
+    [switch]$elevate = $true
+)
+
 function Restart-Zabbix {
     $Zabbix_Service = Get-Service -Name 'Zabbix Agent' -ErrorAction SilentlyContinue
     if ($Zabbix_Service -ne $null -and $Zabbix_Service.Status -eq 'Running') {
-        $Zabbix_Service.Stop()
-        $Zabbix_Service.WaitForStatus('Stopped')
-        $Zabbix_Service.Start()
+        $Zabbix_Service | Restart-Service
     }
 }
 
@@ -12,7 +14,7 @@ function Get-ZabbixAgent {
     if ($service_config -ne $null) {
         $image_path = $service_config.GetValue('ImagePath')
         if ($image_path -match "^`"([^`"]*)`".*$") {
-            return $Matches.1
+            return $Matches[1]
         }
         return $image_path -replace "--config .*", ""
     }
@@ -31,7 +33,7 @@ function Get-ZabbixPath {
         return $install_x86.GetValue('InstallFolder')
     }
 
-    return (Get-ChildItem -Path (Get-ZabbixAgent)).DirectoryName
+    return ((Get-ChildItem -Path (Get-ZabbixAgent)).DirectoryName + '/')
 }
 
 function Setup-VeeamAgent {
@@ -73,10 +75,13 @@ UserParameter=vbr[*],powershell -NoProfile -ExecutionPolicy Bypass -File ""${zab
     Restart-Zabbix
 }
 
-# Run as administrator
-$loop = [string]$args[0]
-if ([bool](([System.Security.Principal.WindowsIdentity]::GetCurrent()).groups -match "S-1-5-32-544")) {
-    Setup-VeeamAgent
-} elseif ($loop -eq "") {
-    Start-Process Powershell -Verb runAs -ArgumentList "-NoProfile -ExecutionPolicy Bypass -File `"$PSCommandPath`" NoLoop"
+# If main script, launch setup
+if ($MyInvocation.PSCommandPath -eq $null) {
+    if ([bool](([System.Security.Principal.WindowsIdentity]::GetCurrent()).groups -match "S-1-5-32-544")) {
+        Setup-VeeamAgent
+    } elseif ($elevate.IsPresent) {
+        Start-Process Powershell -Verb runAs -ArgumentList "-NoProfile -ExecutionPolicy Bypass -File `"$PSCommandPath`" -elevate:$false"
+    } else {
+        throw "Cannot elevate setup."
+    }
 }

@@ -1,5 +1,5 @@
 param(
-    [switch]$elevate = $true
+    [switch]$no_elevate
 )
 
 function Restart-Zabbix {
@@ -75,12 +75,43 @@ UserParameter=vbr[*],powershell -NoProfile -ExecutionPolicy Bypass -File ""${zab
     Restart-Zabbix
 }
 
+function Setup-PowerShell3 {
+    if ($env:PROCESSOR_ARCHITECTURE -eq "AMD64") {
+        $arch = "x64"
+    } else {
+        $arch = "x86"
+    }
+
+    $win_version = (Get-WmiObject Win32_OperatingSystem).Version -split '\.'
+    $base_version = $win_version[0] + '.' + $win_version[1]
+
+    if ($base_version -eq '6.0') {
+        $package = 'Windows6.0-KB2506146'
+    } elseif ($base_version -eq '6.1') {
+        $package = 'Windows6.1-KB2506143'
+    }
+    $url = "https://download.microsoft.com/download/E/7/6/E76850B8-DA6E-4FF5-8CCE-A24FC513FD16/${package}-${arch}.msu"
+    $msu_file = $msi_file = [System.IO.Path]::GetTempPath() + "${package}-${arch}.msu"
+
+    $client = new-object System.Net.WebClient
+    $client.DownloadFile($url, $msu_file)
+
+    Start-Process WUSA -ArgumentList ($msu_file, '/quiet', '/norestart') -Wait
+}
+
 # If main script, launch setup
 if ($MyInvocation.PSCommandPath -eq $null) {
     if ([bool](([System.Security.Principal.WindowsIdentity]::GetCurrent()).groups -match "S-1-5-32-544")) {
+        if ($PSVersionTable.PSCompatibleVersions -notcontains "3.0") {
+            Setup-PowerShell3
+        }
         Setup-VeeamAgent
-    } elseif ($elevate.IsPresent) {
-        Start-Process Powershell -Verb runAs -ArgumentList "-NoProfile -ExecutionPolicy Bypass -File `"$PSCommandPath`" -elevate:$false"
+    } elseif (-not $no_elevate.IsPresent) {
+        # PowerShell 2.0 do not set $PSCommandPath. So use current file invocation.
+        if ($PSCommandPath -eq $null) {
+			$PSCommandPath = $MyInvocation.InvocationName
+		}
+        Start-Process Powershell -Verb runAs -ArgumentList "-NoProfile -ExecutionPolicy Bypass -File `"$PSCommandPath`" -no_elevate"
     } else {
         throw "Cannot elevate setup."
     }

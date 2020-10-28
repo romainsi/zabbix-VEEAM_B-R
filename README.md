@@ -52,7 +52,7 @@ Why? Because the execution of this command can take between 30 seconds and more 
   - Result of each jobs
   - Execution status for each jobs
   - Next run time of each jobs
-  
+
 ### 5. Veeam Jobs Replication Backup:
   - Result of each jobs
   - Execution status for each jobs
@@ -111,6 +111,14 @@ Why? Because the execution of this command can take between 30 seconds and more 
 
 
 ## Setup
+
+### Automatic scripted installation
+Run Setup.ps1 for installing the monitoring script on hosts.
+
+### Manual installation
+
+Your host must have PowerShell 3.0 or above. Install upgrade from [Microsoft Download](https://www.microsoft.com/en-us/download/details.aspx?id=34595) for
+windows 7 and Windows 2008.
 
 1. Install the Zabbix agent on your host
 2. Copy `zabbix_vbr_job.ps1` in the directory : `C:\Program Files\Zabbix Agent\scripts\` (create folder if not exist)

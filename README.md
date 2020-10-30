@@ -1,3 +1,5 @@
+! You can test the new SQL version for Zabbix 5.X: https://github.com/romainsi/zabbix-VB-R-SQL.
+
 # VEEAM-Backup-Recovery-jobs
 
 This template use the VEEAM Backup & Replication PowerShell Cmdlets to discover and manage VEEAM Backup jobs, Veeam BackupSync, Veeam Tape Job, Veeam Endpoint Backup Jobs, All Repositories and Veeam Services.

@@ -106,7 +106,7 @@
             <discovery_rules>
                 <discovery_rule>
                     <name>VEEAM Services</name>
-                    <key>service.discovery</key>
+                    <key>service.discovery.veeam</key>
                     <delay>1h</delay>
                     <filter>
                         <conditions>

@@ -191,7 +191,7 @@
                     <type>0</type>
                     <snmp_community/>
                     <snmp_oid/>
-                    <key>service.discovery</key>
+                    <key>service.discovery.veeam</key>
                     <delay>3600</delay>
                     <status>0</status>
                     <allowed_hosts/>

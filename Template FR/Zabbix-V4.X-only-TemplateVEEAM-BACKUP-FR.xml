@@ -47,9 +47,6 @@
                 <application>
                     <name>VEEAM Repository</name>
                 </application>
-                <application>
-                    <name>VEEAM Services</name>
-                </application>
             </applications>
             <items>
                 <item>
@@ -104,44 +101,6 @@
                 </item>
             </items>
             <discovery_rules>
-                <discovery_rule>
-                    <name>VEEAM Services</name>
-                    <key>service.discovery</key>
-                    <delay>1h</delay>
-                    <filter>
-                        <conditions>
-                            <condition>
-                                <macro>{#SERVICE.NAME}</macro>
-                                <value>@Veeam</value>
-                                <formulaid>A</formulaid>
-                            </condition>
-                        </conditions>
-                    </filter>
-                    <item_prototypes>
-                        <item_prototype>
-                            <name>Status {#SERVICE.DISPLAYNAME}</name>
-                            <key>service.info[{#SERVICE.NAME},state]</key>
-                            <delay>60</delay>
-                            <applications>
-                                <application>
-                                    <name>VEEAM Services</name>
-                                </application>
-                            </applications>
-                            <valuemap>
-                                <name>Windows service state</name>
-                            </valuemap>
-                            <request_method>POST</request_method>
-                            <trigger_prototypes>
-                                <trigger_prototype>
-                                    <expression>{min(#3)}&lt;&gt;0</expression>
-                                    <name>{#SERVICE.DISPLAYNAME} n'est pas en cours d'exécution (type de démarrage {#SERVICE.STARTUPNAME})</name>
-                                    <priority>AVERAGE</priority>
-                                </trigger_prototype>
-                            </trigger_prototypes>
-                        </item_prototype>
-                    </item_prototypes>
-                    <request_method>POST</request_method>
-                </discovery_rule>
                 <discovery_rule>
                     <name>VEEAM Agent Jobs</name>
                     <key>vbr[&quot;DiscoveryAgentJobs&quot;]</key>

@@ -108,20 +108,19 @@ Why? Because the execution of this command can take between 30 seconds and more 
 ### Discovery Veeam Repository
 - [HIGH] => Less than 2Gb remaining on the repository
 
-### Discovery Veeam Services
+### Discovery Veeam Services ``(this discovery exists in standard Zabbix Windows hosts template so it removed from here to avoid conflicts and duplicates)``
 - [AVERAGE] => Veeam Service is down for each services
 
 
 ## Setup
 
 1. Install the Zabbix agent on your host
-2. Copy `zabbix_vbr_job.ps1` in the directory : `C:\Program Files\Zabbix Agent\scripts\` (create folder if not exist)
+2. Copy `zabbix_vbr_job.ps1` in the directory : `C:\Program Files\Zabbix Agent\scripts\` (create folder if not exist). Also you can use any other directory, but change UserParameter=vbr[*] below then.
 3. Add the following line to your Zabbix agent configuration file:
     ```
     EnableRemoteCommands=1
     UnsafeUserParameters=1
     ServerActive="IP or DNS Zabbix Server"
-    Alias=service.discovery.veeam:service.discovery
     Timeout=(to adjust if items arrive in timeout and don't forget to ajust the zabbixserver timeout)
     UserParameter=vbr[*],powershell -NoProfile -ExecutionPolicy Bypass -File "C:\Program Files\Zabbix Agent\scripts\zabbix_vbr_job.ps1" "$1" "$2" "$3"
     ```
@@ -143,7 +142,3 @@ With a large or very large backup tasks history, the XML size can be more than 5
 https://www.veeam.com/kb1995
 Use first : "Changing Session history retention" and if this is not enough, "Clear old job sessions".
 
-
-** **If you already use the default Template OS Windows with Services Discovery we've two solutions :**
-1. Remove the key service.discovery in "Template OS Windows" : only veeam services will be monitored. And proceeded to step 4.
-2. Remove the key service.discovery in "Template VEEAM - Backup and Replication" : all services will be monitored included Veeam. And skip step 4 and 6.

@@ -635,7 +635,7 @@ switch ($ITEM)
 	
 	"RunningJob" {
 		$xml1 = ImportXml -item backupjob
-		$query = $xml1 | Where-Object { $_.isCompleted -eq $false } | Measure-Object
+		$query = $xml1 | Where-Object { $_.IsRunning -eq $true } | Measure-Object
 		if ($query)
 		{
 			[string]$query.Count

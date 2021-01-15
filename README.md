@@ -142,3 +142,5 @@ With a large or very large backup tasks history, the XML size can be more than 5
 https://www.veeam.com/kb1995
 Use first : "Changing Session history retention" and if this is not enough, "Clear old job sessions".
 
+
+Note: For Windows 7, Windows 2008 and older hosts to make the template work install [Powershell v3](https://www.microsoft.com/en-us/download/details.aspx?id=34595) (or newer) manually.

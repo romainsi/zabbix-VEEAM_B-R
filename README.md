@@ -1,4 +1,4 @@
-! You can test the new SQL version for Zabbix 5.X: https://github.com/romainsi/zabbix-VB-R-SQL.
+ :warning: Depreciated : Use SQL version for Zabbix 5.X: https://github.com/romainsi/zabbix-VB-R-SQL.
 
 # VEEAM-Backup-Recovery-jobs
 

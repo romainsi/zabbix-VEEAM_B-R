@@ -1,4 +1,4 @@
- :warning: DEPRECATED : Use SQL version for Zabbix 5.4: https://github.com/romainsi/zabbix-VB-R-SQL.
+ :warning: DEPRECATED : Use SQL version for Zabbix 6.X: https://github.com/romainsi/zabbix-VB-R-SQL.
 
 # VEEAM-Backup-Recovery-jobs
 
